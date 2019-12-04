@@ -73,8 +73,9 @@ bool validPassword_part2(int input)
 
 int main()
 {
-	int lower = 265275;
-	int higher = 781584;
+    std::vector<std::string> input = util::readFileLines("..\\input_2019_4.txt", '-');
+	int lower = std::stoi(input[0]);
+	int higher = std::stoi(input[1]);
 	
 	int count_part1 = 0;
 	int count_part2 = 0;
@@ -87,4 +88,6 @@ int main()
 	std::cout << "Part 1: " << count_part1 << std::endl;
 	std::cout << "Part 2: " << count_part2 << std::endl;
 	getchar();
+
+    return 0;
 }
