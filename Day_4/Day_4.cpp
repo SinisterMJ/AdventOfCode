@@ -28,10 +28,8 @@ std::vector<int> digitsFromInt(int input)
 	return result;
 }
 
-bool validPassword_part1(int input)
+bool validPassword_part1(std::vector<int> digits)
 {
-	std::vector<int> digits = digitsFromInt(input);
-
 	bool foundDouble = false;
 	for (int index = 1; index < digits.size(); ++index)
 	{
@@ -45,10 +43,8 @@ bool validPassword_part1(int input)
 	return foundDouble;
 }
 
-bool validPassword_part2(int input)
+bool validPassword_part2(std::vector<int> digits)
 {
-	std::vector<int> digits = digitsFromInt(input);
-
 	bool foundDouble = false;
 	for (int index = 1; index < digits.size(); ++index)
 	{
@@ -82,8 +78,12 @@ int main()
 	int count_part2 = 0;
 	for (int index = lower; index <= higher; ++index)
 	{
-		count_part1 += validPassword_part1(index);
-		count_part2 += validPassword_part2(index);
+        std::vector<int> input = digitsFromInt(index);
+        if (validPassword_part1(input))
+        {
+            count_part1++;
+            count_part2 += validPassword_part2(input);  // Part 2 is a strict subset of part 1
+        }		
 	}
 
 	std::cout << "Part 1: " << count_part1 << std::endl;
