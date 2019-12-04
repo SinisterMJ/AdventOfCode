@@ -10,6 +10,7 @@
 #include <sstream>
 #include <stdint.h>
 #include <chrono>
+#include "Map2DBase.h"
 
 namespace util
 {
@@ -20,6 +21,7 @@ namespace util
         Timer() {}
         void start() { startP = std::chrono::steady_clock::now(); }
         int64_t usPassed() { auto end = std::chrono::steady_clock::now(); return std::chrono::duration_cast<std::chrono::microseconds>(end - startP).count(); }
+		int64_t msPassed() { auto end = std::chrono::steady_clock::now(); return std::chrono::duration_cast<std::chrono::milliseconds>(end - startP).count(); }
     };
 	static inline std::string readFile(const std::string& path)
 	{
