@@ -9,9 +9,18 @@
 #include <string>
 #include <sstream>
 #include <stdint.h>
+#include <chrono>
 
 namespace util
 {
+    class Timer {
+    private:
+        std::chrono::time_point<std::chrono::steady_clock> startP;
+    public:
+        Timer() {}
+        void start() { startP = std::chrono::steady_clock::now(); }
+        int64_t usPassed() { auto end = std::chrono::steady_clock::now(); return std::chrono::duration_cast<std::chrono::microseconds>(end - startP).count(); }
+    };
 	static inline std::string readFile(const std::string& path)
 	{
 		FILE* f;
@@ -50,17 +59,18 @@ namespace util
 
 		return lines;
 	}
+
+    std::vector<std::string> split(const std::string &s, char delim) {
+        std::vector<std::string> elems;
+        std::stringstream ss(s);
+        std::string number;
+        while (std::getline(ss, number, delim)) {
+            elems.push_back(number);
+        }
+        return elems;
+    }
 }
 
-std::vector<std::string> split(const std::string &s, char delim) {
-	std::vector<std::string> elems;
-	std::stringstream ss(s);
-	std::string number;
-	while (std::getline(ss, number, delim)) {
-		elems.push_back(number);
-	}
-	return elems;
-}
 
 struct v2
 {
@@ -69,6 +79,10 @@ struct v2
 
 	int x;
 	int y;
+    v2 operator + (const v2& a) const { return v2(a.x + x, a.y + y); }
+    v2& operator+= (const v2& b) { x += b.x; y += b.y; }
+    v2 operator - (const v2& a) const { return v2(a.x - x, a.y - y); }
+    v2& operator-= (const v2& b) { x -= b.x; y -= b.y; }
 };
 
 bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
@@ -78,9 +92,6 @@ bool operator > (const v2& a, const v2& b) { return b < a; }
 bool operator != (const v2& a, const v2& b) { return !(a == b); }
 bool operator <= (const v2& a, const v2& b) { return !(b < a); }
 bool operator >= (const v2& a, const v2& b) { return !(a < b); }
-
-v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
-v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
 
 struct v3
 {

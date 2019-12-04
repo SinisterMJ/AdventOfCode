@@ -16,7 +16,7 @@ private:
 public:
 	Wire(std::string path)
 	{
-		std::vector<std::string> directions = split(path, ',');
+		std::vector<std::string> directions = util::split(path, ',');
         v2 start;
         int totalSteps = 0;
 
@@ -89,6 +89,8 @@ public:
 
 int main()
 {
+    util::Timer myTime;
+    myTime.start();
 	std::vector<std::string> inputs = util::readFileLines("..\\input_2019_3.txt");
 	
 	Wire A(inputs[0]);
@@ -97,5 +99,6 @@ int main()
 	std::cout << "Distance: " << distance << std::endl;
 	int steps = A.shortestSteps(B.getPoints());
 	std::cout << "Steps: " << steps << std::endl;
+    std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
 }
