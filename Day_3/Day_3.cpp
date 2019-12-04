@@ -8,16 +8,6 @@
 #include <sstream>
 #include <string>
 
-std::vector<std::string> split(const std::string &s, char delim) {
-	std::vector<std::string> elems;
-	std::stringstream ss(s);
-	std::string number;
-	while (std::getline(ss, number, delim)) {
-		elems.push_back(number);
-	}
-	return elems;
-}
-
 class Wire {
 public:
 	struct Point

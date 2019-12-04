@@ -8,7 +8,7 @@
 #include <vector>
 #include <sstream>
 
-std::vector<int> split(const std::string &s, char delim) {
+std::vector<int> splitInt(const std::string &s, char delim) {
 	std::vector<int> elems;
 	std::stringstream ss(s);
 	std::string number;
@@ -42,7 +42,7 @@ int runCommands(std::vector<int> commands)
 int main()
 {
 	std::string inputString = util::readFile("D:\\Development\\Projects\\AdventOfCode\\input_2019_2.txt");
-	std::vector<int> commands = split(inputString, ',');
+	std::vector<int> commands = splitInt(inputString, ',');
 	
 	commands[1] = 12;
 	commands[2] = 2;
