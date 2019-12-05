@@ -125,10 +125,10 @@ int runCommands(std::vector<int> commands, int _input)
 		int param_2 = (commands[index] / 1000) % 10;
 		int param_3 = (commands[index] / 10000) % 10;
 
-        analyzeOpcode(opcode, param_1, param_2, param_3, commands, index, _input, output);
-
         if (opcode == operationCodes::opcode_terminate)
             return output;
+
+        analyzeOpcode(opcode, param_1, param_2, param_3, commands, index, _input, output);
 	}
 
 	return -1;
