@@ -30,6 +30,7 @@ std::vector<int> splitInt(const std::string &s, char delim) {
 	return elems;
 }
 
+#pragma region opcodes
 void analyzeOpcode(int opcode, int modePos1, int modePos2, int modePos3, std::vector<int>& commands, uint32_t& index, int& _input, int& output)
 {
     if (opcode == operationCodes::opcode_add)
@@ -113,6 +114,7 @@ void analyzeOpcode(int opcode, int modePos1, int modePos2, int modePos3, std::ve
         index += 2;
     }
 }
+#pragma endregion
 
 int runCommands(std::vector<int> commands, int _input)
 {
@@ -142,8 +144,6 @@ int main()
     int value_part1 = runCommands(commands, 1);
     std::cout << "Solution on AoC Day 5 Part 1: " << value_part1 << std::endl;
 	
-    // reset commands
-    commands = splitInt(inputString, ',');
     int value_part2 = runCommands(commands, 5);
     std::cout << "Solution on AoC Day 5 Part 2: " << value_part2 << std::endl;
 
