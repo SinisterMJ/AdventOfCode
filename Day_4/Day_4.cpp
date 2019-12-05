@@ -46,12 +46,10 @@ bool validPassword_part1(std::vector<int> digits, int& externalIndex)
 	{
 		if (digits[index] < digits[index - 1])
 		{
-			//externalIndex += 1 * pow(10, digits.size() - index - 1);
 			for (int i = index; i < digits.size(); ++i)
 			{
 				digits[i] = digits[index - 1];
 			}
-
 			externalIndex = intFromDigits(digits) - 1;
 			return false;
 		}
