@@ -138,6 +138,8 @@ int runCommands(std::vector<int> commands, int _input)
 
 int main()
 {
+	util::Timer myTime;
+	myTime.start();
 	std::string inputString = util::readFile("..\\input_2019_5.txt");
 	std::vector<int> commands = splitInt(inputString, ',');
 	
@@ -147,6 +149,7 @@ int main()
     int value_part2 = runCommands(commands, 5);
     std::cout << "Solution on AoC Day 5 Part 2: " << value_part2 << std::endl;
 
+	std::cout << "Time taken: " << myTime.msPassed() << " [ms]" << std::endl;
 	getchar();
 	return 0;
 }
