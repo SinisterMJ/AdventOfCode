@@ -8,6 +8,18 @@
 #include <vector>
 #include <sstream>
 
+enum operationCodes {
+    opcode_add = 1,
+    opcode_mul,
+    opcode_input,
+    opcode_output,
+    opcode_jumptrue,
+    opcode_jumpfalse,
+    opcode_lessthan,
+    opcode_equals,
+    opcode_terminate = 99
+};
+
 std::vector<int> splitInt(const std::string &s, char delim) {
 	std::vector<int> elems;
 	std::stringstream ss(s);
@@ -18,56 +30,99 @@ std::vector<int> splitInt(const std::string &s, char delim) {
 	return elems;
 }
 
-int runCommands(std::vector<int> commands)
+int runCommands(std::vector<int> commands, int _input)
 {
+    std::vector<int> outputs;
+    int output = -1;
 	for (uint32_t index = 0; index < commands.size();)
 	{
 		int opcode = commands[index] % 100;
 		int param_1 = (commands[index] / 100) % 10;
 		int param_2 = (commands[index] / 1000) % 10;
 		int param_3 = (commands[index] / 10000) % 10;
+        
+        if (opcode == operationCodes::opcode_add)
+        {
+            commands[commands[index + 3]] =
+                (param_1 == 0 ? commands[commands[index + 1]] : commands[index + 1]) +
+                (param_2 == 0 ? commands[commands[index + 2]] : commands[index + 2]);
+            index += 4;
+        }
+        if (opcode == operationCodes::opcode_mul)
+        {
+            commands[commands[index + 3]] =
+                (param_1 == 0 ? commands[commands[index + 1]] : commands[index + 1]) *
+                (param_2 == 0 ? commands[commands[index + 2]] : commands[index + 2]);
+            index += 4;
+        }
+        if (opcode == operationCodes::opcode_input)
+        {
+            commands[commands[index + 1]] = _input;
+            index += 2;
+        }
+        if (opcode == operationCodes::opcode_output)
+        {
+            if (commands[commands[index + 1]] != 0)
+            {
+                output = commands[commands[index + 1]];
+            }
+            index += 2;
+        }
+        if (opcode == operationCodes::opcode_jumptrue)
+        {
+            auto& param_1_val =
+                (param_1 == 0 ? commands[commands[index + 1]] : commands[index + 1]);
+            if (param_1_val == 0)
+            {
+                index += 3;
+            }
+            else
+            {
+                auto& param_2_val =
+                    (param_2 == 0 ? commands[commands[index + 2]] : commands[index + 2]);
+                index = param_2_val;
+            }
+        }
+        if (opcode == operationCodes::opcode_jumpfalse)
+        {
+            auto& param_1_val =
+                (param_1 == 0 ? commands[commands[index + 1]] : commands[index + 1]);
+            if (param_1_val != 0)
+            {
+                index += 3;
+            }
+            else
+            {
+                auto& param_2_val =
+                    (param_2 == 0 ? commands[commands[index + 2]] : commands[index + 2]);
+                index = param_2_val;
+            }
+        }
+        if (opcode == operationCodes::opcode_lessthan)
+        {
+            auto& param_1_val =
+                (param_1 == 0 ? commands[commands[index + 1]] : commands[index + 1]);
+            auto& param_2_val =
+                (param_2 == 0 ? commands[commands[index + 2]] : commands[index + 2]);
+            commands[commands[index + 3]] = (param_1_val < param_2_val ? 1 : 0);
+            index += 4;
+        }
+        if (opcode == operationCodes::opcode_equals)
+        {
+            auto& param_1_val =
+                (param_1 == 0 ? commands[commands[index + 1]] : commands[index + 1]);
+            auto& param_2_val =
+                (param_2 == 0 ? commands[commands[index + 2]] : commands[index + 2]);
+            commands[commands[index + 3]] = (param_1_val == param_2_val ? 1 : 0);
+            index += 4;
+        }
 
-		int param_1_val, param_2_val, param_3_val;
-
-		if (param_1 == 0)
-			param_1_val = commands[commands[index + 1]];
-		if (param_1 == 1)
-			param_1_val = commands[index + 1];
-		
-		if (param_2 == 0)
-			param_2_val = commands[commands[index + 2]];
-		if (param_2 == 1)
-			param_2_val = commands[index + 2];
-
-		if (param_3 == 0)
-			param_3_val = commands[commands[index + 3]];
-		if (param_3 == 1)
-			param_3_val = commands[index + 3];
-
-		switch (commands[index]) {
-		case 1:
-			commands[param_3_val] = param_1_val + param_2_val;
-			index += 4;
-			break;
-		case 2:
-			commands[param_3_val] = param_1_val * param_2_val;
-			index += 4;
-			break;
-		case 3:
-			commands[param_1_val] = 1;
-			index += 2;
-			break;
-		case 4:
-			std::cout << "Opcode 4: value=" << param_1_val;
-			index += 2;
-			break;
-		case 99:
-			return commands[0];
-			break;
-		default:
-			//return -1;
-		}
+        if (opcode == operationCodes::opcode_terminate)
+        {
+            return output;
+        }
 	}
+
 	return -1;
 }
 
@@ -75,10 +130,14 @@ int main()
 {
 	std::string inputString = util::readFile("..\\input_2019_5.txt");
 	std::vector<int> commands = splitInt(inputString, ',');
-	commands.resize(10000);
-	int value_1 = runCommands(commands);
-
-	std::cout << "Solution on AoC Day 5 Part 1: " << value_1 << std::endl;
+	
+    int value_part1 = runCommands(commands, 1);
+    std::cout << "Solution on AoC Day 5 Part 1: " << value_part1 << std::endl;
+	
+    // reset commands
+    commands = splitInt(inputString, ',');
+    int value_part2 = runCommands(commands, 5);
+    std::cout << "Solution on AoC Day 5 Part 2: " << value_part2 << std::endl;
 
 	getchar();
 	return 0;
