@@ -11,20 +11,27 @@
 
 std::string center = "COM";
 
-int getOrbits(std::map<std::string, std::string>& input, std::string id)
+int getOrbits(std::map<std::string, std::string>& input, std::string id, std::map<std::string, int>& orbitPassed)
 {
 	if (id == center)
 		return 0;
 
-	return 1 + getOrbits(input, input[id]);
+	if (orbitPassed.find(id) != orbitPassed.end())
+		return orbitPassed[id];
+
+	int result = 1 + getOrbits(input, input[id], orbitPassed);
+	orbitPassed[id] = result;
+	return result;
 }
 
 int getTotalOrbits(std::map<std::string, std::string>& input)
 {
 	int totalOrbits = 0;
+	std::map<std::string, int> orbitPassed;
+
 	for (auto elem : input)
 	{
-		totalOrbits += getOrbits(input, elem.first);
+		totalOrbits += getOrbits(input, elem.first, orbitPassed);
 	}
 
 	return totalOrbits;
@@ -34,34 +41,25 @@ int findLengthBetweenOrbits(std::map<std::string, std::string>& input, std::stri
 {
 	std::string current = start;
 	
-	std::vector<std::string> path1;
-	std::vector<std::string> path2;
+	std::map<std::string, int> path1;
+	int stepsYOU = 0;
 
 	while (current != "COM")
 	{
-		path1.push_back(input[current]);
+		path1[input[current]] = stepsYOU++;
 		current = input[current];
 	}
 
 	current = end;
+	int stepsSanta = -1;
 
 	while (current != "COM")
 	{
-		path2.push_back(input[current]);
+		if (path1.find(current) != path1.end())
+			return path1[current] + stepsSanta;
+		
 		current = input[current];
-	}
-
-	int steps = 0;
-
-	for (int i = 0; i < path1.size(); ++i)
-	{
-		for (int j = 0; j < path2.size(); ++j)
-		{
-			if (path2[j] == path1[i])
-			{
-				return i + j;
-			}
-		}
+		stepsSanta++;
 	}
 }
 
@@ -78,9 +76,7 @@ int main()
 		orbits[list[1]] = list[0];
 	}
 
-	
-
-	//std::cout << "Part 1: " << getTotalOrbits(orbits) << std::endl;
+	std::cout << "Part 1: " << getTotalOrbits(orbits) << std::endl;
 	std::cout << "Part 2: " << findLengthBetweenOrbits(orbits, "YOU", "SAN") << std::endl;
 
 	std::cout << "Time taken: " << myTime.msPassed() << " [ms]" << std::endl;
