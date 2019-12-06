@@ -106,7 +106,7 @@ int main()
 
 	std::cout << "Part 1: " << count_part1 << std::endl;
 	std::cout << "Part 2: " << count_part2 << std::endl;
-    std::cout << "Time taken: " << myTime.msPassed() << " [ms]" << std::endl;
+    std::cout << "Time taken: " << myTime.usPassed() << " [ms]" << std::endl;
 	getchar();
 
     return 0;
