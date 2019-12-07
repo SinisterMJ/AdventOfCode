@@ -2,12 +2,12 @@
 //
 
 #include "../aoc.h"
+#include "../IntcodeVM.h"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <algorithm>
-#include "../IntcodeVM.h"
 
 std::vector<int64_t> splitInt(const std::string &s, char delim) {
 	std::vector<int64_t> elems;
@@ -41,11 +41,11 @@ int main()
 			vm.initializeCommands(commands);
 			std::vector<int64_t> copy(2);
 			copy[0] = inputs[index];
-			copy[1] = result.at(result.size() - 1);
+			copy[1] = result.back();
 			vm.addInput(copy);
 			result = vm.runCommands();
 		}
-		maxVal1 = std::max(maxVal1, result.at(result.size() - 1));
+		maxVal1 = std::max(maxVal1, result.back());
 	} while (std::next_permutation(inputs.begin(), inputs.end()));
 	
 	std::cout << "Solution on AoC Day 7 Part 1: " << maxVal1 << std::endl;
@@ -65,8 +65,7 @@ int main()
 			vms[index].addInput(input)->initializeCommands(commands);
 		}
 
-		result[0] = 0;
-		result.resize(1);
+		result = { 0 };
 		
 		while (!vms[4].hasTerminated())
 		{
@@ -76,7 +75,7 @@ int main()
 				result = vms[index].runCommands();
 			}
 		}
-		maxVal2 = std::max(maxVal2, result.at(result.size() - 1));
+		maxVal2 = std::max(maxVal2, result.back());
 	} 
 	while (std::next_permutation(inputs.begin(), inputs.end()));
 		
