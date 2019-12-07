@@ -151,8 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Map2DBase.h" />
-    <ClInclude Include="..\aoc.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

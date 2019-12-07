@@ -13,7 +13,7 @@ year = datetime.datetime.now().year
 if len(sys.argv) == 3:
 	year = sys.argv[2]
 
-fileName = r"./input_" + str(year) + "_" + str(day) + ".txt"
+fileName = r"./inputs/input_" + str(year) + "_" + str(day) + ".txt"
 
 if os.path.isfile(fileName):
     print ("File exist. No request should be done.")

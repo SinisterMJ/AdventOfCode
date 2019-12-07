@@ -111,7 +111,7 @@ std::vector<int64_t> IntcodeVM::runCommands()
 
 		if (!analyzeOpcode(opcode, param_1, param_2, param_3, status.commands, index, inputsAdded, status.inputIndex))
 		{
-			// new output was generated. Save current settings, and go to next VM
+			// need new input. Return current results
 			status.index = index;
 			return outputsAdded;
 		}

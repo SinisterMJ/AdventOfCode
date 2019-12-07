@@ -151,11 +151,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\IntcodeVM.cpp" />
+    <ClCompile Include="..\includes\IntcodeVM.cpp" />
     <ClCompile Include="Day_7.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\IntcodeVM.h" />
+    <ClInclude Include="..\includes\IntcodeVM.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
