@@ -2,7 +2,7 @@
 //
 
 #include "pch.h"
-#include "../aoc.h"
+#include "../includes/aoc.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -140,7 +140,7 @@ int main()
 {
 	util::Timer myTime;
 	myTime.start();
-	std::string inputString = util::readFile("..\\input_2019_5.txt");
+	std::string inputString = util::readFile("..\\inputs\\input_2019_5.txt");
 	std::vector<int> commands = splitInt(inputString, ',');
 	
     int value_part1 = runCommands(commands, 1);

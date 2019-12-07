@@ -2,7 +2,7 @@
 //
 
 #include "pch.h"
-#include "../aoc.h"
+#include "../includes/aoc.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -67,7 +67,7 @@ int main()
 {
 	util::Timer myTime;
 	myTime.start();
-	std::vector<std::string> inputString = util::readFileLines("..\\input_2019_6.txt");
+	std::vector<std::string> inputString = util::readFileLines("..\\inputs\\input_2019_6.txt");
 	
 	std::map<std::string, std::string> orbits;
 	for (auto elem : inputString)

@@ -2,7 +2,7 @@
 //
 
 #include "pch.h"
-#include "../aoc.h"
+#include "../includes/aoc.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -91,7 +91,7 @@ int main()
 {
     util::Timer myTime;
     myTime.start();
-	std::vector<std::string> inputs = util::readFileLines("..\\input_2019_3.txt");
+	std::vector<std::string> inputs = util::readFileLines("..\\inputs\\input_2019_3.txt");
 	
 	Wire A(inputs[0]);
 	Wire B(inputs[1]);

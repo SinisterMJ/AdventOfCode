@@ -2,7 +2,7 @@
 //
 
 #include "pch.h"
-#include "../aoc.h"
+#include "../includes/aoc.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -88,7 +88,7 @@ int main()
 {
     util::Timer myTime;
     myTime.start();
-    std::vector<std::string> input = util::readFileLines("..\\input_2019_4.txt", '-');
+    std::vector<std::string> input = util::readFileLines("..\\inputs\\input_2019_4.txt", '-');
 	int lower = std::stoi(input[0]);
 	int higher = std::stoi(input[1]);
 	

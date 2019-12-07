@@ -1,8 +1,8 @@
 // Day_1.cpp : Diese Datei enthält die Funktion "main". Hier beginnt und endet die Ausführung des Programms.
 //
 
-#include "../aoc.h"
-#include "../IntcodeVM.h"
+#include "../includes/aoc.h"
+#include "../includes/IntcodeVM.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -23,7 +23,7 @@ int main()
 {
 	util::Timer myTime;
 	myTime.start();
-	std::string inputString = util::readFile("..\\input_2019_7.txt");
+	std::string inputString = util::readFile("..\\inputs\\input_2019_7.txt");
 
 	std::vector<int64_t> commands = splitInt(inputString, ',');
 	std::vector<int64_t> inputs = { 0, 1, 2, 3, 4 };
@@ -33,8 +33,8 @@ int main()
 	
 	do
 	{
-		result[0] = 0;
-		result.resize(1);
+		result = { 0 };
+
 		for (int index = 0; index < 5; index++)
 		{
 			IntcodeVM vm;

@@ -2,7 +2,7 @@
 //
 
 #include "pch.h"
-#include "../aoc.h"
+#include "../includes/aoc.h"
 #include <iostream>
 
 int calculateFuelCosts(int mass)
@@ -24,7 +24,7 @@ int calculateFuelCostsRecursive(int mass)
 
 int main()
 {
-	std::vector<std::string> inputs = util::readFileLines("D:\\Development\\Projects\\AdventOfCode\\input_2019_1.txt");
+	std::vector<std::string> inputs = util::readFileLines("..\\inputs\\input_2019_1.txt");
 	std::vector<int> masses;
 	for (auto elem: inputs)
 	{

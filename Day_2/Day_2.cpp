@@ -2,7 +2,7 @@
 //
 
 #include "pch.h"
-#include "../aoc.h"
+#include "../includes/aoc.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -41,7 +41,7 @@ int runCommands(std::vector<int> commands)
 
 int main()
 {
-	std::string inputString = util::readFile("D:\\Development\\Projects\\AdventOfCode\\input_2019_2.txt");
+	std::string inputString = util::readFile("..\\inputs\\input_2019_2.txt");
 	std::vector<int> commands = splitInt(inputString, ',');
 	
 	commands[1] = 12;
