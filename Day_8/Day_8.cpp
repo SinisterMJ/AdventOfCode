@@ -71,7 +71,7 @@ int main()
 	std::cout << "Part 1: " << result << std::endl;
 	std::cout << "Part 2: " << std::endl << resultString << std::endl;
 
-	std::cout << "Time taken: " << myTime.msPassed() << " [ms]" << std::endl;
+	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
 	return 0;
 }
