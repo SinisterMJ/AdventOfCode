@@ -81,7 +81,7 @@ int main()
 		
 	std::cout << "Solution on AoC Day 7 Part 2: " << maxVal2 << std::endl;
 
-	std::cout << "Time taken: " << myTime.msPassed() << " [ms]" << std::endl;
+	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
 	return 0;
 }
