@@ -46,13 +46,15 @@ public:
 		return this;
 	}
 
-	std::vector<int64_t> runCommands();
-
 	IntcodeVM* addInput(std::vector<int64_t> in)
 	{
 		inputsAdded.insert(inputsAdded.end(), in.begin(), in.end());
 		return this;
 	}
+
+    std::vector<int64_t> runCommands();
+
+    int64_t getFirstCommand() { return status.commands[0]; }
 
 	bool hasTerminated() { return status.terminated; }
 };

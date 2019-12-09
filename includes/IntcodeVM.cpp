@@ -5,23 +5,22 @@
 int64_t IntcodeVM::readAndResize(int64_t index, std::vector<int64_t>& commands)
 {
 	if (index >= static_cast<int64_t>(commands.size()))
-	{
 		commands.resize(index + 1, 0);
-	}
-
+	
 	return commands[index];
 }
 
 int64_t IntcodeVM::readValue(int modePos, int64_t index, std::vector<int64_t>& commands)
 {
-	if (modePos == 0)
-		return readAndResize(readAndResize(index, commands), commands);
-	if (modePos == 1)
-		return readAndResize(index, commands);
-	if (modePos == 2)
-		return readAndResize(readAndResize(index, commands) + status.relativeBase, commands);
+    int64_t address = index;
+    
+    if (modePos == 0)
+        address = readAndResize(index, commands);
 
-	return 0;
+    if (modePos == 2)
+        address = readAndResize(index, commands) + status.relativeBase;
+	
+    return readAndResize(address, commands);
 }
 
 void IntcodeVM::writeValue(int modePos, int64_t value, int64_t index, std::vector<int64_t>& commands)

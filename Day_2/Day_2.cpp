@@ -3,6 +3,7 @@
 
 #include "pch.h"
 #include "../includes/aoc.h"
+#include "../includes/IntcodeVM.h"
 #include <iostream>
 #include <string>
 #include <vector>

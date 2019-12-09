@@ -29,7 +29,7 @@ int main()
 	
     std::cout << "Day 9, Part 2: " << result2[0] << std::endl;
 
-	std::cout << "Time taken: " << myTime.msPassed() << " [ms]" << std::endl;
+	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
 	return 0;
 }
