@@ -61,6 +61,8 @@ int findLengthBetweenOrbits(std::map<std::string, std::string>& input, std::stri
 		current = input[current];
 		stepsSanta++;
 	}
+
+    return stepsSanta + stepsYOU;
 }
 
 int main()
