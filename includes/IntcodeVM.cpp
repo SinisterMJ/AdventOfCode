@@ -26,9 +26,12 @@ int64_t IntcodeVM::readValue(int modePos, int64_t index, std::vector<int64_t>& c
 
 void IntcodeVM::writeValue(int modePos, int64_t value, int64_t index, std::vector<int64_t>& commands)
 {
-	int64_t temp = readValue(modePos, index, commands); // resize if necessary happens here
-	temp = readValue(1, index, commands);
-	commands[temp] = value;
+    int64_t address = commands[index] + (modePos == 2 ? status.relativeBase : 0);
+
+    if (address >= static_cast<int64_t>(commands.size()))
+        commands.resize(address + 1, 0);
+
+    commands[address] = value;
 }
 
 bool IntcodeVM::analyzeOpcode(int opcode, int modePos1, int modePos2, int modePos3, std::vector<int64_t>& commands, int64_t& index, std::vector<int64_t>& _input, int& inputIndex)
@@ -36,7 +39,7 @@ bool IntcodeVM::analyzeOpcode(int opcode, int modePos1, int modePos2, int modePo
 	if (opcode == operationCodes::opcode_add)
 	{
 		int64_t operand1 = readValue(modePos1, index + 1, commands);
-		int64_t operand2 = readValue(modePos1, index + 2, commands);
+		int64_t operand2 = readValue(modePos2, index + 2, commands);
 		writeValue(modePos3, operand1 + operand2, index + 3, commands);
 		index += 4;
 	}
@@ -44,10 +47,26 @@ bool IntcodeVM::analyzeOpcode(int opcode, int modePos1, int modePos2, int modePo
 	if (opcode == operationCodes::opcode_mul)
 	{
 		int64_t operand1 = readValue(modePos1, index + 1, commands);
-		int64_t operand2 = readValue(modePos1, index + 2, commands);
+		int64_t operand2 = readValue(modePos2, index + 2, commands);
 		writeValue(modePos3, operand1 * operand2, index + 3, commands);
 		index += 4;
 	}
+
+    if (opcode == operationCodes::opcode_input)
+    {
+        if (inputIndex >= _input.size())
+        {
+            return false;
+        }
+        writeValue(modePos1, _input[inputIndex++], index + 1, commands);
+        index += 2;
+    }
+
+    if (opcode == operationCodes::opcode_output)
+    {
+        outputsAdded.push_back(readValue(modePos1, index + 1, commands));
+        index += 2;
+    }
 
 	if (opcode == operationCodes::opcode_jumptrue)
 	{
@@ -93,27 +112,9 @@ bool IntcodeVM::analyzeOpcode(int opcode, int modePos1, int modePos2, int modePo
 		index += 4;
 	}
 
-	if (opcode == operationCodes::opcode_input)
-	{
-		if (inputIndex >= _input.size())
-		{
-			return false;
-		}
-		writeValue(modePos1, _input[inputIndex++], index + 1, commands);
-		index += 2;
-	}
-
 	if (opcode == operationCodes::opcode_relativebase)
 	{
 		status.relativeBase += readValue(modePos1, index + 1, commands);
-		index += 2;
-	}
-
-	if (opcode == operationCodes::opcode_output)
-	{
-		
-		outputsAdded.push_back(readValue(modePos1, index + 1, commands));
-
 		index += 2;
 	}
 
@@ -144,9 +145,6 @@ std::vector<int64_t> IntcodeVM::runCommands()
 			status.index = index;
 			return outputsAdded;
 		}
-
-		if (outputsAdded.size() == 16)
-			int breakHere = 0;
 	}
 
 	return outputsAdded;
