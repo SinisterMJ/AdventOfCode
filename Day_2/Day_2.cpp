@@ -1,7 +1,6 @@
 // Day_1.cpp : Diese Datei enthält die Funktion "main". Hier beginnt und endet die Ausführung des Programms.
 //
 
-#include "pch.h"
 #include "../includes/aoc.h"
 #include "../includes/IntcodeVM.h"
 #include <iostream>
@@ -42,33 +41,43 @@ int runCommands(std::vector<int> commands)
 
 int main()
 {
+    util::Timer myTime;
+    myTime.start();
+
 	std::string inputString = util::readFile("..\\inputs\\input_2019_2.txt");
-	std::vector<int> commands = splitInt(inputString, ',');
+	std::vector<int64_t> commands = util::splitInt64(inputString, ',');
 	
 	commands[1] = 12;
 	commands[2] = 2;
-	int value_1 = runCommands(commands);
-
-	std::cout << "Solution on AoC Part 1: " << value_1 << std::endl;
-
+    {
+        IntcodeVM vm;
+        vm.initializeCommands(commands);
+        vm.runCommands();
+        std::cout << "Solution on AoC Part 1: " << vm.getFirstCommand() << std::endl;
+    }
 	
-	for (int i = 0; i < 100; ++i)
-	{
-		for (int j = 0; j < 100; ++j)
-		{
-			commands[1] = i;
-			commands[2] = j;
-			int value = runCommands(commands);
- 			if (value == 19690720)
-			{
-				std::cout << "Valid solution. i = " << i << ", j = " << j << std::endl;
-				std::cout << "Solution on AoC Part 2: " << i * 100 + j << std::endl;
-				goto solution_found;
-			}
-		}
-	}
+    {
+        for (int i = 0; i < 100; ++i)
+        {
+            commands[1] = i;
+            for (int j = 0; j < 100; ++j)
+            {
+                commands[2] = j;
+                IntcodeVM vm;
+                vm.initializeCommands(commands);
+                vm.runCommands();
+
+                if (vm.getFirstCommand() == 19690720)
+                {
+                    std::cout << "Solution on AoC Part 2: " << i * 100 + j << std::endl;
+                    goto solution_found;
+                }
+            }
+        }
+    }
 
 solution_found:
+    std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
 	return 0;
 }
