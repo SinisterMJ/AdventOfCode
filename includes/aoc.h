@@ -71,6 +71,26 @@ namespace util
         }
         return elems;
     }
+
+	std::vector<int> splitInt(const std::string &s, char delim) {
+		std::vector<int> elems;
+		std::stringstream ss(s);
+		std::string number;
+		while (std::getline(ss, number, delim)) {
+			elems.push_back(std::stoi(number));
+		}
+		return elems;
+	}
+
+	std::vector<int64_t> splitInt64(const std::string &s, char delim) {
+		std::vector<int64_t> elems;
+		std::stringstream ss(s);
+		std::string number;
+		while (std::getline(ss, number, delim)) {
+			elems.push_back(std::stoll(number));
+		}
+		return elems;
+	}
 }
 
 

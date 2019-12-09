@@ -17,6 +17,7 @@ private:
 		opcode_jumpfalse,
 		opcode_lessthan,
 		opcode_equals,
+		opcode_relativebase,
 		opcode_terminate = 99
 	};
 
@@ -25,10 +26,14 @@ private:
 		int64_t index = 0;
 		int32_t inputIndex = 0;
 		bool terminated = false;
+		int64_t relativeBase = 0;
 	};
 
 	bool analyzeOpcode(int opcode, int modePos1, int modePos2, int modePos3, std::vector<int64_t>& commands, int64_t& index, std::vector<int64_t>& _input, int& inputIndex);
-	
+	int64_t readValue(int modePos, int64_t index, std::vector<int64_t>& commands);
+	int64_t readAndResize(int64_t index, std::vector<int64_t>& commands);
+	void writeValue(int modePos, int64_t value, int64_t index, std::vector<int64_t>& commands);
+
 	currentState status;
 	std::vector<int64_t> inputsAdded;
 	std::vector<int64_t> outputsAdded;

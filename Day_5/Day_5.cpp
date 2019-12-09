@@ -20,16 +20,6 @@ enum operationCodes {
     opcode_terminate = 99
 };
 
-std::vector<int> splitInt(const std::string &s, char delim) {
-	std::vector<int> elems;
-	std::stringstream ss(s);
-	std::string number;
-	while (std::getline(ss, number, delim)) {
-		elems.push_back(std::stoi(number));
-	}
-	return elems;
-}
-
 #pragma region opcodes
 void analyzeOpcode(int opcode, int modePos1, int modePos2, int modePos3, std::vector<int>& commands, uint32_t& index, int& _input, int& output)
 {
@@ -141,7 +131,7 @@ int main()
 	util::Timer myTime;
 	myTime.start();
 	std::string inputString = util::readFile("..\\inputs\\input_2019_5.txt");
-	std::vector<int> commands = splitInt(inputString, ',');
+	std::vector<int> commands = util::splitInt(inputString, ',');
 	
     int value_part1 = runCommands(commands, 1);
     std::cout << "Solution on AoC Day 5 Part 1: " << value_part1 << std::endl;
