@@ -11,23 +11,19 @@
 const double PI = 3.14159265359;
 
 struct LocDistAngle {
-    int32_t x;
-    int32_t y;
+    v2 pos;
     float angle;
     double distance;
 
-    LocDistAngle(int32_t d_x, int32_t d_y, int32_t _x, int32_t _y) 
+    LocDistAngle(v2 d_v, v2 p) 
     {
-        distance = std::sqrt(d_x * d_x + d_y * d_y);
-        if (d_x == 0)
-            int breakHere = 0;
-        angle = static_cast<float>(std::atan2(d_x, -d_y) / PI * 180.0);
+        distance = std::sqrt(d_v.x * d_v.x + d_v.y * d_v.y);
+        angle = static_cast<float>(std::atan2(d_v.x, -d_v.y) / PI * 180.0);
         
         if (angle < 0)
             angle += 360.0;
 
-        x = _x;
-        y = _y;
+        pos = p;
     }
 
     bool operator<(const LocDistAngle& b) const 
@@ -37,6 +33,13 @@ struct LocDistAngle {
         return distance < b.distance;
     }
 };
+
+int gcd(int a, int b)
+{
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
 
 int main()
 {
@@ -50,69 +53,78 @@ int main()
     for (int y = 0; y < input.size(); ++y)
         for (int x = 0; x < input[y].length(); ++x)
             asteroids.write(x, y, input[y][x]);
-    
+
     int32_t maxAsteroids = 0;
-    int32_t laserX, laserY;
+    v2 laserPos;
+
     for (int32_t y = 0; y < asteroids.height(); ++y)
     {
         for (int32_t x = 0; x < asteroids.width(); ++x)
         {
-            if (asteroids.read(x, y) == '#')
+            v2 basePos(x, y);
+            if (asteroids.read(basePos) == '#')
             {
-                std::set<float> uniqueAngles;
+                int32_t numAsteroids = 0;
                 for (int32_t search_y = 0; search_y < asteroids.height(); ++search_y)
                 {
                     for (int32_t search_x = 0; search_x < asteroids.width(); ++search_x)
                     {
-                        if (search_x == x && search_y == y)
+                        v2 searchPos(search_x, search_y);
+                        if (searchPos == basePos)
                             continue;
-
-                        if (asteroids.read(search_x, search_y) == '#')
+                        
+                        if (asteroids.read(searchPos) == '#')
                         {
-                            LocDistAngle temp(search_x - x, search_y - y, search_x, search_y);
-                            uniqueAngles.insert(temp.angle);
+                            int32_t ggt = gcd(std::abs(search_x - x), std::abs(search_y - y));
+                            v2 vec((search_x - x) / ggt, (search_y - y) / ggt);
+                            v2 curPos = basePos + vec;
+                            bool isVisible = true;
+                            for ( ; curPos.x != search_x || curPos.y != search_y; curPos += vec )
+                            {
+                                if (asteroids.read(curPos) == '#')
+                                {
+                                    isVisible = false;
+                                    break;
+                                }
+                            }
+                            numAsteroids += isVisible;
                         }
                     }
                 }
-                if (maxAsteroids < uniqueAngles.size())
-                {
-                    laserX = x;
-                    laserY = y;
-                }
-                maxAsteroids = std::max<int32_t>(uniqueAngles.size(), maxAsteroids);
+                if (maxAsteroids < numAsteroids)
+                    laserPos = basePos;
+                
+                maxAsteroids = std::max(numAsteroids, maxAsteroids);
             }
         }
     }
 
-    std::vector<LocDistAngle> laserShots;
+    std::cout << "Result Day 10 Part 1: " << maxAsteroids << std::endl;
 
+    std::vector<LocDistAngle> laserShots;
     for (int x = 0; x < asteroids.width(); ++x)
     {
         for (int y = 0; y < asteroids.height(); ++y)
         {
-            if (x == laserX && y == laserY)
+            v2 basePos(x, y);
+            if (basePos == laserPos)
                 continue;
 
-            if (asteroids.read(x, y) == '#')
-                laserShots.push_back(LocDistAngle(x - laserX, y - laserY, x, y));
+            if (asteroids.read(basePos) == '#')
+                laserShots.push_back(LocDistAngle(basePos - laserPos, basePos));
         }
     }
-    
-    std::cout << "Result Day 10 Part 1: " << maxAsteroids << std::endl;
     std::sort(laserShots.begin(), laserShots.end());
     
     float lastAngle = -1.f;
     int currentIndex = 0;
     int lastIndex = -1;
-    for (int count = 1; laserShots.size() > 0; ++count)
+    for (int count = 1; count <= 200; ++count)
     {
-        while (currentIndex == laserShots.size() || lastAngle == laserShots[currentIndex].angle)
+        while (lastAngle == laserShots[currentIndex].angle)
         {
-            currentIndex++;
-            if (currentIndex >= laserShots.size())
-                currentIndex = 0;
-
-            // Wrapped around, only points with same angle remain. Choose shortest distance (first element)
+            currentIndex = (currentIndex + 1) % laserShots.size();
+            
             if (lastIndex == currentIndex)
             {
                 currentIndex = 0;
@@ -122,12 +134,14 @@ int main()
 
         if (count == 200)
         {
-            std::cout << "Result Day 10 Part 2: " << laserShots[currentIndex].x * 100 + laserShots[currentIndex].y << std::endl;
+            std::cout << "Result Day 10 Part 2: " << laserShots[currentIndex].pos.x * 100 + laserShots[currentIndex].pos.y << std::endl;
         }
 
         lastIndex = currentIndex;
         lastAngle = laserShots[currentIndex].angle;
         laserShots.erase(laserShots.begin() + currentIndex);
+        if (currentIndex == laserShots.size())
+            currentIndex = 0;
     }
 
     std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;

@@ -10,7 +10,6 @@
 #include <sstream>
 #include <stdint.h>
 #include <chrono>
-#include "Map2DBase.h"
 
 namespace util
 {
@@ -102,9 +101,9 @@ struct v2
 	int x;
 	int y;
     v2 operator + (const v2& a) const { return v2(a.x + x, a.y + y); }
-    v2& operator+= (const v2& b) { x += b.x; y += b.y; }
-    v2 operator - (const v2& a) const { return v2(a.x - x, a.y - y); }
-    v2& operator-= (const v2& b) { x -= b.x; y -= b.y; }
+    v2& operator+= (const v2& b) { x += b.x; y += b.y; return *this; }
+    v2 operator - (const v2& a) const { return v2(x - a.x, y - a.y); }
+    v2& operator-= (const v2& b) { x -= b.x; y -= b.y; return *this; }
 };
 
 bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }

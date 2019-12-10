@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "aoc.h"
 
 template<class T>
 class Map2DBase {
@@ -29,6 +30,11 @@ public:
 	{
 		return data[y * _width + x];
 	}
+
+    T read(v2 pos)
+    {
+        return data[pos.y * _width + pos.x];
+    }
 
 	void write(int32_t x, int32_t y, T input)
 	{
