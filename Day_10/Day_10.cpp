@@ -145,6 +145,6 @@ int main()
     }
 
     std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
-    getchar();
+	getchar();
     return 0;
 }

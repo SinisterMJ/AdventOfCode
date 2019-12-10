@@ -25,6 +25,9 @@ int calculateFuelCostsRecursive(int mass)
 int main()
 {
 	std::vector<std::string> inputs = util::readFileLines("..\\inputs\\input_2019_1.txt");
+	util::Timer myTime;
+	myTime.start();
+
 	std::vector<int> masses;
 	for (auto elem: inputs)
 	{
@@ -45,6 +48,8 @@ int main()
 
 	std::cout << "Total fuel mass    (normal): " << totalMass_normal << std::endl;
 	std::cout << "Total fuel mass (recursive): " << totalMass_recursive << std::endl;
+
+	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
-	return 0;
+	return time;
 }
