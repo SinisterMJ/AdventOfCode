@@ -79,8 +79,7 @@ int main()
                     laserX = x;
                     laserY = y;
                 }
-                //maxAsteroids = std::max(static_cast<int32_t>(uniqueAngles.size(), maxAsteroids);
-                maxAsteroids =  maxAsteroids < static_cast<int32_t>(uniqueAngles.size()) ? static_cast<int32_t>(uniqueAngles.size()) : maxAsteroids;
+                maxAsteroids = std::max<int32_t>(uniqueAngles.size(), maxAsteroids);
             }
         }
     }
@@ -104,13 +103,21 @@ int main()
     
     float lastAngle = -1.f;
     int currentIndex = 0;
-    for (int32_t count = 1; count <= 200; ++count)
+    int lastIndex = -1;
+    for (int count = 1; laserShots.size() > 0; ++count)
     {
-        while (lastAngle == laserShots[currentIndex].angle)
+        while (currentIndex == laserShots.size() || lastAngle == laserShots[currentIndex].angle)
         {
             currentIndex++;
-            if (currentIndex == laserShots.size())
+            if (currentIndex >= laserShots.size())
                 currentIndex = 0;
+
+            // Wrapped around, only points with same angle remain. Choose shortest distance (first element)
+            if (lastIndex == currentIndex)
+            {
+                currentIndex = 0;
+                break;
+            }
         }
 
         if (count == 200)
@@ -118,6 +125,7 @@ int main()
             std::cout << "Result Day 10 Part 2: " << laserShots[currentIndex].x * 100 + laserShots[currentIndex].y << std::endl;
         }
 
+        lastIndex = currentIndex;
         lastAngle = laserShots[currentIndex].angle;
         laserShots.erase(laserShots.begin() + currentIndex);
     }
