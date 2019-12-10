@@ -9,10 +9,15 @@ public:
 	Map2DBase(int32_t _width, int32_t _height, T _emptyCell)
 		: width(_width)
 		, height(_height)
-		, data(std::shared_ptr<T>(new T[width * height]))
+		, data(new T[width * height])
 		, emptyCell(_emptyCell)
 	{
 
+	}
+
+	~Map2DBase()
+	{
+		delete[] data;
 	}
 
 	bool validIndex(int32_t x, int32_t y)
@@ -46,6 +51,11 @@ public:
 
 		return true;
 	}
+
+	void remove(int32_t x, int32_t y)
+	{
+		data[y * width + x] = emptyCell;
+	}
 		
 	bool checkOccupation(int32_t x, int32_t y)
 	{
@@ -63,5 +73,5 @@ private:
 
 	T emptyCell;
 
-	std::shared_ptr<T> data;
+	T* data;
 };
