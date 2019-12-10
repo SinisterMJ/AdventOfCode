@@ -1,15 +1,14 @@
 #pragma once
 
 #include <stdint.h>
-#include <memory>
 
 template<class T>
 class Map2DBase {
 public:
-	Map2DBase(int32_t _width, int32_t _height, T _emptyCell)
-		: width(_width)
-		, height(_height)
-		, data(new T[width * height])
+	Map2DBase(int32_t _width_, int32_t _height_, T _emptyCell)
+		: _width(_width_)
+		, _height(_height_)
+		, data(new T[_width * _height])
 		, emptyCell(_emptyCell)
 	{
 
@@ -22,19 +21,22 @@ public:
 
 	bool validIndex(int32_t x, int32_t y)
 	{
-		return (x >= 0 && x < width &&
-				y >= 0 && y < height);
+		return (x >= 0 && x < _width &&
+				y >= 0 && y < _height);
 	}
 
 	T read(int32_t x, int32_t y)
 	{
-		return data[y * width + x];
+		return data[y * _width + x];
 	}
 
 	void write(int32_t x, int32_t y, T input)
 	{
-		data[y * width + x] = input;
+		data[y * _width + x] = input;
 	}
+
+    int32_t height() { return _height; }
+    int32_t width() { return _width; }
 
 	bool move(int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, bool checkOccupation = true)
 	{
@@ -54,7 +56,7 @@ public:
 
 	void remove(int32_t x, int32_t y)
 	{
-		data[y * width + x] = emptyCell;
+		data[y * _width + x] = emptyCell;
 	}
 		
 	bool checkOccupation(int32_t x, int32_t y)
@@ -68,8 +70,8 @@ public:
 	}
 
 private:
-	int32_t width;
-	int32_t height;
+	int32_t _width;
+	int32_t _height;
 
 	T emptyCell;
 
