@@ -18,34 +18,9 @@ struct Hull {
 v2 turn(v2 in, int64_t dir)
 {
 	if (dir == 0)
-	{
-		if (in == v2(1, 0))
-			return v2(0, 1);
-
-		if (in == v2(0, 1))
-			return v2(-1, 0);
-
-		if (in == v2(-1, 0))
-			return v2(0, -1);
-
-		if (in == v2(0, -1))
-			return v2(1, 0);
-	}
-
+		return v2(-in.y, in.x);
 	if (dir == 1)
-	{
-		if (in == v2(1, 0))
-			return v2(0, -1);
-
-		if (in == v2(0, -1))
-			return v2(-1, 0);
-
-		if (in == v2(-1, 0))
-			return v2(0, 1);
-
-		if (in == v2(0, 1))
-			return v2(1, 0);
-	}
+		return v2(in.y, -in.x);
 
 	return v2(0, 0);
 }
