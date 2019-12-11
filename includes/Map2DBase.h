@@ -26,6 +26,11 @@ public:
 				y >= 0 && y < _height);
 	}
 
+	bool validIndex(v2 pos)
+	{
+		return validIndex(pos.x, pos.y);
+	}
+
 	T read(int32_t x, int32_t y)
 	{
 		return data[y * _width + x];
@@ -33,12 +38,17 @@ public:
 
     T read(v2 pos)
     {
-        return data[pos.y * _width + pos.x];
+		return read(pos.x, pos.y);
     }
 
 	void write(int32_t x, int32_t y, T input)
 	{
 		data[y * _width + x] = input;
+	}
+
+	void write(v2 pos, T input)
+	{
+		write(pos.x, pos.y, input);
 	}
 
     int32_t height() { return _height; }
@@ -60,11 +70,21 @@ public:
 		return true;
 	}
 
+	bool move(v2 from, v2 to, bool checkOccupation = true)
+	{
+		return move(from.x, from.y, to.x, to.y, checkOccupation);
+	}
+
 	void remove(int32_t x, int32_t y)
 	{
 		data[y * _width + x] = emptyCell;
 	}
-		
+	
+	void remove(v2 pos)
+	{
+		remove(pos.x, pos.y);
+	}
+
 	bool checkOccupation(int32_t x, int32_t y)
 	{
 		if (!validIndex(x, y))
@@ -73,6 +93,11 @@ public:
 		T tempVal = read(x, y);
 		
 		return tempVal != emptyCell;
+	}
+
+	bool checkOccupation(v2 pos)
+	{
+		return checkOccupation(pos.x, pos.y);
 	}
 
 private:
