@@ -66,10 +66,10 @@ int main()
 
 	auto input = util::readFile("..\\inputs\\input_2019_11.txt");
 	std::vector<int64_t> commands = util::splitInt64(input, ',');
-	
+
 	std::map<v2, int> currentColor = runPaintJob(v2(0, 1), 0, commands);
 	std::map<v2, int> currentColor2 = runPaintJob(v2(0, 1), 1, commands);
-	
+
 	std::cout << "Part 1: " << currentColor.size() << std::endl;
 	std::cout << "Part 2: " << std::endl << std::endl;
 
@@ -84,6 +84,7 @@ int main()
 		maxY = std::max(maxY, elem.first.y);
 	}
 
+    std::string result = "";
 	for (int y = maxY; y >= minY; --y)
 	{
 		for (int x = minX; x <= maxX; ++x)
@@ -92,17 +93,17 @@ int main()
 			if (currentColor2.find(pos) != currentColor2.end())
 			{
 				if (currentColor2[pos] == 1)
-					std::cout << "*";
+                    result += 254;
 				else
-					std::cout << " ";
+                    result += " ";
 			}
 			else
-				std::cout << " ";
+                result += " ";
 		}
-		std::cout << std::endl;
+        result += "\n";
 	}
 
-    std::cout << std::endl;
+    std::cout << result << std::endl;
 
 	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
