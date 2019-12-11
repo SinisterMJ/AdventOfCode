@@ -51,5 +51,5 @@ int main()
 
 	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
-	return time;
+	return 0;
 }

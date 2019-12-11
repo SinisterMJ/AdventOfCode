@@ -4,41 +4,62 @@
 #include <vector>
 #include <set>
 #include <stdint.h>
+#include <map>
 
 #include "../includes/aoc.h"
 #include "../includes/Map2DBase.h"
+#include "../includes/IntcodeVM.h"
 
-const double PI = 3.14159265359;
+struct Hull {
+	v2 position;
+	int color;
+};
 
-struct LocDistAngle {
-	v2 pos;
-	float angle;
-	double distance;
-
-	LocDistAngle(v2 d_v, v2 p)
-	{
-		distance = std::sqrt(d_v.x * d_v.x + d_v.y * d_v.y);
-		angle = static_cast<float>(std::atan2(d_v.x, -d_v.y) / PI * 180.0);
-
-		if (angle < 0)
-			angle += 360.0;
-
-		pos = p;
-	}
-
-	bool operator<(const LocDistAngle& b) const
-	{
-		if (angle != b.angle)
-			return angle < b.angle;
-		return distance < b.distance;
+struct Visited {
+	Hull setting;
+	v2 dir;
+	bool operator< (const Visited& a) const { 
+		if (setting.color != a.setting.color)
+			return setting.color < a.setting.color;
+		if (setting.position == a.setting.position)
+			return dir < a.dir; 
+		return setting.position < a.setting.position;
 	}
 };
 
-int gcd(int a, int b)
+v2 turn(v2 in, int64_t dir)
 {
-	if (b == 0)
-		return a;
-	return gcd(b, a % b);
+	if (dir == 0)
+	{
+		if (in == v2(1, 0))
+			return v2(0, 1);
+
+		if (in == v2(0, 1))
+			return v2(-1, 0);
+
+		if (in == v2(-1, 0))
+			return v2(0, -1);
+
+		if (in == v2(0, -1))
+			return v2(1, 0);
+	}
+
+	if (dir == 1)
+	{
+		if (in == v2(1, 0))
+			return v2(0, -1);
+
+		if (in == v2(0, -1))
+			return v2(-1, 0);
+
+		if (in == v2(-1, 0))
+			return v2(0, 1);
+
+		if (in == v2(0, 1))
+			return v2(1, 0);
+	}
+
+	return v2(0, 0);
 }
 
 int main()
@@ -46,102 +67,117 @@ int main()
 	util::Timer myTime;
 	myTime.start();
 
-	auto input = util::readFileLines("..\\inputs\\input_2019_10.txt");
+	auto input = util::readFile("..\\inputs\\input_2019_11.txt");
+	std::vector<int64_t> commands = util::splitInt64(input, ',');
+	
+	std::map<Visited, bool> alreadySeen;
+	std::map<v2, int> currentColor;
 
-	Map2DBase<char> asteroids(static_cast<int32_t>(input.size()), static_cast<int32_t>(input[0].length()), '.');
+	v2 pos(0, 0);
 
-	for (int y = 0; y < input.size(); ++y)
-		for (int x = 0; x < input[y].length(); ++x)
-			asteroids.write(x, y, input[y][x]);
+	Hull currentHull;
+	currentHull.position.x = 0;
+	currentHull.position.y = 0;
+	currentHull.color = 0;
+	v2 curDir = v2(0, 1);
 
-	int32_t maxAsteroids = 0;
-	v2 laserPos;
+	IntcodeVM vm;
+	vm.initializeCommands(commands);
 
-	for (int32_t y = 0; y < asteroids.height(); ++y)
+	do
 	{
-		for (int32_t x = 0; x < asteroids.width(); ++x)
+		std::vector<int64_t> input = { currentHull.color };
+		vm.addInput(input);
+		auto output = vm.runCommands();
+
+		currentHull.color = output[0];
+		currentColor[pos] = currentHull.color;
+
+		curDir = turn(curDir, output[1]);
+		pos += curDir;
+		currentHull.color = 0;
+		currentHull.position = pos;
+
+		if (currentColor.find(pos) != currentColor.end())
 		{
-			v2 basePos(x, y);
-			if (asteroids.read(basePos) == '#')
+			currentHull.color = currentColor[pos];
+		}
+
+		Visited temp;
+		temp.setting = currentHull;
+		temp.dir = curDir;
+	} while (!(vm.hasTerminated()));
+	
+
+	IntcodeVM vm2;
+	vm2.initializeCommands(commands);
+	std::map<v2, int> currentColor2;
+	do
+	{
+		std::vector<int64_t> input = { currentHull.color };
+		vm2.addInput(input);
+		auto output = vm2.runCommands();
+
+		currentHull.color = output[0];
+		currentColor2[pos] = currentHull.color;
+
+		curDir = turn(curDir, output[1]);
+		pos += curDir;
+		currentHull.color = 0;
+		currentHull.position = pos;
+
+		if (currentColor2.find(pos) != currentColor2.end())
+		{
+			currentHull.color = currentColor2[pos];
+		}
+
+		Visited temp;
+		temp.setting = currentHull;
+		temp.dir = curDir;
+	} while (!vm2.hasTerminated());
+
+
+	std::cout << "Part 1: " << currentColor.size() << std::endl;
+
+	int minX = 0, maxX = 0;
+	int minY = 0, maxY = 0;
+
+	for (auto elem : currentColor2)
+	{
+		minX = std::min(minX, elem.first.x);
+		maxX = std::max(minX, elem.first.x);
+		minY = std::min(minY, elem.first.y);
+		maxY = std::max(minY, elem.first.y);
+	}
+
+	std::string result = "";
+
+	for (int y = maxY; y >= minY; --y)
+	{
+		for (int x = minX; x <= maxX; ++x)
+		{
+			v2 pos(x, y);
+			if (currentColor2.find(pos) != currentColor2.end())
 			{
-				int32_t numAsteroids = 0;
-				for (int32_t search_y = 0; search_y < asteroids.height(); ++search_y)
+				if (currentColor2[pos] == 1)
 				{
-					for (int32_t search_x = 0; search_x < asteroids.width(); ++search_x)
-					{
-						v2 searchPos(search_x, search_y);
-						if (searchPos == basePos)
-							continue;
-
-						if (asteroids.read(searchPos) == '#')
-						{
-							int32_t ggt = gcd(std::abs(search_x - x), std::abs(search_y - y));
-							v2 vec((search_x - x) / ggt, (search_y - y) / ggt);
-							v2 curPos = basePos + vec;
-							bool isVisible = true;
-							for (; curPos.x != search_x || curPos.y != search_y; curPos += vec)
-							{
-								if (asteroids.read(curPos) == '#')
-								{
-									isVisible = false;
-									break;
-								}
-							}
-							numAsteroids += isVisible;
-						}
-					}
+					std::cout << "*";
+					result += "#";
 				}
-				if (maxAsteroids < numAsteroids)
-					laserPos = basePos;
-
-				maxAsteroids = std::max(numAsteroids, maxAsteroids);
+				else
+				{
+					std::cout << " ";
+					result += " ";
+				}
 			}
-		}
-	}
-
-	std::cout << "Result Day 10 Part 1: " << maxAsteroids << std::endl;
-
-	std::vector<LocDistAngle> laserShots;
-	for (int x = 0; x < asteroids.width(); ++x)
-	{
-		for (int y = 0; y < asteroids.height(); ++y)
-		{
-			v2 basePos(x, y);
-			if (basePos == laserPos)
-				continue;
-
-			if (asteroids.read(basePos) == '#')
-				laserShots.push_back(LocDistAngle(basePos - laserPos, basePos));
-		}
-	}
-	std::sort(laserShots.begin(), laserShots.end());
-
-	float lastAngle = -1.f;
-	int currentIndex = 0;
-	int lastIndex = -1;
-	for (int count = 1; count <= 200; ++count)
-	{
-		while (lastAngle == laserShots[currentIndex].angle)
-		{
-			currentIndex = (currentIndex + 1) % laserShots.size();
-
-			if (lastIndex == currentIndex)
+			else
 			{
-				currentIndex = 0;
-				break;
+				std::cout << " ";
+				result += " ";
 			}
 		}
-
-		if (count == 200)
-		{
-			std::cout << "Result Day 10 Part 2: " << laserShots[currentIndex].pos.x * 100 + laserShots[currentIndex].pos.y << std::endl;
-		}
-
-		lastIndex = currentIndex;
-		lastAngle = laserShots[currentIndex].angle;
-		laserShots.erase(laserShots.begin() + currentIndex);
-		if (currentIndex == laserShots.size())
-			currentIndex = 0;
+		std::cout << std::endl;
+		result += "\n";
 	}
 
 	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
