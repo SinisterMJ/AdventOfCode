@@ -71,7 +71,7 @@ int main()
 	std::map<v2, int> currentColor2 = runPaintJob(v2(0, 1), 1, commands);
 	
 	std::cout << "Part 1: " << currentColor.size() << std::endl;
-	std::cout << "Part 2: " << std::endl;
+	std::cout << "Part 2: " << std::endl << std::endl;
 
 	int minX = 0, maxX = 0;
 	int minY = 0, maxY = 0;
@@ -101,6 +101,8 @@ int main()
 		}
 		std::cout << std::endl;
 	}
+
+    std::cout << std::endl;
 
 	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();

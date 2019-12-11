@@ -155,6 +155,7 @@
     <ClCompile Include="Day_11.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\includes\ConsoleColor.h" />
     <ClInclude Include="..\includes\IntcodeVM.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
