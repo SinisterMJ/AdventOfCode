@@ -49,10 +49,16 @@ int main()
     auto input = util::readFileLines("..\\inputs\\input_2019_10.txt");
 
     Map2DBase<char> asteroids(static_cast<int32_t>(input.size()), static_cast<int32_t>(input[0].length()), '.');
+    Map2DBase<int32_t> asteroidCount(static_cast<int32_t>(input.size()), static_cast<int32_t>(input[0].length()), 0);
 
     for (int y = 0; y < input.size(); ++y)
+    {
         for (int x = 0; x < input[y].length(); ++x)
+        {
             asteroids.write(x, y, input[y][x]);
+            asteroidCount.write(x, y, 0);
+        }
+    }
 
     int32_t maxAsteroids = 0;
     v2 laserPos;
@@ -64,22 +70,19 @@ int main()
             v2 basePos(x, y);
             if (asteroids.read(basePos) == '#')
             {
-                int32_t numAsteroids = 0;
-                for (int32_t search_y = 0; search_y < asteroids.height(); ++search_y)
+                for (int32_t search_y = y; search_y < asteroids.height(); ++search_y)
                 {
-                    for (int32_t search_x = 0; search_x < asteroids.width(); ++search_x)
+                    for (int32_t search_x = (y == search_y) ? x + 1 : 0; search_x < asteroids.width(); ++search_x)
                     {
                         v2 searchPos(search_x, search_y);
-                        if (searchPos == basePos)
-                            continue;
-                        
+                                                
                         if (asteroids.read(searchPos) == '#')
                         {
-                            int32_t ggt = gcd(std::abs(search_x - x), std::abs(search_y - y));
-                            v2 vec((search_x - x) / ggt, (search_y - y) / ggt);
+                            int32_t ggt = gcd(std::abs(searchPos.x - basePos.x), std::abs(searchPos.y - basePos.y));
+                            v2 vec((searchPos - basePos) / ggt);
                             v2 curPos = basePos + vec;
                             bool isVisible = true;
-                            for ( ; curPos.x != search_x || curPos.y != search_y; curPos += vec )
+                            for ( ; curPos != searchPos; curPos += vec )
                             {
                                 if (asteroids.read(curPos) == '#')
                                 {
@@ -87,14 +90,22 @@ int main()
                                     break;
                                 }
                             }
-                            numAsteroids += isVisible;
+
+                            if (isVisible)
+                            {
+                                asteroidCount.inc(basePos, 1);
+                                asteroidCount.inc(searchPos, 1);
+                            }
                         }
                     }
                 }
-                if (maxAsteroids < numAsteroids)
+
+                int currentSeen = asteroidCount.read(basePos);
+                if (maxAsteroids < currentSeen)
+                {
                     laserPos = basePos;
-                
-                maxAsteroids = std::max(numAsteroids, maxAsteroids);
+                    maxAsteroids = currentSeen;
+                }
             }
         }
     }

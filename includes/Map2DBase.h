@@ -51,6 +51,11 @@ public:
 		write(pos.x, pos.y, input);
 	}
 
+    void inc(v2 pos, T val)
+    {
+        data[pos.y * _width + pos.x] += val;
+    }
+
     int32_t height() { return _height; }
     int32_t width() { return _width; }
 

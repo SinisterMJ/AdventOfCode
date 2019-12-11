@@ -104,6 +104,8 @@ struct v2
     v2& operator+= (const v2& b) { x += b.x; y += b.y; return *this; }
     v2 operator - (const v2& a) const { return v2(x - a.x, y - a.y); }
     v2& operator-= (const v2& b) { x -= b.x; y -= b.y; return *this; }
+    v2 operator / (const int div) const { return v2(x / div, y / div); }
+    v2& operator/= (const int div) { x /= div; y /= div; return *this; }
 };
 
 bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
