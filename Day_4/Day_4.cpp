@@ -64,7 +64,7 @@ bool validPassword_part1(std::vector<int> digits, int& externalIndex)
 bool validPassword_part2(std::vector<int> digits)
 {
 	bool foundDouble = false;
-	for (int index = 1; index < digits.size(); ++index)
+	for (int32_t index = 1; index < static_cast<int32_t>(digits.size()); ++index)
 	{
 		if (digits[index] < digits[index - 1])
 			return false;
@@ -74,7 +74,7 @@ bool validPassword_part2(std::vector<int> digits)
 			if (index - 2 >= 0 && digits[index] == digits[index - 2])
 				continue;
 
-			if (index + 1 < digits.size() && digits[index] == digits[index + 1])
+			if (index + 1 < static_cast<int32_t>(digits.size()) && digits[index] == digits[index + 1])
 				continue;
 
 			foundDouble = true;

@@ -43,7 +43,7 @@ std::map<v2, int> runPaintJob(v2 startDir, int startColor, std::vector<int64_t>&
 		vm.addInput(input);
 		auto output = vm.runCommands();
 
-		currentHull.color = output[0];
+		currentHull.color = static_cast<int32_t>(output[0]);
 		currentColor[currentHull.position] = currentHull.color;
 
 		curDir = turn(curDir, output[1]);
