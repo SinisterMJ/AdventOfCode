@@ -92,6 +92,7 @@ namespace util
 	}
 }
 
+const double PI = 3.14159265359;
 
 struct v2
 {
