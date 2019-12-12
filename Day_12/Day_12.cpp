@@ -20,12 +20,9 @@ struct Moon {
 	
     Status initial;
 
-	Moon(int x, int y, int z) {
-		position.x = x;
-		position.y = y;
-		position.z = z;
-
-        initial.position = position;
+	Moon(int x, int y, int z) : position(x, y, z) 
+    {
+	    initial.position = position;
         initial.velocity = velocity;
 	}
 
@@ -40,12 +37,13 @@ struct Moon {
 
     void move()
 	{
-		position = position + velocity;
+		position += velocity;
 	}
 	
 	bool getCircular(int index)
 	{
-        return position[index] == initial.position[index] && velocity[index] == initial.velocity[index];
+        return  (position[index] == initial.position[index]) && 
+                (velocity[index] == initial.velocity[index]);
 	}
 
 	int64_t energy()
@@ -72,9 +70,8 @@ int64_t getTotalEnergy(std::vector<Moon>& moons)
 {
     int64_t result = 0;
     for (int i = 0; i < moons.size(); ++i)
-    {
         result += moons[i].energy();
-    }
+
     return result;
 }
 
@@ -90,9 +87,7 @@ void performStep(std::vector<Moon>& moons)
     }
 
     for (int i = 0; i < moons.size(); ++i)
-    {
         moons[i].move();
-    }
 }
 
 int main()
@@ -110,9 +105,7 @@ int main()
 	for (auto elem : input)
 	{
         if (std::regex_search(elem, moon_match, moon_regex) && moon_match.size() >= 4)
-        {
             moons.push_back(Moon(std::stoi(moon_match[1]), std::stoi(moon_match[2]), std::stoi(moon_match[3])));
-        }
 	}
     
 	for (int sim = 0;; ++sim)

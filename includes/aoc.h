@@ -126,6 +126,7 @@ struct v3
 	int y;
 	int z;
 
+    v3& operator+= (const v3& b) { x += b.x; y += b.y; z += b.z;  return *this; }
 	int& operator[](int index)
 	{
 		if (index == 0)
