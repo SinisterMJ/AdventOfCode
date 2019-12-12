@@ -129,13 +129,11 @@ int main()
 				periodic[dimension] = sim + 1;
 		}
 
-        if (periodic[0] != -1 && periodic[1] != -1 && periodic[2] != -1)
-        {
-            std::cout << "Part 2: " << lcm(periodic[0], lcm(periodic[1], periodic[2])) << std::endl;
+        if (periodic[0] != -1 && periodic[1] != -1 && periodic[2] != -1 && sim >= 1000)
             break;
-        }
 	}
 
+    std::cout << "Part 2: " << lcm(periodic[0], lcm(periodic[1], periodic[2])) << std::endl;
 	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();
 	return 0;
