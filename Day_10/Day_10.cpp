@@ -8,8 +8,6 @@
 #include "../includes/aoc.h"
 #include "../includes/Map2DBase.h"
 
-const double PI = 3.14159265359;
-
 struct LocDistAngle {
     v2 pos;
     float angle;

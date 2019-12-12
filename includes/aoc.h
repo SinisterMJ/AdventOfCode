@@ -125,6 +125,15 @@ struct v3
 	int x;
 	int y;
 	int z;
+
+	int operator[](int index)
+	{
+		if (index == 0)
+			return x;
+		if (index == 1)
+			return y;
+		return z;
+	}
 };
 
 bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
@@ -134,6 +143,7 @@ bool operator > (const v3& a, const v3& b) { return b < a; }
 bool operator != (const v3& a, const v3& b) { return !(a == b); }
 bool operator <= (const v3& a, const v3& b) { return !(b < a); }
 bool operator >= (const v3& a, const v3& b) { return !(a < b); }
+
 
 v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
 v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
