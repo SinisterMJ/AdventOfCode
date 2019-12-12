@@ -126,7 +126,7 @@ struct v3
 	int y;
 	int z;
 
-	int operator[](int index)
+	int& operator[](int index)
 	{
 		if (index == 0)
 			return x;

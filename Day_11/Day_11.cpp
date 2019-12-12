@@ -93,7 +93,7 @@ int main()
 			if (currentColor2.find(pos) != currentColor2.end())
 			{
 				if (currentColor2[pos] == 1)
-                    result += 254;
+                    result += static_cast<unsigned char>(0xFE);
 				else
                     result += " ";
 			}
