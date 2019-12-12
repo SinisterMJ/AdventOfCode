@@ -127,6 +127,7 @@ struct v3
 	int z;
 
     v3& operator+= (const v3& b) { x += b.x; y += b.y; z += b.z;  return *this; }
+
 	int& operator[](int index)
 	{
 		if (index == 0)
@@ -135,6 +136,15 @@ struct v3
 			return y;
 		return z;
 	}
+
+    int operator[](int index) const
+    {
+        if (index == 0)
+            return x;
+        if (index == 1)
+            return y;
+        return z;
+    }
 };
 
 bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }

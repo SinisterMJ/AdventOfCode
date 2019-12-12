@@ -26,7 +26,7 @@ struct Moon {
         initial.velocity = velocity;
 	}
 
-	void changeVelocity(Moon& other)
+	void changeVelocity(const Moon& other)
 	{
         for (int index = 0; index < 3; ++index)
         {
