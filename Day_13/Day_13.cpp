@@ -13,7 +13,7 @@
 #include "../includes/IntcodeVM.h"
 #include <Windows.h>
 
-void DrawMap(Map2DBase<int>& map)
+void DrawMap(Map2DBase<int>& map, int score)
 {
 	HANDLE hStdout;
 	COORD destCoord;
@@ -44,13 +44,9 @@ void DrawMap(Map2DBase<int>& map)
 		}
 		result += "\n";
 	}
+	result += "Score: " + std::to_string(score);
 	std::cout << result << std::endl;
-	Sleep(15);
-}
-
-int moveDecision(v2 v2_currBall, v2 v2_lastBall, v2 v2_currPad, v2& predictPosition, Map2DBase<int>& gameMap)
-{
-	return sgn(v2_currBall.x - v2_currPad.x);
+	Sleep(30);
 }
 
 int main()
@@ -91,8 +87,6 @@ int main()
 	v2 size(lastElem->first.x - firstElem->first.x + 1, lastElem->first.y - firstElem->first.y + 1);
 	Map2DBase<int> gameMap(size, 0);
 
-	v2 predictedPosition;
-
 	for (auto elem : tileMap)
 		gameMap.write(elem.first, elem.second);
 
@@ -100,12 +94,14 @@ int main()
 	commands[0] = 2;
 	vm.initializeCommands(commands);
 
-	int nextDirection = 0;
-
 	while (!vm.hasTerminated())
 	{
-		std::vector<int64_t> input = { nextDirection };
+		v2 currBall = gameMap.find(4);
+		v2 currPad = gameMap.find(3);
+
+		std::vector<int64_t> input = { sgn(currBall.x - currPad.x) };
 		vm.addInput(input);
+		
 		auto output = vm.runCommands();
 		
 		for (int index = 0; index < output.size(); index += 3)
@@ -122,14 +118,10 @@ int main()
 			gameMap.write(elem.first, elem.second);
 		}
 
-		//DrawMap(gameMap);
-		
-		v2 currBall = gameMap.find(4);
-		v2 currPad = gameMap.find(3);
-		nextDirection = sgn(currBall.x - currPad.x);
+		DrawMap(gameMap, tileMap[v2(-1, 0)]);
 	}
 
-	std::cout << std::endl << "Part 1: " << result << std::endl;
+	std::cout << "Part 1: " << result << std::endl;
 	std::cout << "Part 2: " << tileMap[v2(-1, 0)] << std::endl;
 	std::cout << "Time taken: " << myTime.usPassed() << " [us]" << std::endl;
 	getchar();

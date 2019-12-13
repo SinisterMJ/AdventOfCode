@@ -48,7 +48,7 @@ public:
 			return v2(-1, -1);
 		}
 
-		int index = std::distance(data.begin(), it);
+		int index = static_cast<int32_t>(std::distance(data.begin(), it));
 
 		return v2(index % _width, index / _width);
 	}

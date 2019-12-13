@@ -18,7 +18,7 @@ struct Hull {
 v2 turn(v2 in, int64_t dir)
 {
 	dir = 2 * dir - 1; 
-	return v2(in.y * dir, -in.x * dir);
+	return v2(in.y * static_cast<int32_t>(dir), -in.x * static_cast<int32_t>(dir));
 }
 
 std::map<v2, int> runPaintJob(v2 startDir, int startColor, std::vector<int64_t>& commands)
