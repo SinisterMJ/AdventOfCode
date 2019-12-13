@@ -50,7 +50,7 @@ public:
 
 		int index = static_cast<int32_t>(std::distance(data.begin(), it));
 
-		return v2(index % _width, index / _width);
+		return v2((index % _width), (index / _width));
 	}
 
 	T read(int32_t x, int32_t y)

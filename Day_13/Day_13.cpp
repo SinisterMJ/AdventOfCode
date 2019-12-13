@@ -11,6 +11,8 @@
 #include "../includes/aoc.h"
 #include "../includes/Map2DBase.h"
 #include "../includes/IntcodeVM.h"
+
+#define NOMINMAX
 #include <Windows.h>
 
 void DrawMap(Map2DBase<int>& map, int score)
@@ -79,12 +81,19 @@ int main()
 				result++;
 		}
 	}
+	int minX, minY, maxX, maxY;
+	minX = minY = std::numeric_limits<int>::max();
+	maxX = maxX = std::numeric_limits<int>::min();
 
-	auto firstElem = tileMap.begin();
-	auto lastElem = (tileMap.end());
-	lastElem--;
-
-	v2 size(lastElem->first.x - firstElem->first.x + 1, lastElem->first.y - firstElem->first.y + 1);
+	for (auto elem : tileMap)
+	{
+		minX = std::min(minX, elem.first.x);
+		maxX = std::max(maxX, elem.first.x);
+		minY = std::min(minY, elem.first.y);
+		maxY = std::max(maxY, elem.first.y);
+	}
+	
+	v2 size(maxX - minX + 1, maxY - minY + 1);
 	Map2DBase<int> gameMap(size, 0);
 
 	for (auto elem : tileMap)
@@ -108,17 +117,12 @@ int main()
 		{
 			v2 pos = v2(static_cast<int>(output[index]), static_cast<int>(output[index + 1]));
 			tileMap[pos] = static_cast<int>(output[index + 2]);
+			
+			if (gameMap.validIndex(pos))
+				gameMap.write(pos, tileMap[pos]);
 		}
 
-		for (auto elem : tileMap)
-		{
-			if (!gameMap.validIndex(elem.first))
-				continue;
-
-			gameMap.write(elem.first, elem.second);
-		}
-
-		DrawMap(gameMap, tileMap[v2(-1, 0)]);
+		// DrawMap(gameMap, tileMap[v2(-1, 0)]);
 	}
 
 	std::cout << "Part 1: " << result << std::endl;
