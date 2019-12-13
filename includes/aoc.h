@@ -107,6 +107,13 @@ struct v2
     v2& operator-= (const v2& b) { x -= b.x; y -= b.y; return *this; }
     v2 operator / (const int div) const { return v2(x / div, y / div); }
     v2& operator/= (const int div) { x /= div; y /= div; return *this; }
+
+	int& operator[](int index)
+	{
+		if (index == 0)
+			return x;
+		return y;
+	}
 };
 
 bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
@@ -159,4 +166,6 @@ bool operator >= (const v3& a, const v3& b) { return !(a < b); }
 v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
 v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
 
-
+template <typename T> int sgn(T val) {
+	return (T(0) < val) - (val < T(0));
+}

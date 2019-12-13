@@ -9,7 +9,16 @@ public:
 	Map2DBase(int32_t _width_, int32_t _height_, T _emptyCell)
 		: _width(_width_)
 		, _height(_height_)
-		, data(new T[_width * _height])
+		, data(_width * _height)
+		, emptyCell(_emptyCell)
+	{
+
+	}
+
+	Map2DBase(v2 size, T _emptyCell)
+		: _width(size.x)
+		, _height(size.y)
+		, data(_width * _height)
 		, emptyCell(_emptyCell)
 	{
 
@@ -17,7 +26,7 @@ public:
 
 	~Map2DBase()
 	{
-		delete[] data;
+
 	}
 
 	bool validIndex(int32_t x, int32_t y)
@@ -29,6 +38,19 @@ public:
 	bool validIndex(v2 pos)
 	{
 		return validIndex(pos.x, pos.y);
+	}
+
+	v2 find(T val)
+	{
+		auto it = std::find(data.begin(), data.end(), val);
+		if (it == data.end())
+		{
+			return v2(-1, -1);
+		}
+
+		int index = std::distance(data.begin(), it);
+
+		return v2(index % _width, index / _width);
 	}
 
 	T read(int32_t x, int32_t y)
@@ -111,5 +133,5 @@ private:
 
 	T emptyCell;
 
-	T* data;
+	std::vector<T> data;
 };
