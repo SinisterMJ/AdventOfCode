@@ -43,8 +43,9 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 	std::map<std::string, int64_t> temp;
 
 	requiredMats["FUEL"] = count;
-	
-	while (!(requiredMats.size() == 1 && requiredMats["ORE"] != 0))
+	int64_t totalOre = 0;
+
+	while (requiredMats.size() > 0)
 	{
 		temp.clear();
 		
@@ -69,44 +70,39 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 			if (foundInMap)
 				continue;
 
-			if (elem.first != "ORE")
-			{
-				std::string name = elem.first;
-				int64_t quantity = std::max<int64_t>(0, elem.second - warehouse[elem.first]);
-				auto input = reactions[elem.first];
-				int64_t outputQuantity = input.first;
-				int64_t multiple = std::ceil(static_cast<double>(quantity) / outputQuantity);
+			std::string name = elem.first;
+			int64_t quantity = std::max<int64_t>(0, elem.second - warehouse[elem.first]);
+			auto input = reactions[elem.first];
+			int64_t outputQuantity = input.first;
+			int64_t multiple = std::ceil(static_cast<double>(quantity) / outputQuantity);
 				
-				warehouse[elem.first] = multiple * outputQuantity - quantity;
+			warehouse[elem.first] = multiple * outputQuantity - quantity;
 
-				for (auto outputElem : reactions[elem.first].second)
-				{
-					temp[outputElem.first] += multiple * outputElem.second;
-				}
-			}
-
-			if (elem.first == "ORE")
+			for (auto outputElem : reactions[elem.first].second)
 			{
-				temp[elem.first] += elem.second;
-			}
+				if (outputElem.first == "ORE")
+					totalOre += multiple * outputElem.second;
+				else
+					temp[outputElem.first] += multiple * outputElem.second;
+			}			
 		}
 
 		requiredMats.swap(temp);
 	}
 
-	return requiredMats["ORE"];
+	return totalOre;
 }
 
 
 int64_t calcFuelOutcome(Element& reactions, int64_t inputOre)
 {
 	int64_t lowerEstimate = inputOre / calcOreUsage(reactions, 1);
-	int64_t higherEstimate = 1.1 * lowerEstimate;
+	int64_t higherEstimate = 2 * lowerEstimate;
 
 	while (calcOreUsage(reactions, higherEstimate) < inputOre)
 	{
 		lowerEstimate = higherEstimate;
-		higherEstimate *= 1.05;
+		higherEstimate *= 2;
 	}
 
 	int64_t mid = (lowerEstimate + higherEstimate) / 2;
@@ -127,9 +123,10 @@ int64_t calcFuelOutcome(Element& reactions, int64_t inputOre)
 
 		if (resMid == inputOre)
 			return mid;
+
 		mid = (lowerEstimate + higherEstimate) / 2;
 	}
-
+	
 	return mid;
 }
 
