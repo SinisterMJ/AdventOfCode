@@ -38,20 +38,19 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 {
 	bool allOres = false;
 
-	std::vector<Material> requiredMats = { std::make_pair("FUEL", count) };
+	std::map<std::string, int64_t> requiredMats;
 	std::map<std::string, int64_t> warehouse = { };
-	std::vector<std::pair<std::string, int64_t>> temp;
-	
-	temp.reserve(reactions.size());
-	requiredMats.reserve(reactions.size());
+	std::map<std::string, int64_t> temp;
 
-	while (requiredMats.size() != 1 || requiredMats[0].first != "ORE")
+	requiredMats["FUEL"] = count;
+	
+	while (!(requiredMats.size() == 1 && requiredMats["ORE"] != 0))
 	{
-		temp.resize(0);
+		temp.clear();
 		
 		for (auto elem : requiredMats)
 		{
-			bool foundInDependencies = false;
+			bool foundInMap = false;
 			
 			// Check if the current element is in the requirements of the others
 			for (auto check : requiredMats)
@@ -59,23 +58,15 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 				if (check.first == elem.first)
 					continue;
 
-				if (foundInDependencies = checkPath(elem.first, check.first, reactions))
+				if (foundInMap = checkPath(elem.first, check.first, reactions))
 				{
-					bool foundInVec = false;
-					for (int64_t index = 0; index < temp.size() && !foundInVec; ++index)
-					{
-						if (foundInVec = (temp[index].first == elem.first))
-							temp[index].second += elem.second;
-					}
-
-					if (!foundInVec)
-						temp.push_back(elem);
-
+					temp[elem.first] += elem.second;
+					bool foundInMap = false;
 					break;
 				}
 			}
 
-			if (foundInDependencies)
+			if (foundInMap)
 				continue;
 
 			if (elem.first != "ORE")
@@ -90,40 +81,20 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 
 				for (auto outputElem : reactions[elem.first].second)
 				{
-					bool foundInVec = false;
-					for (int64_t index = 0; index < temp.size() && !foundInVec; ++index)
-					{
-						if (foundInVec = (temp[index].first == outputElem.first))
-						{
-							temp[index].second += multiple * outputElem.second;
-						}
-					}
-
-					if (!foundInVec)
-					{
-						temp.push_back(std::make_pair(outputElem.first, outputElem.second * multiple));
-					}
+					temp[outputElem.first] += multiple * outputElem.second;
 				}
 			}
 
 			if (elem.first == "ORE")
 			{
-				bool foundInVec = false;
-				for (int64_t index = 0; index < temp.size() && !foundInVec; ++index)
-				{
-					if (foundInVec = (temp[index].first == elem.first))
-						temp[index].second += elem.second;
-				}
-
-				if (!foundInVec)
-					temp.push_back(elem);
+				temp[elem.first] += elem.second;
 			}
 		}
 
 		requiredMats.swap(temp);
 	}
 
-	return requiredMats[0].second;
+	return requiredMats["ORE"];
 }
 
 
