@@ -15,7 +15,7 @@ int calculateFuelCosts(int mass)
 
 int calculateFuelCostsRecursive(int mass)
 {
-	if (mass <= 5)
+	if (mass <= 8)
 		return 0;
 	
 	int val = mass / 3 - 2;
