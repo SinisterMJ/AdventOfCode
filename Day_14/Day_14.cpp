@@ -62,7 +62,6 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 				if (foundInMap = checkPath(elem.first, check.first, reactions))
 				{
 					temp[elem.first] += elem.second;
-					bool foundInMap = false;
 					break;
 				}
 			}
@@ -76,7 +75,7 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 			int64_t outputQuantity = input.first;
 			int64_t multiple = std::ceil(static_cast<double>(quantity) / outputQuantity);
 				
-			warehouse[elem.first] = multiple * outputQuantity - quantity;
+			warehouse[elem.first] -= multiple * outputQuantity - elem.second;
 
 			for (auto outputElem : reactions[elem.first].second)
 			{
