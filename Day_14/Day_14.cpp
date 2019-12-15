@@ -51,31 +51,13 @@ int64_t calcOreUsage(Element& reactions, int64_t count)
 		
 		for (auto elem : requiredMats)
 		{
-			bool foundInMap = false;
-			
-			// Check if the current element is in the requirements of the others
-			for (auto check : requiredMats)
-			{
-				if (check.first == elem.first)
-					continue;
-
-				if (foundInMap = checkPath(elem.first, check.first, reactions))
-				{
-					temp[elem.first] += elem.second;
-					break;
-				}
-			}
-
-			if (foundInMap)
-				continue;
-
 			std::string name = elem.first;
 			int64_t quantity = std::max<int64_t>(0, elem.second - warehouse[elem.first]);
 			auto input = reactions[elem.first];
 			int64_t outputQuantity = input.first;
-			int64_t multiple = std::ceil(static_cast<double>(quantity) / outputQuantity);
+			int64_t multiple = static_cast<int64_t>(std::ceil(static_cast<double>(quantity) / outputQuantity));
 				
-			warehouse[elem.first] -= multiple * outputQuantity - elem.second;
+			warehouse[elem.first] += multiple * outputQuantity - elem.second;
 
 			for (auto outputElem : reactions[elem.first].second)
 			{
@@ -107,17 +89,17 @@ int64_t calcFuelOutcome(Element& reactions, int64_t inputOre)
 	int64_t mid = (lowerEstimate + higherEstimate) / 2;
 	int64_t resMid = 0;
 
-	while (mid != lowerEstimate && mid != higherEstimate)
+	while (lowerEstimate <= higherEstimate)
 	{
 		resMid = calcOreUsage(reactions, mid);
 		if (resMid > inputOre)
 		{
-			higherEstimate = mid;
+			higherEstimate = mid - 1;
 		}
 
 		if (resMid < inputOre)
 		{
-			lowerEstimate = mid;
+			lowerEstimate = mid + 1;
 		}
 
 		if (resMid == inputOre)

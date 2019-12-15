@@ -123,6 +123,8 @@ int64_t chooseDirection(std::map<v2, int>& oxygenMap, std::map<v2, int>& flood, 
 		if (flood[currentPos + east] < val)
 			return 4;
 	}
+
+	return 1;
 }
 
 int64_t findShortestPath(std::vector<int64_t>& commands, std::map<v2, int>& oxygenMap)
@@ -159,7 +161,7 @@ int64_t findShortestPath(std::vector<int64_t>& commands, std::map<v2, int>& oxyg
 					direction = east;
 			}
 
-			oxygenMap[currentPos + direction] = output[0];
+			oxygenMap[currentPos + direction] = static_cast<int32_t>(output[0]);
 			if (output[0] != 0)
 			{
 				currentPos += direction;
