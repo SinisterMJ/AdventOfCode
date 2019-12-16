@@ -14,21 +14,21 @@
 #include "../includes/IntcodeVM.h"
 #include <inttypes.h>
 
-std::vector<int> fftPattern = { 0, 1, 0, -1 };
+std::vector<int32_t> fftPattern = { 0, 1, 0, -1 };
 
-int getLastDigit(int input)
+int32_t getLastDigit(int32_t input)
 {
     return std::abs(input) % 10;
 }
 
-int fft(std::vector<int>& signal, int fftLength)
+int32_t fft(std::vector<int32_t>& signal, int32_t fftLength)
 {
-    int index = 0;
-    int result = 0;
+    int32_t index = 0;
+    int32_t result = 0;
         
     while (index < signal.size())
     {
-        int indexFFT = ((index + 1) / fftLength) % 4;
+        int32_t indexFFT = ((index + 1) / fftLength) % 4;
 
         if (fftPattern[indexFFT] == 1)
             result += signal[index];
@@ -41,23 +41,23 @@ int fft(std::vector<int>& signal, int fftLength)
     return getLastDigit(result);
 }
 
-int getResult1(std::vector<int32_t> inputSignal)
+int32_t getResult1(std::vector<int32_t> inputSignal)
 {
-    std::vector<int> temporary;
+    std::vector<int32_t> temporary;
     temporary.resize(inputSignal.size());
 
-    int result = 0;
+    int32_t result = 0;
 
-    for (int run = 0; run < 100; ++run)
+    for (int32_t run = 0; run < 100; ++run)
     {
-        for (int index = 1; index <= inputSignal.size(); ++index)
+        for (int32_t index = 1; index <= inputSignal.size(); ++index)
         {
             temporary[index - 1] = fft(inputSignal, index);
         }
         std::swap(temporary, inputSignal);
     }
 
-    for (int index = 0; index < 8; ++index)
+    for (int32_t index = 0; index < 8; ++index)
     {
         result = result * 10 + inputSignal[index];
     }
@@ -65,32 +65,36 @@ int getResult1(std::vector<int32_t> inputSignal)
     return result;
 }
 
-int getResult2(std::vector<int32_t> inputSignal)
+int32_t getResult2(std::vector<int32_t> inputSignal)
 {
-    std::vector<int> repeatedSignal;
-    int result = 0;
+    std::vector<int32_t> repeatedSignal;
+    int32_t result = 0;
 
-    int neededDigits = 10000 * static_cast<int32_t>(inputSignal.size());
-    int offset = 0;
+    int32_t neededDigits = 10000 * static_cast<int32_t>(inputSignal.size());
+    repeatedSignal.reserve(neededDigits);
 
-    for (int index = 0; index < 7; ++index)
+    int32_t offset = 0;
+
+    for (int32_t index = 0; index < 7; ++index)
         offset = offset * 10 + inputSignal[index];
 
-    for (int i = 0; i < 10000; ++i)
+    int32_t unnecessary = offset / static_cast<int32_t>(inputSignal.size());
+    offset -= unnecessary * static_cast<int32_t>(inputSignal.size());
+
+    for (int32_t i = 0; i < (10000 - unnecessary); ++i)
         repeatedSignal.insert(repeatedSignal.end(), inputSignal.begin(), inputSignal.end());
-        
-    for (int run = 0; run < 100; ++run)
+
+    for (int32_t run = 0; run < 100; ++run)
     {
-        int val = repeatedSignal.back();
-        for (int index = repeatedSignal.size() - 2; index >= offset; --index)
+        int32_t val = repeatedSignal.back();
+        for (int32_t index = static_cast<int32_t>(repeatedSignal.size()) - 2; index >= offset; --index)
         {
-            val += repeatedSignal[index];
-            val = val % 10;
+            val = (val + repeatedSignal[index]) % 10;
             repeatedSignal[index] = val;
         }
     }
 
-    for (int index = offset; index < offset + 8; ++index)
+    for (int32_t index = offset; index < offset + 8; ++index)
         result = 10 * result + repeatedSignal[index];
     
     return result;
@@ -105,7 +109,7 @@ int main()
 
     std::vector<int32_t> inputSignal;
 
-    for (int index = 0; index < input.length(); ++index)
+    for (int32_t index = 0; index < input.length(); ++index)
     {
         std::string digit = input.substr(index, 1);
         if (digit == "\n")
