@@ -8,37 +8,6 @@
 #include <vector>
 #include <sstream>
 
-std::vector<int> splitInt(const std::string &s, char delim) {
-	std::vector<int> elems;
-	std::stringstream ss(s);
-	std::string number;
-	while (std::getline(ss, number, delim)) {
-		elems.push_back(std::stoi(number));
-	}
-	return elems;
-}
-
-int runCommands(std::vector<int> commands)
-{
-	for (uint32_t index = 0; index < commands.size(); index += 4)
-	{
-		switch (commands[index]) {
-		case 1:
-			commands[commands[index + 3]] = commands[commands[index + 1]] + commands[commands[index + 2]];
-			break;
-		case 2:
-			commands[commands[index + 3]] = commands[commands[index + 1]] * commands[commands[index + 2]];
-			break;
-		case 99:
-			return commands[0];
-			break;
-		default:
-			return -1;
-		}
-	}
-	return -1;
-}
-
 int main()
 {
     util::Timer myTime;

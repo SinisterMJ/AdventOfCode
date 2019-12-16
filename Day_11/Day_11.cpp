@@ -60,8 +60,8 @@ int main()
 	util::Timer myTime;
 	myTime.start();
 
-	/*auto input = util::readFile("..\\inputs\\input_2019_11.txt");*/
-	auto input = util::readFile("..\\inputs\\day11.txt"); 
+	auto input = util::readFile("..\\inputs\\input_2019_11.txt");
+
 	std::vector<int64_t> commands = util::splitInt64(input, ',');
 
 	std::map<v2, int> currentColor = runPaintJob(v2(0, 1), 0, commands);

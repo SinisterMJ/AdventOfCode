@@ -9,23 +9,13 @@
 #include <sstream>
 #include <algorithm>
 
-std::vector<int64_t> splitInt(const std::string &s, char delim) {
-	std::vector<int64_t> elems;
-	std::stringstream ss(s);
-	std::string number;
-	while (std::getline(ss, number, delim)) {
-		elems.push_back(std::stoi(number));
-	}
-	return elems;
-}
-
 int main()
 {
 	util::Timer myTime;
 	myTime.start();
 	std::string inputString = util::readFile("..\\inputs\\input_2019_7.txt");
 
-	std::vector<int64_t> commands = splitInt(inputString, ',');
+	std::vector<int64_t> commands = util::splitInt64(inputString, ',');
 	std::vector<int64_t> inputs = { 0, 1, 2, 3, 4 };
 
 	int64_t maxVal1 = std::numeric_limits<int64_t>::min();
