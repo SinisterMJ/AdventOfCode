@@ -5,6 +5,7 @@
 
 #include "../includes/aoc.h"
 #include "../includes/IntcodeVM.h"
+#include <regex>
 
 class Day17 {
 private:
@@ -105,47 +106,104 @@ private:
 		return result;
 	}
 
-	std::vector<std::string> findPatterns(std::string input)
+	bool checkPatterns(std::string input, std::map<uint8_t, std::string>& dict)
 	{
-		std::vector<std::string> result;
-
-		result.push_back("R8L10L12R4");
-		result.push_back("R8L12R4R4");
-		result.push_back("R8L10R8");
-
-		/*int offset = 0;
-/*
-		while (result.size() < 3 && offset < input.length())
+		int offset = 0;
+		while (offset < input.length())
 		{
-			std::string substr;
-			
-			int countDir = 0;
-			int index = 1;
-			while (countDir < 5)
-			{
-				if (offset + index + 1 >= input.length())
-					break;
+			std::string subA = input.substr(offset, dict['A'].length());
+			std::string subB = input.substr(offset, dict['B'].length());
+			std::string subC = input.substr(offset, dict['C'].length());
 
-				std::string internSubstr = input.substr(offset, index);
-				if (input.find(internSubstr, offset + 1))
+			if (subA == dict['A'])
+			{
+				offset += dict['A'].length();
+				continue;
+			}
+
+			if (subB == dict['B'])
+			{
+				offset += dict['B'].length();
+				continue;
+			}
+
+			if (subC == dict['C'])
+			{
+				offset += dict['C'].length();
+				continue;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	std::map<uint8_t, std::string> findPatterns(std::string input)
+	{
+		int offset = 0;
+		std::string substituted = input;
+		std::map<std::string, bool> seen;
+		uint8_t current = 'T';
+
+		std::map<uint8_t, std::string> dict;
+		dict['A'] = "";
+		dict['B'] = "";
+		dict['C'] = "";
+
+		for (int lA = 20; lA > 0; --lA)
+		{
+			dict['A'] = input.substr(0, lA);
+			if (createIntcodeString(dict['A']).length() > 20)
+				continue;
+
+			int offsetB = lA;
+
+			for (int lB = 20; lB > 0; --lB)
+			{
+				while (input.substr(offsetB, lA) == dict['A'])
+					offsetB += lA;
+
+				dict['B'] = input.substr(offsetB, lB);
+
+				if (createIntcodeString(dict['B']).length() > 20)
+					continue;
+
+				int offsetC = offsetB + lB;
+
+				for (int lC = 20; lC > 0; --lC)
 				{
-					substr = internSubstr;
+					while (true)
+					{
+						if (input.substr(offsetC, lA) == dict['A'])
+						{
+							offsetC += lA;
+							continue;
+						}
+
+						if (input.substr(offsetC, lB) == dict['B'])
+						{
+							offsetC += lB;
+							continue;
+						}
+
+						break;
+					}
+
+					dict['C'] = input.substr(offsetC, lC);
+
+					if (createIntcodeString(dict['B']).length() > 20)
+						continue;
+
+					if (checkPatterns(input, dict))
+						goto PatternFound;
 				}
-
-				if (input.substr(offset + index, 1) == "R" ||
-					input.substr(offset + index, 1) == "L")
-					countDir++;
-				index++;
 			}
+		}
 
-			if (std::find(result.begin(), result.end(), substr) == result.end())
-			{
-				result.push_back(substr);
-				offset += substr.length();
-			}
-		}*/
+PatternFound:
 
-		return result;
+		return dict;
 	}
 
 	std::string findPath(std::map<v2, int>& cameraView)
@@ -252,7 +310,7 @@ private:
 		{
 			for (uint8_t base = 'A'; base <= 'C'; ++base)
 			{
-				std::string comparePattern = patterns[base - 'A'];
+				std::string comparePattern = patterns[base];
 				if (handled + comparePattern.length() > path.length())
 					continue;
 
@@ -274,7 +332,7 @@ private:
 			int offset = 0;
 			std::vector<int64_t> input = {};
 
-			for (auto character : elem)
+			for (auto character : elem.second)
 			{
 				if (offset != 0 && (character == 'L' || character == 'R'))
 					input.push_back(',');
@@ -286,7 +344,7 @@ private:
 					input.push_back(',');
 			}
 
-			input.push_back(10);
+			input.push_back('\n');
 			vm.addInput(input);
 		}
 
