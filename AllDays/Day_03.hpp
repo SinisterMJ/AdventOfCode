@@ -87,8 +87,8 @@ private:
 					int32_t minY = vert->start.y < vert->end.y ? vert->start.y : vert->end.y;
 					int32_t maxY = vert->start.y > vert->end.y ? vert->start.y : vert->end.y;
 
-					if (minY < hori->start.y && hori->start.y < maxY &&
-						minX < vert->start.x && vert->start.x < maxX)
+					if (minY <= hori->start.y && hori->start.y <= maxY &&
+						minX <= vert->start.x && vert->start.x <= maxX)
 					{
 						v2 crossing(vert->start.x, hori->start.y);
 
