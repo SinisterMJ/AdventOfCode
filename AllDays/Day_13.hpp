@@ -13,39 +13,17 @@
 
 class Day13 {
 private:
-	void DrawMap(Map2DBase<int>& map, int score)
-	{
-		HANDLE hStdout;
-		COORD destCoord;
-		hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	void DrawMapClass(Map2DBase<int>& map, int score)
+	{	
+		std::map<int32_t, uint8_t> dict;
+		dict[0] = ' ';
+		dict[1] = static_cast<uint8_t>(0xFE);
+		dict[2] = '#';
+		dict[3] = '-';
+		dict[4] = 'o';
+		DrawMap(map.getMap(), dict);
 
-		//position cursor at start of window
-		destCoord.X = 0;
-		destCoord.Y = 0;
-		SetConsoleCursorPosition(hStdout, destCoord);
-
-		std::string result = "";
-		for (int y = 0; y < map.height(); ++y)
-		{
-			for (int x = 0; x < map.width(); ++x)
-			{
-				int val = map.read(x, y);
-
-				if (val == 0)
-					result += " ";
-				if (val == 1)
-					result += static_cast<unsigned char>(0xFE);
-				if (val == 2)
-					result += "#";
-				if (val == 3)
-					result += "_";
-				if (val == 4)
-					result += "o";
-			}
-			result += "\n";
-		}
-		result += "Score: " + std::to_string(score);
-		std::cout << result << std::endl;
+		std::cout << "Score: " << score << std::endl;
 		Sleep(30);
 	}
 
@@ -98,7 +76,7 @@ public:
 		}
 
 		v2 size(maxX - minX + 1, maxY - minY + 1);
-		Map2DBase<int> gameMap(size, 0);
+		Map2DBase<int> gameMap(0);
 
 		for (auto elem : tileMap)
 			gameMap.write(elem.first, elem.second);
@@ -126,7 +104,7 @@ public:
 					gameMap.write(pos, tileMap[pos]);
 			}
 
-			// DrawMap(gameMap, tileMap[v2(-1, 0)]);
+			DrawMapClass(gameMap, tileMap[v2(-1, 0)]);
 		}
 
 		std::cout << "Day 13 - Part 1: " << result << std::endl

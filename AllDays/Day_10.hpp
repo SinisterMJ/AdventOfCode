@@ -50,9 +50,9 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-		Map2DBase<char> asteroids(static_cast<int32_t>(input.size()), static_cast<int32_t>(input[0].length()), '.');
-		Map2DBase<int32_t> asteroidCount(static_cast<int32_t>(input.size()), static_cast<int32_t>(input[0].length()), 0);
-
+		Map2DBase<int8_t> asteroids('.');
+		Map2DBase<int32_t> asteroidCount(0);
+		
 		for (int y = 0; y < input.size(); ++y)
 		{
 			for (int x = 0; x < input[y].length(); ++x)

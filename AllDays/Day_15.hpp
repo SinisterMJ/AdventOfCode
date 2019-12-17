@@ -16,22 +16,14 @@ private:
 	const v2 west = v2(1, 0);
 	const v2 east = v2(-1, 0);
 
-	void DrawMap(std::map<v2, int>& map, v2 currentPos)
+	void DrawMapClass(std::map<v2, int>& map, v2 currentPos)
 	{
-		HANDLE hStdout;
-		COORD destCoord;
-		hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-
-		//position cursor at start of window
-		destCoord.X = 0;
-		destCoord.Y = 0;
-		SetConsoleCursorPosition(hStdout, destCoord);
+		std::map<v2, int32_t> copy(map);
 
 		int minX = 0;
 		int minY = 0;
 		int maxX = 0;
 		int maxY = 0;
-
 		for (auto elem : map)
 		{
 			minX = std::min(minX, elem.first.x);
@@ -39,38 +31,26 @@ private:
 			minY = std::min(minY, elem.first.y);
 			maxY = std::max(maxY, elem.first.y);
 		}
-
-		std::string result = "";
 		for (int y = minY; y <= maxY; ++y)
 		{
 			for (int x = minX; x <= maxX; ++x)
 			{
-				v2 now(x, y);
-				if (now == currentPos)
-				{
-					result += "R";
-					continue;
-				}
-
-				if (map.find(now) == map.end())
-				{
-					result += " ";
-					continue;
-				}
-
-				int val = map[now];
-
-				if (val == 0)
-					result += static_cast<unsigned char>(0xFE);
-				if (val == 1)
-					result += ".";
-				if (val == 2)
-					result += "o";
+				if (copy.find(v2(x, y)) == copy.end())
+					copy[v2(x, y)] = 4;
 			}
-			result += "\n";
 		}
+		
+		copy[currentPos] = 3;
 
-		std::cout << result << std::endl;
+		std::map<int32_t, uint8_t> dict;
+		dict[0] = 0xFE;
+		dict[1] = '.';
+		dict[2] = 'o';
+		dict[3] = 'R';
+		dict[4] = ' ';
+
+		DrawMap(copy, dict);
+
 		Sleep(15);
 	}
 
@@ -166,7 +146,7 @@ private:
 					}
 				}
 
-				//DrawMap(oxygenMap, currentPos);
+				// DrawMapClass(oxygenMap, currentPos);
 
 				if (currentPos == v2(0, 0))
 				{

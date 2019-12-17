@@ -14,53 +14,6 @@ private:
 	const v2 west = v2(-1, 0);
 	const v2 east = v2(1, 0);
 	
-	void DrawMap(std::map<v2, int>& map)
-	{
-		HANDLE hStdout;
-		COORD destCoord;
-		hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-
-		//position cursor at start of window
-		destCoord.X = 0;
-		destCoord.Y = 0;
-		SetConsoleCursorPosition(hStdout, destCoord);
-
-		int minX = 0;
-		int minY = 0;
-		int maxX = 0;
-		int maxY = 0;
-
-		for (auto elem : map)
-		{
-			minX = std::min(minX, elem.first.x);
-			maxX = std::max(maxX, elem.first.x);
-			minY = std::min(minY, elem.first.y);
-			maxY = std::max(maxY, elem.first.y);
-		}
-
-		std::string result = "";
-		for (int y = minY; y <= maxY; ++y)
-		{
-			for (int x = minX; x <= maxX; ++x)
-			{
-				int val = map[v2(x, y)];
-
-				if (val == 35)
-					result += "#";
-				else if (val == 46)
-					result += ".";
-				else if (val == 47)
-					result += "O";
-				else
-					result += static_cast<unsigned char>(val);
-			}
-			result += "\n";
-		}
-
-		std::cout << result << std::endl;
-		Sleep(15);
-	}
-
 	bool turnable(v2 direction, int& currentDirection, std::string& inout)
 	{
 		if (direction == north && (currentDirection == 'v' || currentDirection == '^'))
@@ -108,7 +61,7 @@ private:
 
 	bool checkPatterns(std::string input, std::map<uint8_t, std::string>& dict)
 	{
-		int offset = 0;
+		uint64_t offset = 0;
 		while (offset < input.length())
 		{
 			std::string subA = input.substr(offset, dict['A'].length());
@@ -293,7 +246,7 @@ PatternFound:
 
 	}
 
-	int moveRobot(std::vector<int64_t> commands, std::map<v2, int>& cameraView)
+	int64_t moveRobot(std::vector<int64_t> commands, std::map<v2, int>& cameraView)
 	{
 		IntcodeVM vm;
 		commands[0] = 2;
@@ -305,7 +258,7 @@ PatternFound:
 		auto patterns = findPatterns(path);
 		std::vector<int64_t> pattern;
 
-		int handled = 0;
+		uint64_t handled = 0;
 		while (handled != path.length())
 		{
 			for (uint8_t base = 'A'; base <= 'C'; ++base)
@@ -363,7 +316,7 @@ PatternFound:
 		return result;
 	}
 
-	int getScaffolds(std::vector<int64_t> commands, std::map<v2, int>& cameraView)
+	int getScaffolds(std::vector<int64_t> commands, std::map<v2, int32_t>& cameraView)
 	{
 		IntcodeVM vm;
 		vm.initializeCommands(commands);
@@ -371,7 +324,7 @@ PatternFound:
 
 		v2 pos(-1, 0);
 
-		for (int index = 0; index < output.size(); ++index)
+		for (int32_t index = 0; index < output.size(); ++index)
 		{
 			if (output[index] == 10)
 			{
@@ -381,12 +334,12 @@ PatternFound:
 			else
 			{
 				pos.x++;
-				cameraView[pos] = output[index];
+				cameraView[pos] = static_cast<int32_t>(output[index]);
 			}
 
 		}
 
-		int minX, minY, maxX, maxY;
+		int32_t minX, minY, maxX, maxY;
 		minX = minY = maxX = maxY = 0;
 
 		for (auto elem : cameraView)
@@ -397,7 +350,7 @@ PatternFound:
 			maxY = std::max(maxY, elem.first.y);
 		}
 
-		int overlaps = 0;
+		int32_t overlaps = 0;
 		for (int y = minY + 1; y < maxY; ++y)
 		{
 			for (int x = minX + 1; x < maxX; ++x)
@@ -438,7 +391,7 @@ public:
 
 		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
 		
-		std::map<v2, int> cameraView;
+		std::map<v2, int32_t> cameraView;
 		int64_t result1 = getScaffolds(commands, cameraView);
 		int64_t result2 = moveRobot(commands, cameraView);
 

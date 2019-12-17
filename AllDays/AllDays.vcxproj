@@ -118,6 +118,7 @@
     <ClInclude Include="..\includes\aoc.h" />
     <ClInclude Include="..\includes\ConsoleColor.h" />
     <ClInclude Include="..\includes\IntcodeVM.h" />
+    <ClInclude Include="..\includes\Map2DBase.h" />
     <ClInclude Include="Day_01.hpp" />
     <ClInclude Include="Day_02.hpp" />
     <ClInclude Include="Day_03.hpp" />

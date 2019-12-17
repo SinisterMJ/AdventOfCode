@@ -3,22 +3,17 @@
 #include <stdint.h>
 #include "aoc.h"
 
+#define NOMINMAX
+#include <Windows.h>
+
 template<class T>
 class Map2DBase {
 public:
-	Map2DBase(int32_t _width_, int32_t _height_, T _emptyCell)
-		: _width(_width_)
-		, _height(_height_)
-		, data(_width * _height)
-		, emptyCell(_emptyCell)
-	{
-
-	}
-
-	Map2DBase(v2 size, T _emptyCell)
-		: _width(size.x)
-		, _height(size.y)
-		, data(_width * _height)
+	Map2DBase(T _emptyCell)
+		: _minX(std::numeric_limits<int32_t>::max())
+		, _minY(std::numeric_limits<int32_t>::max())
+		, _maxX(std::numeric_limits<int32_t>::min())
+		, _maxY(std::numeric_limits<int32_t>::min())
 		, emptyCell(_emptyCell)
 	{
 
@@ -31,8 +26,8 @@ public:
 
 	bool validIndex(int32_t x, int32_t y)
 	{
-		return (x >= 0 && x < _width &&
-				y >= 0 && y < _height);
+		return (x >= _minX && x <= _maxX &&
+				y >= _minY && y <= _maxY);
 	}
 
 	bool validIndex(v2 pos)
@@ -42,44 +37,47 @@ public:
 
 	v2 find(T val)
 	{
-		auto it = std::find(data.begin(), data.end(), val);
-		if (it == data.end())
+		for (auto elem : dataMap)
 		{
-			return v2(-1, -1);
+			if (elem.second == val)
+				return elem.first;
 		}
 
-		int index = static_cast<int32_t>(std::distance(data.begin(), it));
-
-		return v2((index % _width), (index / _width));
+		return v2(-1, -1);
 	}
 
 	T read(int32_t x, int32_t y)
 	{
-		return data[y * _width + x];
+		return read(v2(x, y));
 	}
 
     T read(v2 pos)
     {
-		return read(pos.x, pos.y);
+		return dataMap[pos];
     }
 
 	void write(int32_t x, int32_t y, T input)
 	{
-		data[y * _width + x] = input;
+		write(v2(x, y), input);
 	}
 
 	void write(v2 pos, T input)
 	{
-		write(pos.x, pos.y, input);
+		_minX = std::min(_minX, pos.x);
+		_maxX = std::max(_maxX, pos.x);
+		_minY = std::min(_minY, pos.y);
+		_maxY = std::max(_maxY, pos.y);
+
+		dataMap[pos] = input;
 	}
 
     void inc(v2 pos, T val)
     {
-        data[pos.y * _width + pos.x] += val;
+		dataMap[pos] += val;
     }
 
-    int32_t height() { return _height; }
-    int32_t width() { return _width; }
+    int32_t height() { return _maxY - _minY + 1; }
+    int32_t width() { return _maxX - _minX + 1; }
 
 	bool move(int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, bool checkOccupation = true)
 	{
@@ -104,12 +102,12 @@ public:
 
 	void remove(int32_t x, int32_t y)
 	{
-		data[y * _width + x] = emptyCell;
+		remove(v2(x, y));
 	}
 	
 	void remove(v2 pos)
 	{
-		remove(pos.x, pos.y);
+		dataMap[pos] = emptyCell;
 	}
 
 	bool checkOccupation(int32_t x, int32_t y)
@@ -127,11 +125,62 @@ public:
 		return checkOccupation(pos.x, pos.y);
 	}
 
+	std::map<v2, T>& getMap()
+	{
+		return dataMap;
+	}
+
 private:
-	int32_t _width;
-	int32_t _height;
+	int32_t _minY;
+	int32_t _minX;
+	int32_t _maxY;
+	int32_t _maxX;
 
 	T emptyCell;
 
-	std::vector<T> data;
+	std::map<v2, T> dataMap;
 };
+
+void DrawMap(std::map<v2, int>& map, const std::map<int, uint8_t>& dict)
+{
+	HANDLE hStdout;
+	COORD destCoord;
+	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	//position cursor at start of window
+	destCoord.X = 0;
+	destCoord.Y = 0;
+	SetConsoleCursorPosition(hStdout, destCoord);
+
+	int minX = 0;
+	int minY = 0;
+	int maxX = 0;
+	int maxY = 0;
+
+	for (auto elem : map)
+	{
+		minX = std::min(minX, elem.first.x);
+		maxX = std::max(maxX, elem.first.x);
+		minY = std::min(minY, elem.first.y);
+		maxY = std::max(maxY, elem.first.y);
+	}
+
+	std::string result = "";
+	for (int y = minY; y <= maxY; ++y)
+	{
+		for (int x = minX; x <= maxX; ++x)
+		{
+			int val = map[v2(x, y)];
+			if (dict.find(val) == dict.end())
+			{
+				result += static_cast<unsigned char>(val);
+				continue;
+			}
+
+			result += dict.at(val);
+		}
+		result += "\n";
+	}
+
+	std::cout << result << std::endl;
+}

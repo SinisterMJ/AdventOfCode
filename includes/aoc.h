@@ -114,6 +114,8 @@ struct v2
 			return x;
 		return y;
 	}
+
+	bool operator == (const v2& a) { return x == a.x && y == a.y; }
 };
 
 bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
