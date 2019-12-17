@@ -98,6 +98,8 @@ struct v2
 {
 	v2() : x(0), y(0) { }
 	v2(int x, int y) : x(x), y(y) { }
+	int abs() { return std::abs(x) + std::abs(y); }
+	int abs() const { return std::abs(x) + std::abs(y); }
 
 	int x;
 	int y;

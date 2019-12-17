@@ -104,7 +104,7 @@ public:
 					gameMap.write(pos, tileMap[pos]);
 			}
 
-			DrawMapClass(gameMap, tileMap[v2(-1, 0)]);
+			//DrawMapClass(gameMap, tileMap[v2(-1, 0)]);
 		}
 
 		std::cout << "Day 13 - Part 1: " << result << std::endl
