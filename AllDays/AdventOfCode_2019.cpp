@@ -24,7 +24,7 @@ int main()
 	int64_t total_us = 0;
 	int64_t lastTime = 0;
 	std::vector<int64_t> runTimes = { };
-	/*
+	
 	Day01 mDay01; runTimes.push_back(mDay01.run());
 	std::cout << std::endl;
 	
@@ -72,8 +72,7 @@ int main()
 
 	Day16 mDay16; runTimes.push_back(mDay16.run());
 	std::cout << std::endl;
-	*/
-
+	
 	Day17 mDay17; runTimes.push_back(mDay17.run());
 	std::cout << std::endl;
 
