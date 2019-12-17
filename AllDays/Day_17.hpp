@@ -155,7 +155,6 @@ private:
 		}
 
 PatternFound:
-
 		return dict;
 	}
 
@@ -242,8 +241,6 @@ PatternFound:
 		}
 
 		return result;
-		
-
 	}
 
 	int64_t moveRobot(std::vector<int64_t> commands, std::map<v2, int>& cameraView)
