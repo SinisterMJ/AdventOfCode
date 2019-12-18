@@ -14,8 +14,15 @@ private:
 	const v2 south = v2(0, 1);
 	const v2 west = v2(1, 0);
 	const v2 east = v2(-1, 0);
+
+	struct Pathway {
+		uint8_t start;
+		uint8_t end;
+		int32_t length;
+		uint32_t mask;
+	};
 	
-	void buildMaze(std::vector<std::string>& input, Map2DBase<uint8_t>& maze, std::map<uint8_t, std::pair<v2, v2>>& doors)
+	void buildMaze(std::vector<std::string>& input, Map2DBase<uint8_t>& maze, std::vector<uint8_t>& keyVec)
 	{
 		for (int y = 0; y < input.size(); ++y)
 		{
@@ -25,12 +32,11 @@ private:
 			}
 		}
 
-		for (uint8_t base = 'A', keys = 'a'; base <= 'Z'; ++base, ++keys)
+		for (uint8_t keys = 'a'; keys <= 'z'; ++keys)
 		{
-			v2 door = maze.find(base);
 			v2 key = maze.find(keys);
 			if (key != v2(-1, -1))
-				doors[base] = std::make_pair(door, key);
+				keyVec.push_back(keys);
 		}
 	}
 
@@ -89,10 +95,10 @@ private:
 		return flooded;
 	}
 
-	std::map<uint8_t, std::pair<int, std::vector<uint8_t>>> buildTraverseItem(Map2DBase<uint8_t>& maze, std::map<v2, int>& stepMap)
+	std::map<uint8_t, std::pair<int, std::vector<uint8_t>>> buildTraverseItem(Map2DBase<uint8_t>& maze, std::map<v2, int>& stepMap, std::vector<uint8_t>& keys)
 	{
 		std::map<uint8_t, std::pair<int, std::vector<uint8_t>>> traverseMap;
-		for (uint8_t base = 'a'; base <= 'z'; ++base)
+		for (auto base : keys)
 		{
 			v2 target = maze.find(base);
 			v2 lookUp = target;
@@ -130,29 +136,40 @@ private:
 		return traverseMap;
 	}
 	   
-	void buildTraverse(Map2DBase<uint8_t>& maze, std::map<uint8_t, std::pair<v2, v2>>& doors, std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap)
+	void buildTraverse(Map2DBase<uint8_t>& maze, std::vector<uint8_t>& keys, std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap)
 	{
-		for (auto elem : doors)
+		for (auto elem : keys)
 		{
-			uint8_t keyFrom = elem.first - 'A' + 'a';
-			auto stepMap = stepsRequired(maze, elem.second.second);
-			traverseMap[keyFrom] = buildTraverseItem(maze, stepMap);
+			v2 keyPos = maze.find(elem);
+			auto stepMap = stepsRequired(maze, keyPos);
+			traverseMap[elem] = buildTraverseItem(maze, stepMap, keys);
 		}
 
 		uint8_t keyFrom = '0';
 		auto stepMap = stepsRequired(maze, maze.find('@'));
-		traverseMap[keyFrom] = buildTraverseItem(maze, stepMap);
+		traverseMap[keyFrom] = buildTraverseItem(maze, stepMap, keys);
 	}
 
-	int64_t traverseMapRecursively(std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap, std::vector<uint8_t> acquiredKeys, uint8_t currPos, int depth)
+
+	struct less_than_key
 	{
-		std::vector<uint8_t> reachableKeys = { };
+		inline bool operator() (const std::pair<uint8_t, int32_t>& struct1, const std::pair<uint8_t, int32_t>& struct2)
+		{
+			return (struct1.second < struct2.second);
+		}
+	};
+
+	int64_t traverseMapRecursively(std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap, std::vector<uint8_t> acquiredKeys, uint8_t currPos, int64_t steps, int64_t bestPath)
+	{
+		if (steps > bestPath)
+			return bestPath;
+
+		std::vector<std::pair<uint8_t, int32_t>> reachableKeys = { };
 		for (auto elem : traverseMap[currPos])
 		{
 			if (std::find(acquiredKeys.begin(), acquiredKeys.end(), elem.first + 'A' - 'a') != acquiredKeys.end())
-			{
 				continue;
-			}
+
 			bool pathFree = true;
 			for (auto door : elem.second.second)
 			{
@@ -161,37 +178,36 @@ private:
 			}
 			if (pathFree)
 			{
-				reachableKeys.push_back(elem.first);
+				reachableKeys.push_back(std::make_pair(elem.first, elem.second.first));
 			}
 		}
 
+		/*if (reachableKeys.size() == 0)
+		{			
+			return steps;
+		}*/
+
 		if (reachableKeys.size() == 0)
-			return 0;
+			bestPath = steps;
 
-		int64_t minSteps = std::numeric_limits<int64_t>::max();
+		std::sort(reachableKeys.begin(), reachableKeys.end(), less_than_key());
 
-		int64_t count = reachableKeys.size();
 		for (auto key : reachableKeys)
 		{
 			std::vector<uint8_t> copyKeys(acquiredKeys);
-			copyKeys.push_back(key + 'A' - 'a');
-			int sanity = traverseMap[currPos][key].first;
-			minSteps = std::min(minSteps, traverseMap[currPos][key].first + traverseMapRecursively(traverseMap, copyKeys, key, depth + 1));
-			if (depth < 5)
-			{
-				std::cout << "Depth: " << depth << " Items remaining: " << --count << std::endl;
-			}
+			copyKeys.push_back(key.first + 'A' - 'a');
+			bestPath = traverseMapRecursively(traverseMap, copyKeys, key.first, steps + key.second, bestPath);
 		}
 
-		return minSteps;
+		return bestPath;
 	}
 
 	int64_t calcStepsFromTraverseMap(std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap)
 	{
 		uint8_t start = '0';
 		std::vector<uint8_t> acquiredKeys = { };
-		int64_t totalSteps = traverseMapRecursively(traverseMap, acquiredKeys, '0', 1);
-		return 0;
+		int64_t totalSteps = traverseMapRecursively(traverseMap, acquiredKeys, '0', 0, std::numeric_limits<int32_t>::max());
+		return totalSteps;
 	}
 
 	std::string inputString;
@@ -199,8 +215,8 @@ private:
 public:
 	Day18()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_18.txt");
-		inputVector = util::readFileLines("..\\inputs\\input_2019_18.txt");
+		inputString = util::readFile("..\\inputs\\input_2019_18_test.txt");
+		inputVector = util::readFileLines("..\\inputs\\input_2019_18_test.txt");
 	}
 
 	int64_t run()
@@ -208,12 +224,12 @@ public:
 		util::Timer myTime;
 		myTime.start();
 		
-		std::map<uint8_t, std::pair<v2, v2>> doors;
+		std::vector<uint8_t> keys;
 		std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>> traverseMap;
 		Map2DBase<uint8_t> maze('.');
 		
-		buildMaze(inputVector, maze, doors);
-		buildTraverse(maze, doors, traverseMap);
+		buildMaze(inputVector, maze, keys);
+		buildTraverse(maze, keys, traverseMap);
 		
 		int64_t result1 = calcStepsFromTraverseMap(traverseMap);
 		
