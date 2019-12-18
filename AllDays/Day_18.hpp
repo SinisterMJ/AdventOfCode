@@ -136,6 +136,8 @@ private:
 				if (seen.find(situation) != seen.end())
 					continue;
 
+				bool subset = false;
+				
 				seen.insert(situation);
 				checkItems.push_back(nextState);
 			}
