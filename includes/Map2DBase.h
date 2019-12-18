@@ -46,6 +46,18 @@ public:
 		return v2(-1, -1);
 	}
 
+	std::vector<v2> findAll(T val)
+	{
+		std::vector<v2> allPositions;
+		for (auto elem : dataMap)
+		{
+			if (elem.second == val)
+				allPositions.push_back(elem.first);
+		}
+
+		return allPositions;
+	}
+
 	T read(int32_t x, int32_t y)
 	{
 		return read(v2(x, y));
