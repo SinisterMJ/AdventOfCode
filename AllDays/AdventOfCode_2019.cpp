@@ -25,10 +25,10 @@ int main()
 	int64_t total_us = 0;
 	int64_t lastTime = 0;
 	std::vector<int64_t> runTimes = { };
-	
-	/*Day01 mDay01; runTimes.push_back(mDay01.run());
+		
+	Day01 mDay01; runTimes.push_back(mDay01.run());
 	std::cout << std::endl;
-	
+		
 	Day02 mDay02; runTimes.push_back(mDay02.run());
 	std::cout << std::endl;
 	
@@ -73,12 +73,13 @@ int main()
 
 	Day16 mDay16; runTimes.push_back(mDay16.run());
 	std::cout << std::endl;
-	
+
 	Day17 mDay17; runTimes.push_back(mDay17.run());
-	std::cout << std::endl;*/
-	
+	std::cout << std::endl;
+
 	Day18 mDay18; runTimes.push_back(mDay18.run());
 	std::cout << std::endl;
+	
 
 	total_us = std::accumulate(runTimes.begin(), runTimes.end(), static_cast<int64_t>(0));
 

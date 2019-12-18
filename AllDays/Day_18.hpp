@@ -70,41 +70,10 @@ private:
 		}
 	};
 
-	struct Keyset {
-		uint32_t mask;
-		int32_t count;
-		Keyset() : mask(0), count(0) { }
-
-		bool isSet(int i)
-		{
-			if (i < 0)
-				return false;
-
-			return (mask & (1 << i));
-		}
-
-		void set(int i) {
-			if (isSet(i))
-				return;
-			if (i < 0)
-				return;
-			mask |= (1 << i);
-			count++;
-		}
-
-		void unset(int i) {
-			if (isSet(i))
-			{ 
-				count--;
-				mask &= ~(1 << i);
-			}
-		}
-	};
-
 	std::string inputString;
 	std::vector<std::string> inputVector;
 
-	void buildMaze(std::vector<std::string>& input, Map2DBase<uint8_t>& maze, Keyset& keyset)
+	void buildMaze(std::vector<std::string>& input, Map2DBase<uint8_t>& maze, uint32_t& keyset)
 	{
 		for (int y = 0; y < input.size(); ++y)
 		{
@@ -115,27 +84,28 @@ private:
 				if ('a' <= input[y][x] && input[y][x] <= 'z')
 				{
 					uint8_t key = input[y][x];
-					keyset.set(key - 'a');
+					keyset |= 1 << (key - 'a');
 					keyMap[input[y][x]] = v2(x, y);
 				}
 			}
 		}
 	}
 
-	int64_t calcSteps(Map2DBase<uint8_t>& map, Keyset keys)
+	int64_t calcSteps(Map2DBase<uint8_t>& map, uint32_t keys)
 	{
 		std::deque<State> checkItems;
 		std::set<StateTimeless> seen = { };
 
 		checkItems.push_back(State(map.find('@'), 0, 0));
 		seen.insert(StateTimeless(map.find('@'), 0));
-
+		int64_t step = 0;
 		while (checkItems.size() > 0)
 		{
 			State check = checkItems.front();
 			checkItems.pop_front();
+			step = check.steps;
 
-			if (check.acquiredKeys == keys.mask)
+			if (check.acquiredKeys == keys)
 			{
 				return check.steps;
 			}
@@ -296,7 +266,7 @@ private:
 		return result;
 	}
 
-	int64_t calcStepsPart2(Map2DBase<uint8_t>& map, Keyset keys)
+	int64_t calcStepsPart2(Map2DBase<uint8_t>& map, uint32_t keys)
 	{
 		auto startPosRobots = map.findAll('@');
 		std::vector<uint8_t> positionsRobots = { '@', '@', '@', '@' };
@@ -328,7 +298,7 @@ private:
 			auto stateTime = statuses.front();
 			statuses.erase(statuses.begin(), statuses.begin() + 1);
 			
-			if (stateTime.state.acquiredKeys == keys.mask)
+			if (stateTime.state.acquiredKeys == keys)
 			{
 				return stateTime.steps;
 			}
@@ -406,23 +376,22 @@ public:
 	{
 		util::Timer myTime;
 		myTime.start();
-		Keyset keys;
+		uint32_t keyMask = 0;
 		Map2DBase<uint8_t> maze('.');
-		Map2DBase<uint8_t> mazePart2('.');
 
-		buildMaze(inputVector, maze, keys);
-		buildMaze(inputVector, mazePart2, keys);
+		buildMaze(inputVector, maze, keyMask);
 
-		v2 changePart2 = mazePart2.find('@');
-		mazePart2.write(changePart2, '#');
+		int64_t result1 = calcSteps(maze, keyMask);
+
+		v2 changePart2 = maze.find('@');
+		maze.write(changePart2, '#');
 		for (auto dir : neighbourTiles)
-			mazePart2.write(changePart2 + dir, '#');
+			maze.write(changePart2 + dir, '#');
 
 		for (auto dir : diagonalTiles)
-			mazePart2.write(changePart2 + dir, '@');
+			maze.write(changePart2 + dir, '@');
 
-		int64_t result2 = calcStepsPart2(mazePart2, keys);
-		int64_t result1 = calcSteps(maze, keys);
+		int64_t result2 = calcStepsPart2(maze, keyMask);
 
 		std::cout << "Day 18 - Part 1: " << result1 << std::endl;
 		std::cout << "Day 18 - Part 2: " << result2 << std::endl;
