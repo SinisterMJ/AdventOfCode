@@ -14,7 +14,7 @@ private:
 	const v2 south = v2(0, 1);
 	const v2 west = v2(1, 0);
 	const v2 east = v2(-1, 0);
-
+	
 	void buildMaze(std::vector<std::string>& input, Map2DBase<uint8_t>& maze, std::map<uint8_t, std::pair<v2, v2>>& doors)
 	{
 		for (int y = 0; y < input.size(); ++y)
@@ -34,36 +34,26 @@ private:
 		}
 	}
 
-	bool checkFloodable(Map2DBase<uint8_t>& maze, std::map<uint8_t, bool>& openDoors, v2 start)
+	bool checkFloodable(Map2DBase<uint8_t>& maze, v2 start)
 	{
-		if (maze.read(start) == '.')
-			return true;
-
 		if (maze.read(start) == '#')
 			return false;
-
-		uint8_t value = maze.read(start);
-
-		if ('a' <= value && value <= 'z')
-			return true;
-
-		if ('A' <= value && value <= 'Z')
-			return openDoors[value];
-
+		
 		return true;
 	}
 
-	bool floodTile(Map2DBase<uint8_t>& maze, std::map<v2, int>& flooded, std::map<uint8_t, bool>& openDoors, v2 currPos, int value)
+	bool floodTile(Map2DBase<uint8_t>& maze, std::map<v2, int>& flooded, v2 currPos, int value)
 	{
-		if (flooded.find(currPos) == flooded.end() && checkFloodable(maze, openDoors, currPos))
+		if (flooded.find(currPos) == flooded.end() && checkFloodable(maze, currPos))
 		{
 			flooded[currPos] = value;
 			return true;
 		}
+
 		return false;
 	}
 
-	std::map<v2, int> stepsRequired(Map2DBase<uint8_t>& maze, std::map<uint8_t, bool>& openDoors, v2 start)
+	std::map<v2, int> stepsRequired(Map2DBase<uint8_t>& maze, v2 start)
 	{
 		std::map<v2, int> flooded;
 		flooded[start] = 0;
@@ -80,13 +70,13 @@ private:
 				if (elem.second != currVal)
 					continue;
 
-				if (floodTile(maze, flooded, openDoors, elem.first + north, currVal + 1))
+				if (floodTile(maze, flooded, elem.first + north, currVal + 1))
 					writtenNewValue = true;
-				if (floodTile(maze, flooded, openDoors, elem.first + east, currVal + 1))
+				if (floodTile(maze, flooded, elem.first + east, currVal + 1))
 					writtenNewValue = true;
-				if (floodTile(maze, flooded, openDoors, elem.first + west, currVal + 1))
+				if (floodTile(maze, flooded, elem.first + west, currVal + 1))
 					writtenNewValue = true;
-				if (floodTile(maze, flooded, openDoors, elem.first + south, currVal + 1))
+				if (floodTile(maze, flooded, elem.first + south, currVal + 1))
 					writtenNewValue = true;
 			}
 
@@ -99,50 +89,109 @@ private:
 		return flooded;
 	}
 
-	int64_t traverseMazeRecursively(Map2DBase<uint8_t>& maze, std::map<uint8_t, std::pair<v2, v2>>& doors, std::map<uint8_t, bool> openDoors, v2 currentPosition)
+	std::map<uint8_t, std::pair<int, std::vector<uint8_t>>> buildTraverseItem(Map2DBase<uint8_t>& maze, std::map<v2, int>& stepMap)
 	{
-		std::vector<std::pair<uint8_t, int32_t>> reachableKeys = { };
-		bool allOpen = true;
-		auto flooded = stepsRequired(maze, openDoors, currentPosition);
-		for (auto elem : openDoors)
+		std::map<uint8_t, std::pair<int, std::vector<uint8_t>>> traverseMap;
+		for (uint8_t base = 'a'; base <= 'z'; ++base)
 		{
-			if (!elem.second)
+			v2 target = maze.find(base);
+			v2 lookUp = target;
+			int steps = stepMap[target];
+
+			int pathLength = steps;
+
+			std::vector<uint8_t> doorsPassed = { };
+
+			while (pathLength > 0)
 			{
-				if (flooded.find(doors[elem.first].second) != flooded.end())
-				{
-					reachableKeys.push_back(std::make_pair(elem.first, flooded[doors[elem.first].second]));
-				}
+				v2 direction;
+				if (stepMap.find(lookUp + north) != stepMap.end() && stepMap[lookUp + north] < pathLength)
+					direction = north;
+
+				if (stepMap.find(lookUp + east) != stepMap.end() && stepMap[lookUp + east] < pathLength)
+					direction = east;
+
+				if (stepMap.find(lookUp + south) != stepMap.end() && stepMap[lookUp + south] < pathLength)
+					direction = south;
+
+				if (stepMap.find(lookUp + west) != stepMap.end() && stepMap[lookUp + west] < pathLength)
+					direction = west;
+
+				pathLength--;
+				lookUp += direction;
+
+				if ('A' <= maze.read(lookUp) && maze.read(lookUp) <= 'Z')
+					doorsPassed.push_back(maze.read(lookUp));
 			}
-			allOpen &= elem.second;
+
+			traverseMap[base] = std::make_pair(steps, doorsPassed);
 		}
-		
-		if (allOpen)
+
+		return traverseMap;
+	}
+	   
+	void buildTraverse(Map2DBase<uint8_t>& maze, std::map<uint8_t, std::pair<v2, v2>>& doors, std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap)
+	{
+		for (auto elem : doors)
+		{
+			uint8_t keyFrom = elem.first - 'A' + 'a';
+			auto stepMap = stepsRequired(maze, elem.second.second);
+			traverseMap[keyFrom] = buildTraverseItem(maze, stepMap);
+		}
+
+		uint8_t keyFrom = '0';
+		auto stepMap = stepsRequired(maze, maze.find('@'));
+		traverseMap[keyFrom] = buildTraverseItem(maze, stepMap);
+	}
+
+	int64_t traverseMapRecursively(std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap, std::vector<uint8_t> acquiredKeys, uint8_t currPos, int depth)
+	{
+		std::vector<uint8_t> reachableKeys = { };
+		for (auto elem : traverseMap[currPos])
+		{
+			if (std::find(acquiredKeys.begin(), acquiredKeys.end(), elem.first + 'A' - 'a') != acquiredKeys.end())
+			{
+				continue;
+			}
+			bool pathFree = true;
+			for (auto door : elem.second.second)
+			{
+				if (std::find(acquiredKeys.begin(), acquiredKeys.end(), door) == acquiredKeys.end())
+					pathFree = false;
+			}
+			if (pathFree)
+			{
+				reachableKeys.push_back(elem.first);
+			}
+		}
+
+		if (reachableKeys.size() == 0)
 			return 0;
 
 		int64_t minSteps = std::numeric_limits<int64_t>::max();
 
+		int64_t count = reachableKeys.size();
 		for (auto key : reachableKeys)
 		{
-			std::map<uint8_t, bool> copyOpenDoors(openDoors);
-			copyOpenDoors[key.first] = true;
-			minSteps = std::min(minSteps, key.second + traverseMazeRecursively(maze, doors, copyOpenDoors, doors[key.first].second));
+			std::vector<uint8_t> copyKeys(acquiredKeys);
+			copyKeys.push_back(key + 'A' - 'a');
+			int sanity = traverseMap[currPos][key].first;
+			minSteps = std::min(minSteps, traverseMap[currPos][key].first + traverseMapRecursively(traverseMap, copyKeys, key, depth + 1));
+			if (depth < 5)
+			{
+				std::cout << "Depth: " << depth << " Items remaining: " << --count << std::endl;
+			}
 		}
 
 		return minSteps;
 	}
 
-	int64_t calcTotalSteps(Map2DBase<uint8_t>& maze, std::map<uint8_t, std::pair<v2, v2>>& doors)
+	int64_t calcStepsFromTraverseMap(std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>>& traverseMap)
 	{
-		std::map<uint8_t, bool> openDoors;
-		for (auto elem : doors)
-		{
-			openDoors[elem.first] = false;
-		}
-
-		v2 currentPosition = maze.find('@');
-
-		int64_t totalSteps = traverseMazeRecursively(maze, doors, openDoors, currentPosition);
-		return totalSteps;
+		uint8_t start = '0';
+		std::vector<uint8_t> acquiredKeys = { };
+		int64_t totalSteps = traverseMapRecursively(traverseMap, acquiredKeys, '0', 1);
+		return 0;
 	}
 
 	std::string inputString;
@@ -160,11 +209,13 @@ public:
 		myTime.start();
 		
 		std::map<uint8_t, std::pair<v2, v2>> doors;
+		std::map<uint8_t, std::map<uint8_t, std::pair<int, std::vector<uint8_t>>>> traverseMap;
 		Map2DBase<uint8_t> maze('.');
 		
 		buildMaze(inputVector, maze, doors);
+		buildTraverse(maze, doors, traverseMap);
 		
-		int64_t result1 = calcTotalSteps(maze, doors);
+		int64_t result1 = calcStepsFromTraverseMap(traverseMap);
 		
 		std::cout << "Day 18 - Part 1: " << result1 << std::endl;
 		
