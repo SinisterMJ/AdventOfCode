@@ -26,13 +26,12 @@ public:
 
 	bool validIndex(int32_t x, int32_t y)
 	{
-		return (x >= _minX && x <= _maxX &&
-				y >= _minY && y <= _maxY);
+		return validIndex(v2(x, y));
 	}
 
 	bool validIndex(v2 pos)
 	{
-		return validIndex(pos.x, pos.y);
+		return dataMap.find(pos) != dataMap.end();
 	}
 
 	v2 find(T val)

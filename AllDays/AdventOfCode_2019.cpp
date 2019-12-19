@@ -16,6 +16,7 @@
 #include "Day_16.hpp"
 #include "Day_17.hpp"
 #include "Day_18.hpp"
+#include "Day_19.hpp"
 
 #include <numeric>
 #include <iomanip>
@@ -80,6 +81,8 @@ int main()
 	Day18 mDay18; runTimes.push_back(mDay18.run());
 	std::cout << std::endl;
 	
+	Day19 mDay19; runTimes.push_back(mDay19.run());
+	std::cout << std::endl;
 
 	total_us = std::accumulate(runTimes.begin(), runTimes.end(), static_cast<int64_t>(0));
 
