@@ -56,7 +56,7 @@ private:
 			while (getBeam(commands, v2(x, y)) == 0)
 				y++;
 						
-			if (getBeam(commands, v2(x - 99, y)) == 1 && getBeam(commands, v2(x - 99, y + 99)) == 1)
+			if (getBeam(commands, v2(x - 99, y + 99)) == 1)
 				return (x - 99) * 10000 + y;
 
 			x++;
