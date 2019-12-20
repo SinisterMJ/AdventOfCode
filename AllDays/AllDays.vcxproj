@@ -138,6 +138,7 @@
     <ClInclude Include="Day_17.hpp" />
     <ClInclude Include="Day_18.hpp" />
     <ClInclude Include="Day_19.hpp" />
+    <ClInclude Include="Day_20.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\includes\IntcodeVM.cpp" />

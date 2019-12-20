@@ -17,6 +17,7 @@
 #include "Day_17.hpp"
 #include "Day_18.hpp"
 #include "Day_19.hpp"
+#include "Day_20.hpp"
 
 #include <numeric>
 #include <iomanip>
@@ -27,7 +28,7 @@ int main()
 	int64_t lastTime = 0;
 	std::vector<int64_t> runTimes = { };
 		
-	Day01 mDay01; runTimes.push_back(mDay01.run());
+	/*Day01 mDay01; runTimes.push_back(mDay01.run());
 	std::cout << std::endl;
 		
 	Day02 mDay02; runTimes.push_back(mDay02.run());
@@ -80,8 +81,11 @@ int main()
 
 	Day18 mDay18; runTimes.push_back(mDay18.run());
 	std::cout << std::endl;
-	
+
 	Day19 mDay19; runTimes.push_back(mDay19.run());
+	std::cout << std::endl;*/
+
+	Day20 mDay20; runTimes.push_back(mDay20.run());
 	std::cout << std::endl;
 
 	total_us = std::accumulate(runTimes.begin(), runTimes.end(), static_cast<int64_t>(0));
