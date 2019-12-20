@@ -91,6 +91,11 @@ public:
 
     int32_t height() { return _maxY - _minY + 1; }
     int32_t width() { return _maxX - _minX + 1; }
+	
+	int32_t minX() { return _minX; }
+	int32_t minY() { return _minY; }
+	int32_t maxX() { return _maxX; }
+	int32_t maxY() { return _maxY; }
 
 	bool move(int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, bool checkOccupation = true)
 	{

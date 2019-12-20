@@ -113,7 +113,7 @@ private:
 			{
 				bool innerPortal = true;
 
-				if (pos.x < 3 || pos.y < 3 || pos.y > maze.height() - 3 || pos.x > maze.width() - 3)
+				if (pos.x == maze.minX() || pos.y == maze.minY() || pos.y == maze.maxY() || pos.x == maze.maxX())
 					innerPortal = false;
 
 				if (innerPortal)
