@@ -215,26 +215,33 @@ private:
 		
 		int32_t value = 0;
 		
+		std::map<PositionDepth, int32_t> newlyAdded;
 		flooded[entry] = value;
+		newlyAdded[entry] = value;
 
 		while (flooded.find(entryEnd) == flooded.end())
 		{
-			for (auto elem : flooded)
+			std::map<PositionDepth, int32_t> temp;
+			for (auto elem : newlyAdded)
 			{
-				if (elem.second == value)
-				{
-					auto neighbours = getValidNeighboursRecursive(maze, elem.first.position, elem.first.depth);
+				auto neighbours = getValidNeighboursRecursive(maze, elem.first.position, elem.first.depth);
 
-					for (auto neighbour : neighbours)
+				for (auto neighbour : neighbours)
+				{
+					if (flooded.find(neighbour) == flooded.end())
 					{
-						if (flooded.find(neighbour) == flooded.end())
-							flooded[neighbour] = value + 1;
+						flooded[neighbour] = value + 1;
+						temp[neighbour] = value + 1;
 					}
 				}
 			}
 
+			newlyAdded.swap(temp);
+
 			++value;
 		}
+
+		std::cout << "Visited tiles: " << flooded.size() << std::endl;
 
 		return flooded[entryEnd];
 	}

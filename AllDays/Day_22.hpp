@@ -162,24 +162,18 @@ private:
 		for (auto order : manipulations)
 		{
 			temp.clear();
-			if (order == "deal into new stack")
-			{
-				for (int64_t index = start.size() - 1; index >= 0; --index)
-				{
-					temp.push_back(start[index]);
-				}
-			}
 
+			if (order == "deal into new stack")
+				for (int64_t index = start.size() - 1; index >= 0; --index)
+					temp.push_back(start[index]);
+			
 			if (std::regex_search(order, match, increment) && match.size() > 1)
 			{
 				int32_t inc = std::stoi(match[1]);
 				temp.resize(count);
 
 				for (int index = 0; index < start.size(); ++index)
-				{
 					temp[(index * inc) % temp.size()] = start[index];
-				}
-
 			}
 
 			if (std::regex_search(order, match, cut) && match.size() > 1)
@@ -188,22 +182,16 @@ private:
 				temp.resize(count);
 
 				if (icut < 0)
-				{
 					icut += count;
-				}
 
 				for (int index = 0; index < start.size(); ++index)
-				{
 					temp[(count - icut + index) % count] = start[index];
-				}
 			}
 
 			temp.swap(start);
 		}
-		
-		auto resDepth = std::find(start.begin(), start.end(), targetCard);
 
-		return std::distance(start.begin(), resDepth);
+		return std::distance(start.begin(), std::find(start.begin(), start.end(), targetCard));
 	}
 
 public:
