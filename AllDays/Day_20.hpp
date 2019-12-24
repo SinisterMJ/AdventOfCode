@@ -9,13 +9,13 @@
 #include <map>
 #include <deque>
 #include <set>
-#include <unordered_set>
 
 class Day20 {
 private:
 	std::string inputString;
 	std::vector<std::string> inputVector;
-	
+	std::map<int32_t, std::vector<v2>> portalMap;
+
 	struct PositionDepth {
 		v2 position;
 		int32_t depth;
@@ -45,7 +45,6 @@ private:
 
 				if ('A' <= val && val <= 'Z')
 				{
-					// search right or now for other portal key
 					int sx = x + 1;
 					int sy = y + 1;
 					uint8_t sval = 0;
@@ -75,16 +74,28 @@ private:
 						if (topDown)
 						{
 							if ((y > 2 && y < inputVector.size() / 2) || (y > inputVector.size() - 3))
+							{
 								maze.write(x, y, key);
+								portalMap[key].push_back(v2(x, y - 1));
+							}
 							else
+							{
 								maze.write(x, sy, key);
+								portalMap[key].push_back(v2(x, sy + 1));
+							}
 						}
 						else
 						{
 							if ((x > 2 && x < maze.width() / 2) || (x > maze.width() - 4))
+							{
 								maze.write(x, y, key);
+								portalMap[key].push_back(v2(x - 1, y));
+							}
 							else
+							{
 								maze.write(sx, y, key);
+								portalMap[key].push_back(v2(sx + 1, y));
+							}
 						}
 					}
 				}
@@ -128,17 +139,12 @@ private:
 				}
 
 				v2 portalOut = pos;
-				auto portals = maze.findAll(maze.read(pos));
+				auto portals = portalMap[val];
+
 				if (portals.size() == 1)
 					continue;
 
-				portalOut = portals[0] == pos ? portals[1] : portals[0];
-
-				for (auto dirPort : maze.neighbours)
-				{
-					if (maze.read(portalOut + dirPort) == '.')
-						pos = portalOut + dirPort;
-				}
+				pos = portals[0] == current ? portals[1] : portals[0];
 			}
 
 			entry.position = pos;
@@ -153,25 +159,19 @@ private:
 		std::vector<v2> result;
 		for (auto dir : maze.neighbours)
 		{
-			if (maze.read(current + dir) == '#')
-				continue;
-
 			v2 pos = current + dir;
+			auto val = maze.read(pos);
 
-			if (maze.read(pos) != '.')
+			if (val == '#')
+				continue;
+						
+			if (val != '.')
 			{
-				v2 portalOut = pos;
-				auto portals = maze.findAll(maze.read(pos));
+				auto portals = portalMap[val];
 				if (portals.size() == 1)
 					continue;
 
-				portalOut = portals[0] == pos ? portals[1] : portals[0];
-
-				for (auto dirPort : maze.neighbours)
-				{
-					if (maze.read(portalOut + dirPort) == '.')
-						pos = portalOut + dirPort;
-				}
+				pos = portals[0] == current ? portals[1] : portals[0];
 			}
 
 			result.push_back(pos);

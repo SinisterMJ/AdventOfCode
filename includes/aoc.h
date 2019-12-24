@@ -11,6 +11,13 @@
 #include <stdint.h>
 #include <chrono>
 
+template <class T>
+inline void hash_combine(std::size_t & seed, const T & v)
+{
+	std::hash<T> hasher;
+	seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
 namespace util
 {
     class Timer {
@@ -172,4 +179,18 @@ v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z -
 
 template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
+}
+
+namespace std
+{
+  template<> struct hash<v2>
+  {
+    inline size_t operator()(const v2 & v) const
+    {
+      size_t seed = 0;
+      ::hash_combine(seed, v.x);
+      ::hash_combine(seed, v.y);
+      return seed;
+    }
+  };
 }
