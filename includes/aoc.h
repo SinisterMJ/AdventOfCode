@@ -166,7 +166,7 @@ struct v3
 };
 
 bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
-bool operator < (const v3& a, const v3& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : (b.y < a.y ? false : (a.z < b.z ? true : false)))); }
+bool operator < (const v3& a, const v3& b) { return a.z != b.z ? a.z < b.z : a.x != b.x ? a.x < b.x : a.y < b.y; }
 
 bool operator > (const v3& a, const v3& b) { return b < a; }
 bool operator != (const v3& a, const v3& b) { return !(a == b); }

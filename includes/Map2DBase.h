@@ -159,16 +159,19 @@ private:
 	std::map<v2, T> dataMap;
 };
 
-void DrawMap(std::map<v2, int>& map, const std::map<int, uint8_t>& dict)
+void DrawMap(std::map<v2, int>& map, const std::map<int, uint8_t>& dict, bool resetScreen = true)
 {
-	HANDLE hStdout;
-	COORD destCoord;
-	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (resetScreen)
+	{
+		HANDLE hStdout;
+		COORD destCoord;
+		hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	//position cursor at start of window
-	destCoord.X = 0;
-	destCoord.Y = 0;
-	SetConsoleCursorPosition(hStdout, destCoord);
+		//position cursor at start of window
+		destCoord.X = 0;
+		destCoord.Y = 0;
+		SetConsoleCursorPosition(hStdout, destCoord);
+	}
 
 	int minX = 0;
 	int minY = 0;

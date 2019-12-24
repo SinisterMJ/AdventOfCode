@@ -21,6 +21,7 @@
 #include "Day_21.hpp"
 #include "Day_22.hpp"
 #include "Day_23.hpp"
+#include "Day_24.hpp"
 
 #include <numeric>
 #include <iomanip>
@@ -88,8 +89,8 @@ int main()
 	Day19 mDay19; runTimes.push_back(mDay19.run());
 	std::cout << std::endl;*/
 
-	Day20 mDay20; runTimes.push_back(mDay20.run());
-	std::cout << std::endl;
+	/*Day20 mDay20; runTimes.push_back(mDay20.run());
+	std::cout << std::endl;*/
 
 	/*Day21 mDay21; runTimes.push_back(mDay21.run());
 	std::cout << std::endl;
@@ -99,6 +100,9 @@ int main()
 
 	Day23 mDay23; runTimes.push_back(mDay23.run());
 	std::cout << std::endl;*/
+
+	Day24 mDay24; runTimes.push_back(mDay24.run());
+	std::cout << std::endl;
 
 	total_us = std::accumulate(runTimes.begin(), runTimes.end(), static_cast<int64_t>(0));
 
