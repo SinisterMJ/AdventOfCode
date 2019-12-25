@@ -22,6 +22,7 @@
 #include "Day_22.hpp"
 #include "Day_23.hpp"
 #include "Day_24.hpp"
+#include "Day_25.hpp"
 
 #include <numeric>
 #include <iomanip>
@@ -32,7 +33,7 @@ int main()
 	int64_t lastTime = 0;
 	std::vector<int64_t> runTimes = { };
 		
-	/*Day01 mDay01; runTimes.push_back(mDay01.run());
+	Day01 mDay01; runTimes.push_back(mDay01.run());
 	std::cout << std::endl;
 		
 	Day02 mDay02; runTimes.push_back(mDay02.run());
@@ -87,21 +88,24 @@ int main()
 	std::cout << std::endl;
 
 	Day19 mDay19; runTimes.push_back(mDay19.run());
-	std::cout << std::endl;*/
+	std::cout << std::endl;
 
-	/*Day20 mDay20; runTimes.push_back(mDay20.run());
-	std::cout << std::endl;*/
+	Day20 mDay20; runTimes.push_back(mDay20.run());
+	std::cout << std::endl;
 
-	/*Day21 mDay21; runTimes.push_back(mDay21.run());
+	Day21 mDay21; runTimes.push_back(mDay21.run());
 	std::cout << std::endl;
 
 	Day22 mDay22; runTimes.push_back(mDay22.run());
 	std::cout << std::endl;
 
 	Day23 mDay23; runTimes.push_back(mDay23.run());
-	std::cout << std::endl;*/
+	std::cout << std::endl;
 
 	Day24 mDay24; runTimes.push_back(mDay24.run());
+	std::cout << std::endl;
+
+	Day25 mDay25; runTimes.push_back(mDay25.run());
 	std::cout << std::endl;
 
 	total_us = std::accumulate(runTimes.begin(), runTimes.end(), static_cast<int64_t>(0));
