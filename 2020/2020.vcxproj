@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{9956795B-C598-4435-94AD-E2FB2CF4ACC9}</ProjectGuid>
-    <RootNamespace>Day18FromNet</RootNamespace>
+    <ProjectGuid>{DF7ADBBD-D41D-4CA9-9C9B-8BE3A67C8CFF}</ProjectGuid>
+    <RootNamespace>2020</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -73,11 +73,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -103,11 +104,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -115,11 +117,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="solve.cpp" />
+    <ClInclude Include="..\includes\aoc.h" />
+    <ClInclude Include="..\includes\ConsoleColor.h" />
+    <ClInclude Include="..\includes\Map2DBase.h" />
+    <ClInclude Include="Day_01.hpp" />
+    <ClInclude Include="Day_02.hpp" />
+    <ClInclude Include="Day_03.hpp" />
+    <ClInclude Include="Day_04.hpp" />
+    <ClInclude Include="Day_05.hpp" />
+    <ClInclude Include="Day_06.hpp" />
+    <ClInclude Include="Day_07.hpp" />
+    <ClInclude Include="Day_08.hpp" />
+    <ClInclude Include="Day_09.hpp" />
+    <ClInclude Include="Day_10.hpp" />
+    <ClInclude Include="Day_11.hpp" />
+    <ClInclude Include="Day_12.hpp" />
+    <ClInclude Include="Day_13.hpp" />
+    <ClInclude Include="Day_14.hpp" />
+    <ClInclude Include="Day_15.hpp" />
+    <ClInclude Include="Day_16.hpp" />
+    <ClInclude Include="Day_17.hpp" />
+    <ClInclude Include="Day_18.hpp" />
+    <ClInclude Include="Day_19.hpp" />
+    <ClInclude Include="Day_20.hpp" />
+    <ClInclude Include="Day_21.hpp" />
+    <ClInclude Include="Day_22.hpp" />
+    <ClInclude Include="Day_23.hpp" />
+    <ClInclude Include="Day_24.hpp" />
+    <ClInclude Include="Day_25.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="solve.h" />
+    <ClCompile Include="AdventOfCode_2020.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -33,6 +33,9 @@ namespace util
 	{
 		FILE* f;
 		fopen_s(&f, path.c_str(), "r");
+		if (f == nullptr)
+			return "";
+
 		std::string input;
 		{
 			fseek(f, 0, SEEK_END);
@@ -94,6 +97,24 @@ namespace util
 		std::string number;
 		while (std::getline(ss, number, delim)) {
 			elems.push_back(std::stoll(number));
+		}
+		return elems;
+	}
+
+	std::vector<int64_t> ConvertToInt64(std::vector<std::string> &s) {
+		std::vector<int64_t> elems;
+		for (auto elem : s)
+		{
+			elems.push_back(std::stoll(elem));
+		}
+		return elems;
+	}
+
+	std::vector<int32_t> ConvertToInt(std::vector<std::string> &s) {
+		std::vector<int32_t> elems;
+		for (auto elem : s)
+		{
+			elems.push_back(std::stoi(elem));
 		}
 		return elems;
 	}

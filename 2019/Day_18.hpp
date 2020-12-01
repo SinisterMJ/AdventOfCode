@@ -38,10 +38,10 @@ private:
 		}
 	};
 
-	struct StateQuad {
+	struct StateQuadTimeless {
 		std::vector<uint8_t> position;
 		uint32_t acquiredKeys;
-		bool operator < (const StateQuad& b) const
+		bool operator < (const StateQuadTimeless& b) const
 		{
 			for (int index = 0; index < position.size(); ++index)
 			{
@@ -52,11 +52,11 @@ private:
 		}
 	};
 
-	struct StateQuadSteps {
-		StateQuad state;
+	struct StateQuad {
+		StateQuadTimeless state;
 		int64_t steps;
 
-		bool operator < (const StateQuadSteps& b) const
+		bool operator < (const StateQuad& b) const
 		{
 			if (steps == b.steps)
 				return state < b.state;
@@ -64,7 +64,7 @@ private:
 			return steps < b.steps;
 		}
 
-		bool operator == (const StateQuadSteps& a) const
+		bool operator == (const StateQuad& a) const
 		{
 			return state.acquiredKeys == a.state.acquiredKeys;
 		}
@@ -282,14 +282,14 @@ private:
 			reachablePerRobotMap[index] = findMaskRobot(map, startPosRobots[index]);
 		}
 
-		std::set<StateQuad> seen;
-		std::vector<StateQuadSteps> statuses;
+		std::set<StateQuadTimeless> seen;
+		std::vector<StateQuad> statuses;
 
-		StateQuad initial;
+		StateQuadTimeless initial;
 		initial.position = positionsRobots;
 		initial.acquiredKeys = 0;
 
-		StateQuadSteps initialTime;
+		StateQuad initialTime;
 		initialTime.state = initial;
 		initialTime.steps = 0;
 
@@ -343,7 +343,7 @@ private:
 
 			for (auto possibilites : possibleSteps)
 			{
-				StateQuadSteps entry;
+				StateQuad entry;
 				entry.steps = stateTime.steps + possibilites[0].second + possibilites[1].second + possibilites[2].second + possibilites[3].second;
 				entry.state.acquiredKeys = stateTime.state.acquiredKeys;
 				entry.state.position = stateTime.state.position;

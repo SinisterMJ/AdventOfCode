@@ -2,14 +2,13 @@ import requests
 import sys
 import datetime
 import os
-
-if len(sys.argv) < 2:
-	print("Wrong number of arguments")
-	exit()
 	
-day = sys.argv[1]
+day = datetime.datetime.now().day
 year = datetime.datetime.now().year
 
+if len(sys.argv) >= 2:
+	year = sys.argv[1]
+	
 if len(sys.argv) == 3:
 	year = sys.argv[2]
 
@@ -23,4 +22,3 @@ r = requests.get("https://adventofcode.com/" + str(year) + "/day/" + str(day) + 
 file = open(fileName, "w") 
 file.write(r.text)
 file.close()
-  
