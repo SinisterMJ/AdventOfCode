@@ -29,6 +29,8 @@
 
 int main()
 {
+    std::ios_base::sync_with_stdio(false);
+
 	int64_t total_us = 0;
 	int64_t lastTime = 0;
 	std::vector<int64_t> runTimes = { };
