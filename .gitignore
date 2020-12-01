@@ -39,7 +39,6 @@ Thumbs.db
 # Visual Studio specific stuff #
 ################################
 *.vcxproj.user
-*.vcxproj.filters
 .vs
 x64/
 *Debug/
