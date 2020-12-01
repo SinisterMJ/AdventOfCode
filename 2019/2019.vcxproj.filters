@@ -90,6 +90,24 @@
     <ClInclude Include="Day_19.hpp">
       <Filter>Headerdateien\Days</Filter>
     </ClInclude>
+    <ClInclude Include="Day_25.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_20.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_21.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_22.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_23.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_24.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdventOfCode_2019.cpp">

@@ -33,36 +33,34 @@ public:
 
         std::sort(numbers.begin(), numbers.end());
 
-		for (uint32_t i = 0; i < numbers.size(); ++i)
+        for (uint32_t i = 0; i < numbers.size() && result_1 == -1; ++i)
+        {
+            remainder_1 = 2020 - numbers[i];
+
+            if (std::binary_search(numbers.begin() + i, numbers.end(), remainder_1))
+                result_1 = numbers[i] * remainder_1;
+        }
+		
+        for (uint32_t i = 0; i < numbers.size(); ++i)
 		{
 			remainder_1 = 2020 - numbers[i];
-			
-			for (uint32_t j = i + 1; j < numbers.size() && numbers[j] <= remainder_1; ++j)
-			{
-				remainder_2 = 2020 - numbers[i] - numbers[j];
-				
+            for (uint32_t j = i + 1; j < numbers.size() && numbers[j] <= remainder_1; ++j)
+            {
+                remainder_2 = 2020 - numbers[i] - numbers[j];
+
                 if (result_2 == -1)
                 {
-                    for (uint32_t k = j + 1; k < numbers.size() && numbers[k] <= remainder_2; ++k)
-                    {
-                        if (numbers[k] == remainder_2)
-                        {
-                            result_2 = numbers[i] * numbers[j] * numbers[k];
-                            break;
-                        }
-                    }
+                    if (std::binary_search(numbers.begin() + j, numbers.end(), remainder_2))
+                        result_2 = numbers[i] * numbers[j] * remainder_2;
                 }
+            }
 
-				if (numbers[j] == remainder_1)
-					result_1 = numbers[i] * numbers[j];
-			}            
-
-            if (result_1 != -1 && result_2 != -1)
+            if (result_2 != -1)
                 break;
 		}
 
-		std::cout << "Day 01 - Part 1: " << result_1 << std::endl
-				  << "Day 01 - Part 2: " << result_2 << std::endl;
+        std::cout << "Day 01 - Part 1: " << result_1 << '\n'
+                  << "Day 01 - Part 2: " << result_2 << '\n';
 
 		return myTime.usPassed();
 	}
