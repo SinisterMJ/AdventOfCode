@@ -17,7 +17,7 @@ fileName = r"./inputs/input_" + str(year) + "_" + str(day) + ".txt"
 if os.path.isfile(fileName):
     print ("File exist. No request should be done.")
 	
-cookies = dict(session='53616c7465645f5fa4afdc8e21d3e374b3cd916c9712115ac698fc8e9bf02cc6c2a4d03e7e18083208b0b457d38f895a')
+cookies = dict(session='53616c7465645f5f89c3b7e16683ddd949a7e0ad4148e7bca3e580bc9b33164e9da938e025b48ea1d966a9727fada7ed')
 r = requests.get("https://adventofcode.com/" + str(year) + "/day/" + str(day) + "/input", cookies=cookies)
 file = open(fileName, "w") 
 file.write(r.text)
