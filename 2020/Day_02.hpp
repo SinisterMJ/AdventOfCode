@@ -24,8 +24,7 @@ public:
         inputVector = util::readFileLines("..\\inputs\\input_2020_2.txt");
 	}
 
-    int countPasswords() {
-        int result = 0;        
+    void parsePasswords() {
         /*std::regex password_regex("([0-9]*)-([0-9]*) ([a-z]): ([a-z]*)");
         std::smatch password_match;*/
         for (auto elem : inputVector)
@@ -51,6 +50,10 @@ public:
                 passwords.push_back(pw);
             }*/
         }
+    }
+
+    int countPasswords() {
+        int result = 0;
 
         for (auto pw : passwords)
         {
@@ -79,6 +82,9 @@ public:
 	{
 		util::Timer myTime;
 		myTime.start();
+        
+        parsePasswords();
+
         int32_t result_1 = countPasswords();
         int32_t result_2 = checkPasswords();
 
