@@ -29,8 +29,8 @@ public:
         std::smatch password_match;*/
         for (auto elem : inputVector)
         {
-            int position_minus = elem.find('-');
-            int position_doppel = elem.find(':');
+            int position_minus = static_cast<int>(elem.find('-'));
+            int position_doppel = static_cast<int>(elem.find(':'));
 
             Password pw_out;
             pw_out.min = std::stoi(elem.substr(0, position_minus));
@@ -57,7 +57,7 @@ public:
 
         for (auto pw : passwords)
         {
-            int count = std::count(pw.password.begin(), pw.password.end(), pw.character);
+            int64_t count = std::count(pw.password.begin(), pw.password.end(), pw.character);
             if (pw.min <= count && count <= pw.max)
                 result++;
         }
@@ -70,8 +70,7 @@ public:
         
         for (auto pw : passwords)
         {
-            if ((pw.password[pw.min - 1] == pw.character && pw.password[pw.max - 1] != pw.character) || 
-                (pw.password[pw.min - 1] != pw.character && pw.password[pw.max - 1] == pw.character))
+            if ((pw.password[pw.min - 1] == pw.character) ^ (pw.password[pw.max - 1] == pw.character))
                 result++;
         }
 
