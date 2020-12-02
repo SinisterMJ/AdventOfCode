@@ -58,8 +58,7 @@ public:
         for (auto pw : passwords)
         {
             int64_t count = std::count(pw.password.begin(), pw.password.end(), pw.character);
-            if (pw.min <= count && count <= pw.max)
-                result++;
+            result += (pw.min <= count && count <= pw.max);
         }
 
         return result;
@@ -70,8 +69,7 @@ public:
         
         for (auto pw : passwords)
         {
-            if ((pw.password[pw.min - 1] == pw.character) ^ (pw.password[pw.max - 1] == pw.character))
-                result++;
+            result += ((pw.password[pw.min - 1] == pw.character) ^ (pw.password[pw.max - 1] == pw.character));
         }
 
         return result;
