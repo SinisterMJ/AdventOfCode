@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import requests
 import re
 y = str(2020)
-cookie = {'session': "53616c7465645f5fa4afdc8e21d3e374b3cd916c9712115ac698fc8e9bf02cc6c2a4d03e7e18083208b0b457d38f895a"}
+cookie = {'session': "53616c7465645f5f89c3b7e16683ddd949a7e0ad4148e7bca3e580bc9b33164e9da938e025b48ea1d966a9727fada7ed"}
 homepage = requests.get('https://adventofcode.com/'+y+'/leaderboard/private', cookies=cookie)
 for id in re.compile(r"(?<=\/"+y+r"\/leaderboard\/private\/view\/)(\d+)").findall(homepage.content.decode()):
     print("\n"*5)

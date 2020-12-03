@@ -42,7 +42,7 @@ int main()
     Day02 mDay02; runTimes.push_back(mDay02.run());
 	std::cout << std::endl;
 	
-    /*Day03 mDay03; runTimes.push_back(mDay03.run());
+    Day03 mDay03; runTimes.push_back(mDay03.run());
 	std::cout << std::endl;
 	
     /*Day04 mDay04; runTimes.push_back(mDay04.run());
