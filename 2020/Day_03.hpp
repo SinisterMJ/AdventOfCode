@@ -15,7 +15,7 @@ public:
         input = util::readFile("..\\inputs\\input_2020_3.txt");
 	}
         
-    int64_t trees_hit(int x, int y) 
+    int64_t trees_hit(std::pair<int, int> slope) 
     {
         int line = 0; int col = 0;
         int trees = 0;
@@ -23,8 +23,8 @@ public:
         while (line < inputs.size())
         {
             trees += (inputs[line][col % inputs[line].length()] == '#');
-            line += y;
-            col += x;
+            col += slope.first;
+            line += slope.second;
         }
 
         return trees;
@@ -35,8 +35,13 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-        int64_t result_1 = trees_hit(3, 1);
-        int64_t result_2 = trees_hit(1,1) * trees_hit(3, 1) * trees_hit(5, 1) * trees_hit(7, 1) * trees_hit(1, 2);
+        std::vector<std::pair<int32_t, int32_t>> vPaths = { {1, 1}, {3, 1}, {5, 1}, {7, 1}, {1, 2} };
+
+        int64_t result_1 = trees_hit(vPaths[1]);
+        int64_t result_2 = 1;
+        
+        for (auto elem : vPaths)
+            result_2 *= trees_hit(elem);
         
         std::cout << "Day 03 - Part 1: " << result_1 << '\n'
                   << "Day 03 - Part 2: " << result_2 << '\n';
