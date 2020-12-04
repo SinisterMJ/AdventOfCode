@@ -13,7 +13,6 @@ private:
         std::string hcl;
         std::string ecl;
         std::string pid;
-        std::string cid;
         bool valid;
     };
 
@@ -56,7 +55,8 @@ private:
 
     void ReadPassports() {
         int index = 0;
-        
+        std::vector<std::string> fields{ "byr:", "iyr:", "eyr:", "hgt:", "hcl:", "ecl:", "pid:" };
+
         for (; index < inputs.size();)
         {
             Passport entry;
@@ -70,35 +70,26 @@ private:
 
             index++;
 
-            auto posByr = sEntry.find("byr:");
-            auto posIyr = sEntry.find("iyr:");
-            auto posEyr = sEntry.find("eyr:");
-            auto posHgt = sEntry.find("hgt:");
-            auto posHcl = sEntry.find("hcl:");
-            auto posEcl = sEntry.find("ecl:");
-            auto posPid = sEntry.find("pid:");
-            auto posCid = sEntry.find("cid:");
+            std::vector<size_t> pos;
 
-            if (posByr == std::string::npos ||
-                posIyr == std::string::npos ||
-                posEyr == std::string::npos ||
-                posHgt == std::string::npos ||
-                posHcl == std::string::npos ||
-                posEcl == std::string::npos ||
-                posPid == std::string::npos)
+            for (auto elem : fields)
+            {
+                auto _sPos = sEntry.find(elem);
+                if (_sPos != std::string::npos)
+                    pos.push_back(_sPos);
+            }
+
+            if (pos.size() != 7)
                 continue;
 
-            entry.byr = sEntry.substr(posByr + 4, sEntry.find(' ', posByr + 4) - posByr - 4);
-            entry.iyr = sEntry.substr(posIyr + 4, sEntry.find(' ', posIyr + 4) - posIyr - 4);
-            entry.eyr = sEntry.substr(posEyr + 4, sEntry.find(' ', posEyr + 4) - posEyr - 4);
-            entry.hgt = sEntry.substr(posHgt + 4, sEntry.find(' ', posHgt + 4) - posHgt - 4);
-            entry.hcl = sEntry.substr(posHcl + 4, sEntry.find(' ', posHcl + 4) - posHcl - 4);
-            entry.ecl = sEntry.substr(posEcl + 4, sEntry.find(' ', posEcl + 4) - posEcl - 4);
-            entry.pid = sEntry.substr(posPid + 4, sEntry.find(' ', posPid + 4) - posPid - 4);
-
-            if (posCid != std::string::npos)
-                entry.cid = sEntry.substr(posCid + 4, sEntry.find(' ', posCid + 4) - posCid - 4);
-
+            entry.byr = sEntry.substr(pos[0] + 4, sEntry.find(' ', pos[0] + 4) - pos[0] - 4);
+            entry.iyr = sEntry.substr(pos[1] + 4, sEntry.find(' ', pos[1] + 4) - pos[1] - 4);
+            entry.eyr = sEntry.substr(pos[2] + 4, sEntry.find(' ', pos[2] + 4) - pos[2] - 4);
+            entry.hgt = sEntry.substr(pos[3] + 4, sEntry.find(' ', pos[3] + 4) - pos[3] - 4);
+            entry.hcl = sEntry.substr(pos[4] + 4, sEntry.find(' ', pos[4] + 4) - pos[4] - 4);
+            entry.ecl = sEntry.substr(pos[5] + 4, sEntry.find(' ', pos[5] + 4) - pos[5] - 4);
+            entry.pid = sEntry.substr(pos[6] + 4, sEntry.find(' ', pos[6] + 4) - pos[6] - 4);
+            
             entry.valid = ValidPassport(entry);
 
             inputPassports.push_back(entry);
