@@ -27,16 +27,13 @@ private:
         if (!((elem.byr != "") && (elem.ecl != "") && (elem.eyr != "") && (elem.hcl != "") && (elem.hgt != "") && (elem.iyr != "") && (elem.pid != "")))
             return false;
 
-        int byr = std::stoi(elem.byr);
-        if (!(1920 <= byr && byr <= 2002))
+        if (!in_range(std::stoi(elem.byr), 1920, 2002))
             return false;
 
-        int iyr = std::stoi(elem.iyr);
-        if (!(2010 <= iyr && iyr <= 2020))
+        if (!in_range(std::stoi(elem.iyr), 2010, 2020))
             return false;
 
-        int eyr = std::stoi(elem.eyr);
-        if (!(2020 <= eyr && eyr <= 2030))
+        if (!in_range(std::stoi(elem.eyr), 2020, 2030))
             return false;
 
         if (!(elem.ecl == "amb" || elem.ecl == "blu" || elem.ecl == "brn" || elem.ecl == "gry" || elem.ecl == "grn" || elem.ecl == "hzl" || elem.ecl == "oth"))
@@ -50,17 +47,9 @@ private:
 
         bool cm = (elem.hgt.find("cm") != std::string::npos);
         std::string height = elem.hgt.substr(0, elem.hgt.size() - 2);
-        int heightUnits = std::stoi(height);
-        if (cm)
-        {
-            if (!(150 <= heightUnits && heightUnits <= 193))
-                return false;
-        }
-        else
-        {
-            if (!(59 <= heightUnits && heightUnits <= 75))
-                return false;
-        }
+        
+        if (!in_range(std::stoi(height), 59 + 91 * cm, 76 + 117 * cm))
+            return false;
 
         return true;
     }
