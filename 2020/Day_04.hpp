@@ -79,40 +79,35 @@ private:
             auto posPid = sEntry.find("pid:");
             auto posCid = sEntry.find("cid:");
 
+            if (posByr == std::string::npos ||
+                posIyr == std::string::npos ||
+                posEyr == std::string::npos ||
+                posHgt == std::string::npos ||
+                posHcl == std::string::npos ||
+                posEcl == std::string::npos ||
+                posPid == std::string::npos)
+                continue;
+
             if (posByr != std::string::npos)
                 entry.byr = sEntry.substr(posByr + 4, sEntry.find(' ', posByr + 4) - posByr - 4);
-            else 
-                continue;
             
             if (posIyr != std::string::npos)
                 entry.iyr = sEntry.substr(posIyr + 4, sEntry.find(' ', posIyr + 4) - posIyr - 4);
-            else
-                continue;
 
             if (posEyr != std::string::npos)
                 entry.eyr = sEntry.substr(posEyr + 4, sEntry.find(' ', posEyr + 4) - posEyr - 4);
-            else
-                continue;
 
             if (posHgt != std::string::npos)
                 entry.hgt = sEntry.substr(posHgt + 4, sEntry.find(' ', posHgt + 4) - posHgt - 4);
-            else
-                continue;
 
             if (posHcl != std::string::npos)
                 entry.hcl = sEntry.substr(posHcl + 4, sEntry.find(' ', posHcl + 4) - posHcl - 4);
-            else
-                continue;
 
             if (posEcl != std::string::npos)
                 entry.ecl = sEntry.substr(posEcl + 4, sEntry.find(' ', posEcl + 4) - posEcl - 4);
-            else
-                continue;
 
             if (posPid != std::string::npos)
                 entry.pid = sEntry.substr(posPid + 4, sEntry.find(' ', posPid + 4) - posPid - 4);
-            else
-                continue;
 
             if (posCid != std::string::npos)
                 entry.cid = sEntry.substr(posCid + 4, sEntry.find(' ', posCid + 4) - posCid - 4);
