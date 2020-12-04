@@ -45,11 +45,11 @@ private:
         if (elem.pid.size() != 9)
             return false;
 
-        if (elem.hcl[0] != '#' && elem.hcl.size() != 7)
+        if (elem.hcl[0] != '#' || elem.hcl.size() != 7)
             return false;
 
         bool cm = (elem.hgt.find("cm") != std::string::npos);
-        std::string height = elem.hgt.substr(0, 2 + cm);
+        std::string height = elem.hgt.substr(0, elem.hgt.size() - 2);
         int heightUnits = std::stoi(height);
         if (cm)
         {
