@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2020_DAY05
 
 #include "../includes/aoc.h"
+#include <bitset>
 
 class Day05 {
 private:
@@ -12,23 +13,12 @@ private:
     {
         for (auto elem : inputs)
         {
-            int32_t row = 0;
-            int32_t seat = 0;
+            std::replace(elem.begin(), elem.end(), 'F', '0');
+            std::replace(elem.begin(), elem.end(), 'B', '1');
+            std::replace(elem.begin(), elem.end(), 'L', '0');
+            std::replace(elem.begin(), elem.end(), 'R', '1');
 
-            for (int index = 0; index < 7; ++index)
-            {
-                if (elem[index] == 'B')
-                    row |= 0x1 << (6 - index);
-            }
-
-            for (int index = 7; index < 10; ++index)
-            {
-                if (elem[index] == 'R')
-                    seat |= 0x1 << (9 - index);
-            }
-
-            int32_t seatId = row * 8 + seat;
-            seatIds.push_back(seatId);
+            seatIds.push_back(std::bitset<8>(elem).to_ulong());
         }
         
         std::sort(seatIds.begin(), seatIds.end());
