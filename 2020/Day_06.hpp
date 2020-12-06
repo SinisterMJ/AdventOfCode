@@ -2,8 +2,10 @@
 #define ADVENTOFCODE2020_DAY06
 
 #include "../includes/aoc.h"
-#include <set>
+#include <iostream>
+#include <vector>
 #include <algorithm>
+#include <set>
 #include <iterator>
 
 class Day06 {
@@ -48,14 +50,7 @@ private:
 
             for (int i = 1; i < checker.size(); ++i)
             {
-                for (auto elem : checker[i])
-                {
-                    if (intersect.find(elem) != intersect.end())
-                    {
-                        combined.insert(elem);
-                    }
-                }
-
+                std::set_intersection(intersect.begin(), intersect.end(), checker[i].begin(), checker[i].end(), std::inserter(combined, combined.begin()));
                 std::swap(combined, intersect);
                 combined.clear();
             }
