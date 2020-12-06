@@ -17,7 +17,7 @@ private:
             std::replace(elem.begin(), elem.end(), 'B', '1');
             std::replace(elem.begin(), elem.end(), 'L', '0');
             std::replace(elem.begin(), elem.end(), 'R', '1');
-
+            
             seatIds.push_back(std::bitset<32>(elem).to_ulong());
         }
         
