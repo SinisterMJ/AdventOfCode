@@ -66,37 +66,6 @@ private:
         return result;
     }
 
-    int32_t ReadReportsCombinedFast() {
-        int index = 0;
-        int32_t result = 0;
-        for (; index < inputVec.size(); ++index)
-        {
-            std::vector<std::string> lists;
-            while (index < inputVec.size() && inputVec[index] != "")
-            {
-                lists.push_back(inputVec[index]);
-                index++;
-            }
-
-            std::string beginning = lists[0];
-
-            for (int i = 1; i < lists.size(); ++i)
-            {
-                for (int j = 0; j < beginning.length(); ++j)
-                {
-                    if (lists[i].find(beginning[j]) == std::string::npos)
-                    {
-                        beginning.erase(j, 1);
-                        --j;
-                    }
-                }
-            }
-
-            result += beginning.length();
-        }
-
-        return result;
-    }
 public:
 	Day06()
 	{
@@ -110,7 +79,7 @@ public:
 		myTime.start();
 		
         int32_t result_1 = ReadReports();
-        int32_t result_2 = ReadReportsCombinedFast();
+        int32_t result_2 = ReadReportsCombined();
 
         std::cout << "Day 06 - Part 1: " << result_1 << '\n'
                   << "Day 06 - Part 2: " << result_2 << '\n';
