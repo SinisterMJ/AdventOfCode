@@ -79,9 +79,7 @@ private:
     int32_t totalNumberBags(std::string outer) {
         int32_t result = 1;
 
-        auto list = allBags[outer];
-
-        for (auto elem : list.children)
+        for (auto elem : allBags[outer].children)
             result += elem.first * totalNumberBags(elem.second);
         
         return result;
