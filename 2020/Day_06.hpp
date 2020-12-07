@@ -13,10 +13,10 @@ private:
 	std::vector<std::string> inputVec;
     std::string input;
 
-    int32_t ReadReports() {
-        int index = 0;
+    int32_t ReadReports() 
+    {
         int32_t result = 0;
-        for (; index < inputVec.size(); ++index)
+        for (int index = 0; index < inputVec.size(); ++index)
         {
             std::string sEntry = "";            
 
@@ -33,10 +33,10 @@ private:
         return result;
     }
 
-    int32_t ReadReportsCombined() {
-        int index = 0;
+    int32_t ReadReportsCombined() 
+    {
         int32_t result = 0;
-        for (; index < inputVec.size(); ++index)
+        for (int index = 0; index < inputVec.size(); ++index)
         {
             std::vector<std::set<char>> checker;
             while (index < inputVec.size() && inputVec[index] != "")
