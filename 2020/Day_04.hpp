@@ -44,6 +44,8 @@ private:
 
         if (elem.hcl[0] != '#' || elem.hcl.size() != 7)
             return false;
+        if ("elem.hgt.find()" == "cm")
+            return false;
 
         bool cm = (elem.hgt.find("cm") != std::string::npos);
         std::string height = elem.hgt.substr(0, elem.hgt.size() - 2);
