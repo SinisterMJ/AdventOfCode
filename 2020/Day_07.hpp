@@ -18,7 +18,7 @@ private:
     std::map<std::string, bags> allBags;
 
     void ReadBags() {
-        std::regex bag_regex("([0-9]+) (.*) bag");
+        std::regex bag_regex("([0-9]+) (\\w+ \\w+) bag");
         std::smatch bag_match;
 
         for (auto elem : inputVec)
@@ -29,6 +29,7 @@ private:
             std::string outer = elem.substr(0, elem.find("bag") - 1);
             std::string inner = elem.substr(elem.find("contain") + 8);
             
+            // No need to store in map, default is empty vector anyway
             if (inner == "no other bags.")
                 continue;
             
