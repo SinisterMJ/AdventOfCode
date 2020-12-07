@@ -33,18 +33,13 @@ public:
 
 	int64_t run()
 	{
-		std::vector<int> masses;
+		std::vector<int> masses = util::ConvertToInt(inputs);
 		int totalMass_recursive = 0;
 		int totalMass_normal = 0;
 
 		util::Timer myTime;
 		myTime.start();
-
-		for (auto elem : inputs)
-		{
-			masses.push_back(std::stoi(elem));
-		}
-		
+        		
 		for (uint32_t index = 0; index < masses.size(); ++index)
 		{
 			totalMass_normal += calculateFuelCosts(masses[index]);

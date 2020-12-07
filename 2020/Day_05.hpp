@@ -49,10 +49,12 @@ public:
             }
         }
 
+        int64_t time = myTime.usPassed();
+
         std::cout << "Day 05 - Part 1: " << result_1 << '\n'
                   << "Day 05 - Part 2: " << result_2 << '\n';
 
-		return myTime.usPassed();
+        return time;
 	}
 };
 

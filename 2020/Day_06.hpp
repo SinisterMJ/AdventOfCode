@@ -27,7 +27,7 @@ private:
             }
 
             std::set<char> checker(sEntry.begin(), sEntry.end());
-            result += checker.size();
+            result += static_cast<int32_t>(checker.size());
         }
 
         return result;
@@ -55,7 +55,7 @@ private:
                 combined.clear();
             }
             
-            result += intersect.size();
+            result += static_cast<int32_t>(intersect.size());
         }
 
         return result;
@@ -76,10 +76,12 @@ public:
         int32_t result_1 = ReadReports();
         int32_t result_2 = ReadReportsCombined();
 
+        int64_t time = myTime.usPassed();
+
         std::cout << "Day 06 - Part 1: " << result_1 << '\n'
                   << "Day 06 - Part 2: " << result_2 << '\n';
 
-		return myTime.usPassed();
+        return time;
 	}
 };
 

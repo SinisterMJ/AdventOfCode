@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2020_DAY04
 
 #include "../includes/aoc.h"
+#include <regex>
 
 class Day04 {
 private:
@@ -38,7 +39,7 @@ private:
         if (!(elem.ecl == "amb" || elem.ecl == "blu" || elem.ecl == "brn" || elem.ecl == "gry" || elem.ecl == "grn" || elem.ecl == "hzl" || elem.ecl == "oth"))
             return false;
 
-        if (elem.pid.size() != 9)
+        if (elem.pid.size() != 9 || !util::is_number(elem.pid))
             return false;
 
         if (elem.hcl[0] != '#' || elem.hcl.size() != 7)
@@ -53,25 +54,17 @@ private:
         return true;
     }
 
-    void ReadPassports() {
-        int index = 0;
+    void ReadPassports() 
+    {
         std::vector<std::string> fields{ "byr:", "iyr:", "eyr:", "hgt:", "hcl:", "ecl:", "pid:" };
+        auto list = util::split(input, "\n\n");
 
-        for (; index < inputs.size();)
-        {
+        for (auto sEntry : list)
+        {        
             Passport entry;
-            std::string sEntry = "";
-
-            while (index < inputs.size() && inputs[index] != "")
-            {
-                sEntry += inputs[index] + " ";
-                index++;
-            }
-
-            index++;
-
+            std::replace(sEntry.begin(), sEntry.end(), '\n', ' ');
+            
             std::vector<size_t> pos;
-
             for (auto elem : fields)
             {
                 auto _sPos = sEntry.find(elem);
@@ -117,10 +110,12 @@ public:
             result_2 += elem.valid;
         }
         
+        int64_t time = myTime.usPassed();
+
         std::cout << "Day 04 - Part 1: " << result_1 << '\n'
                   << "Day 04 - Part 2: " << result_2 << '\n';
-                
-		return myTime.usPassed();
+
+        return time;
 	}
 };
 

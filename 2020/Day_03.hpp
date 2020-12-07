@@ -43,10 +43,12 @@ public:
         for (auto elem : vPaths)
             result_2 *= trees_hit(elem);
         
+        int64_t time = myTime.usPassed();
+
         std::cout << "Day 03 - Part 1: " << result_1 << '\n'
                   << "Day 03 - Part 2: " << result_2 << '\n';
 
-		return myTime.usPassed();
+        return time;
 	}
 };
 

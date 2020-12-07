@@ -8,14 +8,14 @@
 class Day07 {
 private:
     struct bags {
-        std::string outer;
-        std::vector<std::pair<int, std::string>> inner;
+        std::vector<std::pair<int, std::string>> children;
+        int32_t containsShiny;
     };
 
 	std::string inputString;
     std::vector<std::string> inputVec;
 
-    std::map<std::string, std::vector<std::pair<int, std::string>>> allBagsMap;
+    std::map<std::string, bags> allBags;
 
     void ReadBags() {
         std::regex bag_regex("([0-9]+) (.*) bag");
@@ -23,6 +23,9 @@ private:
 
         for (auto elem : inputVec)
         {
+            bags bag;
+            bag.containsShiny = -1;
+
             std::string outer = elem.substr(0, elem.find("bag") - 1);
             std::string inner = elem.substr(elem.find("contain") + 8);
             
@@ -37,18 +40,21 @@ private:
                 int count = std::stoi(bag_match[1]);
                 std::string color = bag_match[2];
 
-                allBagsMap[outer].push_back(std::pair<int, std::string>(count, color));
+                bag.children.push_back(std::pair<int, std::string>(count, color));
             }
+
+            allBags[outer] = bag;
         }
     }
 
     bool containsShiny(std::string out)
     {
-        if (allBagsMap[out].size() == 0)
-            return false;
+        if (allBags[out].containsShiny != -1)
+            return allBags[out].containsShiny;
 
         bool result = false;
-        for (auto elem : allBagsMap[out])
+
+        for (auto elem : allBags[out].children)
         {
             if (elem.second == "shiny gold")
                 return true;
@@ -56,6 +62,7 @@ private:
                 result |= (containsShiny(elem.second));
         }
 
+        allBags[out].containsShiny = result;
         return result;
     }
 
@@ -63,7 +70,7 @@ private:
     {
         int result = 0;
 
-        for (auto elem : allBagsMap)
+        for (auto elem : allBags)
             result += containsShiny(elem.first);
         
         return result;
@@ -72,9 +79,9 @@ private:
     int32_t totalNumberBags(std::string outer) {
         int32_t result = 1;
 
-        auto list = allBagsMap[outer];
+        auto list = allBags[outer];
 
-        for (auto elem : list)
+        for (auto elem : list.children)
             result += elem.first * totalNumberBags(elem.second);
         
         return result;
@@ -93,13 +100,15 @@ public:
 		myTime.start();
         ReadBags();
 
-        //int32_t result_1 = numberBags();
-        //int32_t result_2 = totalNumberBags("shiny gold") - 1;  // shiny gold doesn't count
+        int32_t result_1 = numberBags();
+        int32_t result_2 = totalNumberBags("shiny gold") - 1;  // shiny gold doesn't count
 
-        //std::cout << "Day 07 - Part 1: " << result_1 << '\n'
-          //        << "Day 07 - Part 2: " << result_2 << '\n';
+        int64_t time = myTime.usPassed();
 
-		return myTime.usPassed();
+        std::cout << "Day 07 - Part 1: " << result_1 << '\n'
+                  << "Day 07 - Part 2: " << result_2 << '\n';
+
+        return time;
 	}
 };
 

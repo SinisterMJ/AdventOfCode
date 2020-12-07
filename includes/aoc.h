@@ -10,6 +10,8 @@
 #include <sstream>
 #include <stdint.h>
 #include <chrono>
+#include <cctype>
+#include <algorithm>
 
 template <class T>
 inline void hash_combine(std::size_t & seed, const T & v)
@@ -78,6 +80,19 @@ namespace util
 		return lines;
 	}
 
+    std::vector<std::string> split(std::string s, std::string delim) {
+        std::vector<std::string> elems;
+
+        while (s.find(delim) != std::string::npos) {
+            elems.push_back(s.substr(0, s.find(delim)));
+            s = s.substr(s.find(delim) + delim.size());
+        }
+
+        elems.push_back(s);
+
+        return elems;
+    }
+
     std::vector<std::string> split(const std::string &s, char delim) {
         std::vector<std::string> elems;
         std::stringstream ss(s);
@@ -125,6 +140,12 @@ namespace util
 		}
 		return elems;
 	}
+
+    bool is_number(const std::string& s)
+    {
+        return !s.empty() && std::find_if(s.begin(),
+            s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+    }
 }
 
 const double PI = 3.14159265359;

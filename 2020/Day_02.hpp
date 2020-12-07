@@ -57,8 +57,8 @@ public:
 
         for (auto pw : passwords)
         {
-            int64_t count = std::count(pw.password.begin(), pw.password.end(), pw.character);
-            result += (pw.min <= count && count <= pw.max);
+            int32_t count = static_cast<int32_t>(std::count(pw.password.begin(), pw.password.end(), pw.character));
+            result += in_range(count, pw.min, pw.max);
         }
 
         return result;
@@ -85,10 +85,12 @@ public:
         int32_t result_1 = countPasswords();
         int32_t result_2 = checkPasswords();
 
+        int64_t time = myTime.usPassed();
+
         std::cout << "Day 02 - Part 1: " << result_1 << '\n'
                   << "Day 02 - Part 2: " << result_2 << '\n';
 
-		return myTime.usPassed();
+        return time;
 	}
 };
 
