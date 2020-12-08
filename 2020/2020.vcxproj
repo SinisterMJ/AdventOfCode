@@ -117,6 +117,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\includes\AccumulatorVM.h" />
     <ClInclude Include="..\includes\aoc.h" />
     <ClInclude Include="..\includes\ConsoleColor.h" />
     <ClInclude Include="..\includes\Map2DBase.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Day_25.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\includes\AccumulatorVM.cpp" />
     <ClCompile Include="AdventOfCode_2020.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

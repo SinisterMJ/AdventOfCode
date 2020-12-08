@@ -1,8 +1,5 @@
-// aoc.h
-// Copyright (c) 2019, zhiayang
-// Licensed under the Apache License Version 2.0.
-
-#pragma once
+#ifndef ADVENTOFCODE_AOC
+#define ADVENTOFCODE_AOC
 
 #include <fstream>
 #include <vector>
@@ -243,3 +240,5 @@ namespace std
     }
   };
 }
+
+#endif  // ADVENTOFCODE_AOC

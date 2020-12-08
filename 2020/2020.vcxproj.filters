@@ -105,10 +105,16 @@
     <ClInclude Include="Day_25.hpp">
       <Filter>Headerdateien\Days</Filter>
     </ClInclude>
+    <ClInclude Include="..\includes\AccumulatorVM.h">
+      <Filter>Headerdateien\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdventOfCode_2020.cpp">
       <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\includes\AccumulatorVM.cpp">
+      <Filter>Headerdateien\Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
