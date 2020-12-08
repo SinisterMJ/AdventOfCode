@@ -44,11 +44,7 @@ public:
                 temp.com = opcode_nop;
             if (first == "jmp")
                 temp.com = opcode_jump;
-
-            if (second.find('+') != std::string::npos)
-            {
-                second = second.substr(1);
-            }
+                        
             temp.value = std::stoll(second);
 
             commands.push_back(temp);
