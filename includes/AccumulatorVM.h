@@ -5,10 +5,12 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <set>
+#include <stdint.h>
 
 class AccumulatorVM
 {
-private:
+public:
     enum operationCodes {
         opcode_acc = 0,
         opcode_nop,
@@ -20,18 +22,20 @@ private:
         int64_t value;
     };
 
-
+private:
     int64_t index;
     int64_t accumulator;
+    std::set<int64_t> visited;
     
     std::vector<Command> commands;
     bool terminated;
+
 public:
     AccumulatorVM() : index(0), accumulator(0), terminated(false) { }
     
-
     AccumulatorVM& initializeCommands(std::vector<std::string> _commands)
     {
+        commands.clear();
         for (auto elem : _commands)
         {
             std::string first = elem.substr(0, elem.find(' '));
@@ -51,6 +55,17 @@ public:
         }
 
         return *this;
+    }
+
+    void reset() {
+        index = 0;
+        accumulator = 0;
+        terminated = 0;
+        visited.clear();
+    }
+
+    std::vector<Command>& getCommands() {
+        return commands;
     }
     
     int64_t runCommands();

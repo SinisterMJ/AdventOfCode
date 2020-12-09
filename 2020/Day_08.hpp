@@ -16,36 +16,41 @@ private:
 
     int64_t part2()
     {
+        AccumulatorVM accvm;
+        accvm.initializeCommands(inputVec);
+
         for (int index = 0; index < inputVec.size(); ++index)
         {
-            AccumulatorVM accvm;
-            if (inputVec[index].find("nop") != std::string::npos)
-            {
-                inputVec[index] = std::regex_replace(inputVec[index], std::regex("nop"), "jmp");
-            } 
-            else if (inputVec[index].find("jmp") != std::string::npos)
-            {
-                inputVec[index] = std::regex_replace(inputVec[index], std::regex("jmp"), "nop");
+            auto& commands = accvm.getCommands();
+            
+            if (commands[index].com == AccumulatorVM::opcode_acc)
+                continue;
+
+            if (commands[index].com == AccumulatorVM::opcode_nop) {
+                commands[index].com = AccumulatorVM::opcode_jump;
             }
             else {
-                continue;
+                if (commands[index].com == AccumulatorVM::opcode_jump) {
+                    commands[index].com = AccumulatorVM::opcode_nop;
+                }
             }
-            
-            auto resultVM = accvm.initializeCommands(inputVec).runCommands();
+
+            auto resultVM = accvm.runCommands();
             bool term = accvm.hasTerminated();
 
-            // change it back
-            if (inputVec[index].find("nop") != std::string::npos)
-            {
-                inputVec[index] = std::regex_replace(inputVec[index], std::regex("nop"), "jmp");
+            if (commands[index].com == AccumulatorVM::opcode_nop) {
+                commands[index].com = AccumulatorVM::opcode_jump;
             }
-            else if (inputVec[index].find("jmp") != std::string::npos)
-            {
-                inputVec[index] = std::regex_replace(inputVec[index], std::regex("jmp"), "nop");
+            else {
+                if (commands[index].com == AccumulatorVM::opcode_jump) {
+                    commands[index].com = AccumulatorVM::opcode_nop;
+                }
             }
 
             if (term)
                 return resultVM;
+
+            accvm.reset();
         }
 
         return -1;

@@ -33,6 +33,30 @@ private:
         return result;
     }
 
+    int32_t ReadReportsFast()
+    {
+        int32_t result = 0;
+
+        for (int index = 0; index < inputVec.size(); ++index)
+        {
+            int32_t combined = 0;
+
+            while (index < inputVec.size() && inputVec[index] != "")
+            {
+                for (int i = 0; i < inputVec[index].size(); ++i)
+                {
+                    combined |= 1 << (inputVec[index][i] - 'a');
+                }
+
+                ++index;
+            }
+
+            result += std::bitset<32>(combined).count();
+        }
+
+        return result;
+    }
+
     int32_t ReadReportsCombined() 
     {
         int32_t result = 0;
@@ -61,6 +85,30 @@ private:
         return result;
     }
 
+    int32_t ReadReportsCombinedFast()
+    {
+        int32_t result = 0;
+        for (int index = 0; index < inputVec.size(); ++index)
+        {
+            int32_t combined = 0xFFFFFFFF;
+            std::vector<std::set<char>> checker;
+            while (index < inputVec.size() && inputVec[index] != "")
+            {
+                int32_t local = 0;
+                for (int i = 0; i < inputVec[index].size(); ++i)
+                {
+                    local |= 1 << (inputVec[index][i] - 'a');
+                }
+                combined &= local;
+                ++index;
+            }
+
+            result += std::bitset<32>(combined).count();
+        }
+
+        return result;
+    }
+
 public:
 	Day06()
 	{
@@ -73,8 +121,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
 		
-        int32_t result_1 = ReadReports();
-        int32_t result_2 = ReadReportsCombined();
+        int32_t result_1 = ReadReportsFast();
+        int32_t result_2 = ReadReportsCombinedFast();
 
         int64_t time = myTime.usPassed();
 

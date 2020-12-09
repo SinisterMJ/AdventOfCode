@@ -5,8 +5,6 @@
 
 int64_t AccumulatorVM::runCommands()
 {
-    std::set<int64_t> visited;
-
     for (;;)
     {
         if (visited.find(index) != visited.end() || index >= static_cast<int64_t>(commands.size()))
