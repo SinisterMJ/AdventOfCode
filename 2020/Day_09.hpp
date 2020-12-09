@@ -32,45 +32,12 @@ private:
         return -1;
     }
 
-    int64_t part2(int64_t test) 
+    int64_t part2(int64_t test)
     {
-        for (int index = 2; index < inputs.size(); ++index)
+        for (int index = 1; index < inputs.size(); ++index)
         {
-            for (int i = 0; i < index; ++i)
-            {
-                int acc = inputs[i];
-                for (int j = i + 1; j < index; ++j)
-                {
-                    acc += inputs[j];
-
-                    if (acc > test)
-                        break;
-
-                    if (acc == test)
-                    {
-                        int64_t min = std::numeric_limits<int64_t>::max();
-                        int64_t max = 0;
-                        for (int k = i; k <= j; ++k)
-                        {
-                            min = std::min(min, inputs[k]);
-                            max = std::max(max, inputs[k]);
-                        }
-
-                        return min + max;
-                    }
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    int64_t part2_optimized(int64_t test)
-    {
-        for (int index = 2; index < inputs.size(); ++index)
-        {
-            int i = index - 2;
-            int j = index - 1;
+            int i = index - 1;
+            int j = index;
 
             int acc = inputs[i] + inputs[j];
 
@@ -122,7 +89,7 @@ public:
         inputs = util::ConvertToInt64(inputVec);
 
         int64_t result_1 = part1();
-        int64_t result_2 = part2_optimized(result_1);
+        int64_t result_2 = part2(result_1);
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 09 - Part 1: " << result_1 << '\n'
