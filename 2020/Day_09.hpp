@@ -11,18 +11,19 @@ private:
     std::vector<std::string> inputVec;
     std::vector<int64_t> inputs;
 
-    int64_t part1() 
+    int64_t part1()
     {
         for (int index = 25; index < inputs.size(); ++index)
         {
             bool found = false;
-            for (int i = index - 25; i < index; ++i)
+            for (int i = index - 25; i < index && !found; ++i)
             {
-                for (int j = i + 1; j < index && !found; ++j)
-                {
-                    if (inputs[i] + inputs[j] == inputs[index])
-                        found = true;
-                }
+                auto it = std::find(
+                    inputs.begin() + i + 1,
+                    inputs.begin() + index,
+                    inputs[index] - inputs[i]);
+
+                found |= (it != (inputs.begin() + index));
             }
 
             if (!found)
@@ -34,46 +35,40 @@ private:
 
     int64_t part2(int64_t test)
     {
-        for (int index = 1; index < inputs.size(); ++index)
+        int start = 0;
+        int end = 1;
+        int64_t acc = inputs[start] + inputs[end];
+        for (;start < end && end < inputs.size();)
         {
-            int i = index - 1;
-            int j = index;
+            if (acc < test)
+            {
+                end++;
+                acc += inputs[end];
+            }
 
-            int acc = inputs[i] + inputs[j];
+            if (acc > test)
+            {
+                acc -= inputs[start];
+                start++;
+            }
 
-            while (true) {
-                if (acc < test && i > 0)
+            if (acc == test)
+            {
+                int64_t min = std::numeric_limits<int64_t>::max();
+                int64_t max = 0;
+                for (int k = start; k <= end; ++k)
                 {
-                    i--;
-                    acc += inputs[i];
+                    min = std::min(min, inputs[k]);
+                    max = std::max(max, inputs[k]);
                 }
 
-                if (acc > test && j > i)
-                {
-                    acc -= inputs[j];
-                    j--;
-                }
-
-                if (acc == test)
-                {
-                    int64_t min = std::numeric_limits<int64_t>::max();
-                    int64_t max = 0;
-                    for (int k = i; k <= j; ++k)
-                    {
-                        min = std::min(min, inputs[k]);
-                        max = std::max(max, inputs[k]);
-                    }
-
-                    return min + max;
-                }
-
-                if (i == 0)
-                    break;
+                return min + max;
             }
         }
 
         return -1;
     }
+
 public:
     Day09()
     {
