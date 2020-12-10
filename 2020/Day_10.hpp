@@ -25,26 +25,19 @@ private:
 
     int64_t getCountPerm() 
     {
-        int64_t paths = 1;
-        int32_t cur_1 = 0;
-
-        for (int index = 1; index < adapters.size(); ++index)
+        std::vector<int64_t> dp{ 1 };
+        for (int32_t i = 1; i < adapters.size(); ++i)
         {
-            if (adapters[index] - adapters[index - 1] == 1)
+            int64_t ans = 0;
+            for (int32_t j = 0; j < i; ++j)
             {
-                cur_1++;
+                if (adapters[j] + 3 >= adapters[i])
+                    ans += dp[j];
             }
-            if (adapters[index] - adapters[index - 1] == 3)
-            {
-                if (cur_1 == 0)
-                    continue;
-
-                paths *= static_cast<int32_t>(std::pow(2, cur_1 - 1)) - (cur_1 == 4);
-                cur_1 = 0;
-            }
+            dp.push_back(ans);
         }
 
-        return paths;
+        return dp.back();
     }
 
 public:
