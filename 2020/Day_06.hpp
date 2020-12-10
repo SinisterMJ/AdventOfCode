@@ -51,7 +51,7 @@ private:
                 ++index;
             }
 
-            result += std::bitset<32>(combined).count();
+            result += static_cast<int32_t>(std::bitset<32>(combined).count());
         }
 
         return result;
@@ -103,7 +103,7 @@ private:
                 ++index;
             }
 
-            result += std::bitset<32>(combined).count();
+            result += static_cast<int32_t>(std::bitset<32>(combined).count());
         }
 
         return result;

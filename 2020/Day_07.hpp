@@ -48,6 +48,37 @@ private:
         }
     }
 
+    void ReadBagsFast() {
+        for (auto elem : inputVec)
+        {
+            bags bag;
+            bag.containsShiny = -1;
+
+            std::string outer = elem.substr(0, elem.find("bag") - 1);
+            std::string inner = elem.substr(elem.find("contain") + 8);
+
+            // No need to store in map, default is empty vector anyway
+            if (inner == "no other bags.")
+                continue;
+
+            while (inner.find(',') != std::string::npos || inner.find('.') != std::string::npos)
+            {
+                // number of bags
+                auto pos_number = inner.find(' ');
+                int32_t count = std::stoi(inner.substr(0, pos_number));
+                std::string color = inner.substr(pos_number + 1, inner.find("bag") - pos_number - 2);
+                bag.children.push_back(std::pair<int, std::string>(count, color));
+
+                if (inner.find(',') != std::string::npos)
+                    inner = inner.substr(inner.find(',') + 2);
+                else
+                    break;
+            }
+
+            allBags[outer] = bag;
+        }
+    }
+
     bool containsShiny(std::string out)
     {
         if (allBags[out].containsShiny != -1)
@@ -97,7 +128,7 @@ public:
 	{
 		util::Timer myTime;
 		myTime.start();
-        ReadBags();
+        ReadBagsFast();
 
         int32_t result_1 = numberBags();
         int32_t result_2 = totalNumberBags("shiny gold") - 1;  // shiny gold doesn't count
