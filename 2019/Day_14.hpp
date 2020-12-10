@@ -114,7 +114,7 @@ private:
 public:
 	Day14()
 	{
-		input = util::readFileLines("..\\inputs\\input_2019_14.txt");
+		input = util::readFileLines("..\\inputs\\2019\\input_14.txt");
 	}
 
 	int64_t run()

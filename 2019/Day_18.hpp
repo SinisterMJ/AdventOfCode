@@ -370,8 +370,8 @@ private:
 public:
 	Day18()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_18.txt");
-		inputVector = util::readFileLines("..\\inputs\\input_2019_18.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_18.txt");
+		inputVector = util::readFileLines("..\\inputs\\2019\\input_18.txt");
 	}
 
 	int64_t run()

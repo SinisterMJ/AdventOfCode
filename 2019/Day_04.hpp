@@ -87,14 +87,14 @@ private:
 public:
 	Day04()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_2.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_2.txt");
 	}
 
 	int64_t run()
 	{
 		util::Timer myTime;
 		myTime.start();
-		std::vector<std::string> input = util::readFileLines("..\\inputs\\input_2019_4.txt", '-');
+		std::vector<std::string> input = util::readFileLines("..\\inputs\\2019\\input_4.txt", '-');
 		int lower = std::stoi(input[0]);
 		int higher = std::stoi(input[1]);
 

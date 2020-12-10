@@ -82,7 +82,7 @@ private:
 public:
 	Day23() : result1(-1), result2(-1), lastNatValue(-1)
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_23.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_23.txt");
 	}
 
 	int64_t run()

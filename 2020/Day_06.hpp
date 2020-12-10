@@ -112,8 +112,8 @@ private:
 public:
 	Day06()
 	{
-		inputVec = util::readFileLines("..\\inputs\\input_2020_6.txt", '\n', false);
-        input = util::readFile("..\\inputs\\input_2020_6.txt");
+		inputVec = util::readFileLines("..\\inputs\\2020\\input_6.txt", '\n', false);
+        input = util::readFile("..\\inputs\\2020\\input_6.txt");
 	}
 
 	int64_t run()

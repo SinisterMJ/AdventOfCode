@@ -25,7 +25,7 @@ private:
 public:
 	Day08()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_8.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_8.txt");
 	}
 
 	int64_t run()

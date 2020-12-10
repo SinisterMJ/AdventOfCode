@@ -1,8 +1,15 @@
 import json
 from datetime import datetime as dt
+import datetime
 import requests
+import sys
 import re
-y = str(2020)
+
+y = str(datetime.datetime.now().year)
+
+if len(sys.argv) >= 2:
+	y = sys.argv[1]
+
 cookie = {'session': "53616c7465645f5f89c3b7e16683ddd949a7e0ad4148e7bca3e580bc9b33164e9da938e025b48ea1d966a9727fada7ed"}
 homepage = requests.get('https://adventofcode.com/'+y+'/leaderboard/private', cookies=cookie)
 for id in re.compile(r"(?<=\/"+y+r"\/leaderboard\/private\/view\/)(\d+)").findall(homepage.content.decode()):

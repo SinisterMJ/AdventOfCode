@@ -241,8 +241,6 @@ private:
 			++value;
 		}
 
-		std::cout << "Visited tiles: " << flooded.size() << std::endl;
-
 		return flooded[entryEnd];
 	}
 	
@@ -299,8 +297,8 @@ private:
 public:
 	Day20()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_20.txt");
-		inputVector = util::readFileLines("..\\inputs\\input_2019_20.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_20.txt");
+		inputVector = util::readFileLines("..\\inputs\\2019\\input_20.txt");
 	}
 
 	int64_t run()

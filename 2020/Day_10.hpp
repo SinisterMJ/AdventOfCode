@@ -22,6 +22,7 @@ private:
 
         return count[0] * count[1];
     }
+
     int64_t getCountPerm() 
     {
         int64_t paths = 1;
@@ -49,8 +50,8 @@ private:
 public:
     Day10()
     {
-        inputString = util::readFile("..\\inputs\\input_2020_10.txt");
-        inputVec = util::readFileLines("..\\inputs\\input_2020_10.txt", '\n', true);
+        inputString = util::readFile("..\\inputs\\2020\\input_10.txt");
+        inputVec = util::readFileLines("..\\inputs\\2020\\input_10.txt", '\n', true);
     }
 
     int64_t run()

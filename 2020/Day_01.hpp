@@ -14,8 +14,8 @@ private:
 public:
 	Day01()
 	{
-		inputVector = util::readFileLines("..\\inputs\\input_2020_1.txt");
-		inputString = util::readFile("..\\inputs\\input_2020_1.txt");
+		inputVector = util::readFileLines("..\\inputs\\2020\\input_1.txt");
+		inputString = util::readFile("..\\inputs\\2020\\input_1.txt");
 	}
 
 	int64_t run()

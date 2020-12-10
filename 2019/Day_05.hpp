@@ -10,7 +10,7 @@ private:
 public:
 	Day05()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_5.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_5.txt");
 	}
 
 	int64_t run()

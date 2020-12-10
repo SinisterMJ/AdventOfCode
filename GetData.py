@@ -2,7 +2,8 @@ import requests
 import sys
 import datetime
 import os
-	
+from pathlib import Path
+
 day = datetime.datetime.now().day
 year = datetime.datetime.now().year
 
@@ -10,9 +11,12 @@ if len(sys.argv) >= 2:
 	year = sys.argv[1]
 	
 if len(sys.argv) == 3:
-	year = sys.argv[2]
+	day = sys.argv[2]
 
-fileName = r"./inputs/input_" + str(year) + "_" + str(day) + ".txt"
+fileName = r"./inputs/" + str(year) + "/input_" + str(day) + ".txt"
+filePath = r"./inputs/" + str(year) + "/"
+
+Path(filePath).mkdir(parents=True, exist_ok=True)
 
 if os.path.isfile(fileName):
     print ("File exist. No request should be done.")

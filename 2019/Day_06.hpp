@@ -67,7 +67,7 @@ private:
 public:
 	Day06()
 	{
-		inputString = inputString = util::readFileLines("..\\inputs\\input_2019_6.txt");
+		inputString = inputString = util::readFileLines("..\\inputs\\2019\\input_6.txt");
 	}
 
 	int64_t run()

@@ -221,7 +221,7 @@ private:
 public:
 	Day15()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_15.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_15.txt");
 	}
 
 	int64_t run()

@@ -91,8 +91,8 @@ private:
 public:    
 	Day04()
 	{
-		inputs = util::readFileLines("..\\inputs\\input_2020_4.txt", '\n', false);
-        input = util::readFile("..\\inputs\\input_2020_4.txt");
+		inputs = util::readFileLines("..\\inputs\\2020\\input_4.txt", '\n', false);
+        input = util::readFile("..\\inputs\\2020\\input_4.txt");
 	}
 
 	int64_t run()

@@ -20,8 +20,8 @@ public:
 
 	Day02()
 	{
-		inputString = util::readFile("..\\inputs\\input_2020_2.txt");
-        inputVector = util::readFileLines("..\\inputs\\input_2020_2.txt");
+		inputString = util::readFile("..\\inputs\\2020\\input_2.txt");
+        inputVector = util::readFileLines("..\\inputs\\2020\\input_2.txt");
 	}
 
     void parsePasswords() {

@@ -10,8 +10,8 @@ private:
 public:
     Day11()
     {
-        inputString = util::readFile("..\\inputs\\input_2020_11.txt");
-        inputVec = util::readFileLines("..\\inputs\\input_2020_11.txt", '\n', true);
+        inputString = util::readFile("..\\inputs\\2020\\input_11.txt");
+        inputVec = util::readFileLines("..\\inputs\\2020\\input_11.txt", '\n', true);
     }
 
     int64_t run()

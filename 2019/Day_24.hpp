@@ -224,8 +224,8 @@ private:
 public:
 	Day24()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_24.txt");
-		inputVector = util::readFileLines("..\\inputs\\input_2019_24.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_24.txt");
+		inputVector = util::readFileLines("..\\inputs\\2019\\input_24.txt");
 	}
 
 	int64_t run()

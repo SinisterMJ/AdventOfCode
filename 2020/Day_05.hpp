@@ -27,7 +27,7 @@ private:
 public:
 	Day05()
 	{
-        inputs = util::readFileLines("..\\inputs\\input_2020_5.txt", '\n', true);
+        inputs = util::readFileLines("..\\inputs\\2020\\input_5.txt", '\n', true);
 	}
 
 	int64_t run()

@@ -79,7 +79,7 @@ private:
 public:
 	Day21()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_21.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_21.txt");
 	}
 
 	int64_t run()

@@ -11,8 +11,8 @@ private:
 public:
 	Day03()
 	{
-		inputs = util::readFileLines("..\\inputs\\input_2020_3.txt");
-        input = util::readFile("..\\inputs\\input_2020_3.txt");
+		inputs = util::readFileLines("..\\inputs\\2020\\input_3.txt");
+        input = util::readFile("..\\inputs\\2020\\input_3.txt");
 	}
         
     int64_t trees_hit(std::pair<int, int> slope) 

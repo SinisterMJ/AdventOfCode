@@ -377,8 +377,8 @@ PatternFound:
 public:
 	Day17()
 	{
-		inputString = util::readFile("..\\inputs\\input_2019_17.txt");
-		inputVector = util::readFileLines("..\\inputs\\input_2019_17.txt");
+		inputString = util::readFile("..\\inputs\\2019\\input_17.txt");
+		inputVector = util::readFileLines("..\\inputs\\2019\\input_17.txt");
 	}
 
 	int64_t run()
