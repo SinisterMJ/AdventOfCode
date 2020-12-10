@@ -9,6 +9,19 @@ private:
     std::vector<std::string> inputVec;
     std::vector<int64_t> adapters;
 
+    int64_t getDifferences()
+    {
+        int64_t count[2];
+        count[0] = 0;
+        count[1] = 0;
+
+        for (int index = 1; index < adapters.size(); ++index)
+        {
+            count[(adapters[index] - adapters[index - 1] - 1) / 2]++;
+        }
+
+        return count[0] * count[1];
+    }
     int64_t getCountPerm() 
     {
         int64_t paths = 1;
@@ -25,9 +38,7 @@ private:
                 if (cur_1 == 0)
                     continue;
 
-                int possibles = static_cast<int32_t>(std::pow(2, cur_1 - 1)) - (cur_1 == 4);
-
-                paths *= possibles;
+                paths *= static_cast<int32_t>(std::pow(2, cur_1 - 1)) - (cur_1 == 4);
                 cur_1 = 0;
             }
         }
@@ -51,30 +62,8 @@ public:
         adapters.push_back(0);
         std::sort(adapters.begin(), adapters.end());
         adapters.push_back(adapters.back() + 3);
-
-        int64_t count_1 = 0;
-        int64_t count_3 = 0;
-
-        int32_t cur_1 = 0;
-        int32_t cur_3 = 0;
-
-        for (int index = 1; index < adapters.size(); ++index)
-        {
-            if (adapters[index] - adapters[index - 1] == 1)
-            {
-                cur_3 = 0;
-                cur_1++;
-                count_1++;
-            }
-            if (adapters[index] - adapters[index - 1] == 3)
-            {
-                cur_1 = 0;
-                cur_3++;
-                count_3++;
-            }
-        }
         
-        int64_t result_1 = count_1 * count_3;
+        int64_t result_1 = getDifferences();
         int64_t result_2 = getCountPerm();
 
         int64_t time = myTime.usPassed();
