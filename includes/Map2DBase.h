@@ -59,6 +59,37 @@ public:
 		return allPositions;
 	}
 
+    int32_t countAll(T val)
+    {
+        int32_t count = 0;
+        for (auto elem : dataMap)
+        {
+            if (elem.second == val)
+                count++;
+        }
+
+        return count;
+    }
+
+    static std::vector<v2> getNeighboursVec(bool include_diagonal)
+    {
+        std::vector<v2> neighbours;
+        neighbours.push_back(v2(0, -1));
+        neighbours.push_back(v2(0, 1));
+        neighbours.push_back(v2(-1, 0));
+        neighbours.push_back(v2(1, 0));
+
+        if (include_diagonal)
+        {
+            neighbours.push_back(v2(1, -1));
+            neighbours.push_back(v2(-1, -1));
+            neighbours.push_back(v2(1, 1));
+            neighbours.push_back(v2(-1, 1));
+        }
+
+        return neighbours;
+    }
+
 	T read(int32_t x, int32_t y)
 	{
 		return read(v2(x, y));
@@ -204,4 +235,46 @@ void DrawMap(std::map<v2, int>& map, const std::map<int, uint8_t>& dict, bool re
 	}
 
 	std::cout << result << std::endl;
+}
+
+void DrawMap(std::map<v2, int8_t>& map, bool resetScreen = true)
+{
+    if (resetScreen)
+    {
+        HANDLE hStdout;
+        COORD destCoord;
+        hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        //position cursor at start of window
+        destCoord.X = 0;
+        destCoord.Y = 0;
+        SetConsoleCursorPosition(hStdout, destCoord);
+    }
+
+    int minX = 0;
+    int minY = 0;
+    int maxX = 0;
+    int maxY = 0;
+
+    for (auto elem : map)
+    {
+        minX = std::min(minX, elem.first.x);
+        maxX = std::max(maxX, elem.first.x);
+        minY = std::min(minY, elem.first.y);
+        maxY = std::max(maxY, elem.first.y);
+    }
+
+    std::string result = "";
+    for (int y = minY; y <= maxY; ++y)
+    {
+        for (int x = minX; x <= maxX; ++x)
+        {
+            int val = map[v2(x, y)];
+            
+            result += val;
+        }
+        result += "\n";
+    }
+
+    std::cout << result << std::endl;
 }
