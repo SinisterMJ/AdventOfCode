@@ -6,77 +6,113 @@
 
 class Day08 {
 private:
-	std::string getPixel(std::vector<std::string>& inputs, int index)
-	{
-		for (int i = 0; i < inputs.size(); ++i)
-		{
-			if (inputs[i].at(index) != '2')
-			{
-				if (inputs[i].at(index) == '0')
-					return " ";
-				else
-					return "*";
-			}
-		}
-		return " ";
-	}
+	std::vector<std::string> inputVec;
 
-	std::string inputString;
+    int32_t getCountBackslash(std::string input)
+    {
+        int count = 0;
+
+        int pos = 0;
+
+        while ((pos = (input.find("\\\\", pos))) != std::string::npos)
+        {
+            pos += 2;
+            count++;
+        }
+
+        return count;
+    }
+
+    int32_t getCountQuotes(std::string input)
+    {
+        int count = 0;
+
+        int pos = 0;
+
+        while ((pos = (input.find("\\\"", pos))) != std::string::npos)
+        {
+            pos += 2;
+            count++;
+        }
+
+        return count;
+    }
+
+    int32_t getCountHex(std::string input)
+    {
+        int count = 0;
+
+        int pos = 0;
+
+        while ((pos = (input.find("\\x", pos))) != std::string::npos)
+        {
+            pos += 4;
+            count++;
+        }
+
+        return count;
+    }
+
+    int32_t getLength(std::string input)
+    {
+        int count = input.length() - 2;
+        for (int index = 0; index < input.size(); ++index)
+        {
+            if (input[index] == '\\')
+            {
+                count--;
+                index++;
+                if (input[index] == 'x')
+                {
+                    count -= 2;
+                    index += 2;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    int32_t increaseLength(std::string input)
+    {
+        std::string result = "\"";
+        for (int index = 0; index < input.size(); ++index)
+        {
+            if (input[index] == '\"' || input[index] == '\\')
+            {
+                result += "\\";
+            }
+
+            result += input[index];
+        }
+
+        result += "\"";
+
+        return result.size();
+    }
+
 public:
 	Day08()
 	{
-		inputString = util::readFile("..\\inputs\\2015\\input_8.txt");
+        inputVec = util::readFileLines("..\\inputs\\2015\\input_8.txt");
 	}
 
 	int64_t run()
 	{
 		util::Timer myTime;
 		myTime.start();
+        
+        int64_t result_1 = 0;
+        int64_t result_2 = 0;
 
-		const int height = 6;
-		const int width = 25;
+        for (auto elem : inputVec)
+        {
+            result_1 += elem.length() - getLength(elem);
+            result_2 += increaseLength(elem) - elem.length();
+        }
 
-		std::vector<std::string> images;
-		for (int index = 0; index < inputString.length(); index += height * width)
-		{
-			images.push_back(inputString.substr(index, height * width));
-		}
-
-		if (images.back() == "\n")
-			images.pop_back();
-
-		std::vector<int64_t> countZero;
-		std::vector<int64_t> countOne;
-		std::vector<int64_t> countTwo;
-		for (int index = 0; index < images.size(); ++index)
-		{
-			countZero.push_back(std::count(images[index].begin(), images[index].end(), '0'));
-			countOne.push_back(std::count(images[index].begin(), images[index].end(), '1'));
-			countTwo.push_back(std::count(images[index].begin(), images[index].end(), '2'));
-		}
-
-		int64_t minVal = std::numeric_limits<int64_t>::max();
-		int64_t result = 0;
-		for (int index = 0; index < images.size(); ++index)
-		{
-			if (countZero[index] < minVal)
-			{
-				minVal = countZero[index];
-				result = countOne[index] * countTwo[index];
-			}
-		}
-
-		std::string resultString = "";
-
-		for (int i = 0; i < height * width; ++i)
-		{
-			resultString += getPixel(images, i);
-			if ((i + 1) % width == 0)
-				resultString += "\n";
-		}
-
-		std::cout << "Day 08 - Part 1: " << result << std::endl
-				  << "Day 08 - Part 2: " << std::endl << resultString << std::endl;
+		std::cout << "Day 08 - Part 1: " << result_1 << std::endl
+				  << "Day 08 - Part 2: " << result_2 << std::endl;
 
 		return myTime.usPassed();
 	}
