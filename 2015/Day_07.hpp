@@ -2,79 +2,178 @@
 #define ADVENTOFCODE2015_DAY07
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include <map>
+#include <regex>
 
 class Day07 {
 private:
-	std::string inputString;
+    struct Wire {
+        uint16_t value;
+        std::string instruction;
+        bool written;
+    };
+
+    std::map<std::string, Wire> allWires;
+	std::vector<std::string> inputVec;
+
+    std::regex and_regex;
+    std::regex lshift_regex;
+    std::regex rshift_regex;
+    std::regex or_regex;
+    std::regex not_regex;
+    std::regex input_regex;
+
+    int16_t ParseWires(std::string node)
+    {
+        try {
+            int val = std::stoi(node);
+            return val;
+        }
+        catch (...) {
+        }
+
+        Wire& instance = allWires[node];
+
+        std::smatch reg_match;
+
+        if (instance.written)
+            return instance.value;
+
+        std::regex_match(instance.instruction, reg_match, rshift_regex);
+
+        if (reg_match.size() > 1)
+        {
+            std::string subNode = reg_match[1];
+            int shift = std::stoi(reg_match[2]);
+            instance.value = ParseWires(subNode) >> shift;
+            instance.written = true;
+            return instance.value;
+        }
+
+        std::regex_match(instance.instruction, reg_match, not_regex);
+
+        if (reg_match.size() > 1)
+        {
+            std::string subNode = reg_match[1];
+            instance.value = 0xFFFF ^ ParseWires(subNode);
+            instance.written = true;
+            return instance.value;
+        }
+
+        std::regex_match(instance.instruction, reg_match, lshift_regex);
+
+        if (reg_match.size() > 1)
+        {
+            std::string subNode = reg_match[1];
+            int shift = std::stoi(reg_match[2]);
+         
+            instance.value = ParseWires(subNode) << shift;
+            instance.written = true;
+            return instance.value;
+        }
+
+        std::regex_match(instance.instruction, reg_match, input_regex);
+
+        if (reg_match.size() > 1)
+        {
+            int val = std::stoi(reg_match[1]);
+
+            instance.value = val;
+            instance.written = true;
+            return instance.value;
+        }
+
+        std::regex_match(instance.instruction, reg_match, and_regex);
+
+        if (reg_match.size() > 1)
+        {
+            std::string subNode_1 = reg_match[1];
+            std::string subNode_2 = reg_match[2];
+
+            instance.value = ParseWires(subNode_1) & ParseWires(subNode_2);
+            instance.written = true;
+            return instance.value;
+        }
+
+        std::regex_match(instance.instruction, reg_match, or_regex);
+
+        if (reg_match.size() > 1)
+        {
+            std::string subNode_1 = reg_match[1];
+            std::string subNode_2 = reg_match[2];
+
+            instance.value = ParseWires(subNode_1) | ParseWires(subNode_2);
+            instance.written = true;
+            return instance.value;
+        }
+
+        instance.value = ParseWires(instance.instruction);
+        instance.written = true;
+
+        return instance.value;
+    }
+
+    int64_t part2(int64_t in)
+    {
+        for (auto elem : allWires)
+        {
+            allWires[elem.first].written = false;
+            allWires[elem.first].value = 0;
+        }
+
+        allWires["b"].value = in;
+        allWires["b"].instruction = std::to_string(in);
+        allWires["b"].written = true;
+
+        return ParseWires("a");
+    }
+
+    int64_t part1()
+    {   
+        for (auto elem : inputVec)
+        {
+            auto splitted = util::split(elem, " -> ");
+            Wire temp;
+            temp.instruction = splitted[0];
+            temp.written = false;
+
+            allWires[splitted[1]] = temp;
+        }
+
+        for (auto elem : allWires)
+        {
+            ParseWires(elem.first);
+        }
+
+        return ParseWires("a");
+    }
 public:
 	Day07()
 	{
-		inputString = util::readFile("..\\inputs\\2015\\input_7.txt");
+		inputVec = util::readFileLines("..\\inputs\\2015\\input_7.txt");
 	}
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
-		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
-		std::vector<int64_t> inputs = { 0, 1, 2, 3, 4 };
+        and_regex = std::regex("(\\w+) AND (\\w+)");
+        lshift_regex = std::regex("(\\w+) LSHIFT ([0-9]+)");
+        rshift_regex = std::regex("(\\w+) RSHIFT ([0-9]+)");
+        or_regex = std::regex("(\\w+) OR (\\w+)");
+        not_regex = std::regex("NOT (\\w+)");
+        input_regex = std::regex("([0-9]+)");
 
-		int64_t maxVal1 = std::numeric_limits<int64_t>::min();
-		std::vector<int64_t> result = { 0 };
+        int64_t result_1 = part1();
+        int64_t result_2 = part2(result_1);
+        int64_t time = myTime.usPassed();
 
-		do
-		{
-			result = { 0 };
+        std::cout << "Day 07 - Part 1: " << result_1 << std::endl
+                  << "Day 07 - Part 2: " << result_2 << std::endl;
 
-			for (int index = 0; index < 5; index++)
-			{
-				IntcodeVM vm;
-				vm.initializeCommands(commands);
-				std::vector<int64_t> copy(2);
-				copy[0] = inputs[index];
-				copy[1] = result.back();
-				vm.addInput(copy);
-				result = vm.runCommands();
-			}
-			maxVal1 = std::max(maxVal1, result.back());
-		} while (std::next_permutation(inputs.begin(), inputs.end()));
-
-		
-		inputs = { 5, 6, 7, 8, 9 };
-
-		std::vector<int64_t> input1[5];
-		int64_t maxVal2 = std::numeric_limits<int64_t>::min();
-		do
-		{
-			IntcodeVM vms[5];
-
-			for (int index = 0; index < 5; index++)
-			{
-				std::vector<int64_t> input;
-				input.push_back(inputs[index]);
-				vms[index].addInput(input)->initializeCommands(commands);
-			}
-
-			result = { 0 };
-
-			while (!vms[4].hasTerminated())
-			{
-				for (int index = 0; index < 5; index++)
-				{
-					vms[index].addInput(result);
-					result = vms[index].runCommands();
-				}
-			}
-			maxVal2 = std::max(maxVal2, result.back());
-		} while (std::next_permutation(inputs.begin(), inputs.end()));
-
-		std::cout << "Day 07 - Part 1: " << maxVal1 << std::endl
-				  << "Day 07 - Part 2: " << maxVal2 << std::endl;
-
-		return myTime.usPassed();
-	}
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2015_DAY07

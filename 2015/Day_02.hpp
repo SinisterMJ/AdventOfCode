@@ -2,7 +2,6 @@
 #define ADVENTOFCODE2015_DAY02
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
 
 class Day02 {
 private:

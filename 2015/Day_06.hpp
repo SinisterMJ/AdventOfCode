@@ -26,12 +26,6 @@ public:
         std::regex light_regex("(.*) ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)");
         std::smatch light_match;
 
-        /*for (auto elem : input)
-        {
-            if (std::regex_search(elem, moon_match, moon_regex) && moon_match.size() >= 4)
-                moons.push_back(Moon(std::stoi(moon_match[1]), std::stoi(moon_match[2]), std::stoi(moon_match[3])));
-        }*/
-
         for (auto elem : inputVec)
         {
             std::regex_search(elem, light_match, light_regex);
