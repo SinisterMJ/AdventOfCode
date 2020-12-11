@@ -106,7 +106,7 @@ private:
 	std::vector<PositionDepth> getValidNeighboursRecursive(Map2DBase<int32_t>& maze, v2 current, int32_t currentLevel)
 	{
 		std::vector<PositionDepth> result;
-		for (auto dir : maze.neighbours)
+		for (auto dir : maze.getNeighboursVec(false))
 		{
 			if (maze.read(current + dir) == '#')
 				continue;
@@ -157,7 +157,7 @@ private:
 	std::vector<v2> getValidNeighbours(Map2DBase<int32_t>& maze, v2 current)
 	{
 		std::vector<v2> result;
-		for (auto dir : maze.neighbours)
+		for (auto dir : maze.getNeighboursVec(false))
 		{
 			v2 pos = current + dir;
 			auto val = maze.read(pos);
@@ -186,7 +186,7 @@ private:
 
 		v2 start = maze.find('A' * 256 + 'A');
 
-		for (auto dir : maze.neighbours)
+		for (auto dir : maze.getNeighboursVec(false))
 		{
 			if (maze.read(start + dir) == '.')
 			{
@@ -196,7 +196,7 @@ private:
 		}
 
 		v2 end = maze.find('Z' * 256 + 'Z');
-		for (auto dir : maze.neighbours)
+		for (auto dir : maze.getNeighboursVec(false))
 		{
 			if (maze.read(end + dir) == '.')
 			{
@@ -250,7 +250,7 @@ private:
 				
 		v2 start = maze.find('A' * 256 + 'A');
 
-		for (auto dir : maze.neighbours)
+		for (auto dir : maze.getNeighboursVec(false))
 		{
 			if (maze.read(start + dir) == '.')
 			{
@@ -260,7 +260,7 @@ private:
 		}
 
 		v2 end = maze.find('Z' * 256 + 'Z');
-		for (auto dir : maze.neighbours)
+		for (auto dir : maze.getNeighboursVec(false))
 		{
 			if (maze.read(end + dir) == '.')
 			{

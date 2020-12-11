@@ -120,6 +120,6 @@ int main()
 
 	std::cout << std::endl << "Total time needed for all days: " << total_us << "[us]" << std::endl;
 
-	//getchar();
+	getchar();
 	return 0;
 }

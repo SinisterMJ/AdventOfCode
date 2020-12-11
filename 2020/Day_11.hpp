@@ -11,36 +11,22 @@ private:
 
     int64_t runFerry(int max_occupied, int max_vector)
     {
-        Map2DBase<int8_t> ferry('.');
-        Map2DBase<int8_t> ferry_temp('.');
+        std::vector<std::string> ferry_s = inputVec;
+        std::vector<std::string> ferry_s_temp;
+        std::vector<v2> neighbours = Map2DBase<int8_t>::getNeighboursVec(true);
 
-        std::vector<v2> neighbours = ferry.getNeighboursVec(true);
-
-        for (int y = 0; y < inputVec.size(); ++y)
+        do 
         {
-            for (int x = 0; x < inputVec[y].length(); ++x)
+            ferry_s_temp = ferry_s;
+            for (int y = 0; y < ferry_s_temp.size(); ++y)
             {
-                ferry.write(x, y, inputVec[y][x]);
-            }
-        }
-
-        bool changed = true;
-        while (changed)
-        {
-            changed = false;
-
-            for (int y = 0; y <= ferry.maxY(); ++y)
-            {
-                for (int x = 0; x <= ferry.maxX(); ++x)
+                for (int x = 0; x < ferry_s_temp[y].size(); ++x)
                 {
-                    v2 pos(x, y);
-                    ferry_temp.write(x, y, ferry.read(x, y));
-
-                    if (ferry.read(x, y) == '.')
+                    if (ferry_s[y][x] == '.')
                         continue;
-
-                    bool occupied = (ferry.read(x, y) == '#');
-
+                    
+                    bool occupied = (ferry_s_temp[y][x] == '#');
+                    v2 pos(x, y);
                     int32_t count_neighbour = 0;
 
                     for (auto& elem : neighbours)
@@ -48,12 +34,12 @@ private:
                         for (int index = 1; index <= max_vector; ++index)
                         {
                             v2 pos_neighbour = pos + elem * index;
-                            if (pos_neighbour.x >= 0 && pos_neighbour.x <= ferry.maxX() &&
-                                pos_neighbour.y >= 0 && pos_neighbour.y <= ferry.maxY())
+                            if (in_range<int32_t>(pos_neighbour.x, 0, ferry_s_temp[y].size() - 1) &&
+                                in_range<int32_t>(pos_neighbour.y, 0, ferry_s_temp.size() - 1))
                             {
-                                if (ferry.read(pos_neighbour.x, pos_neighbour.y) != '.')
+                                if (ferry_s_temp[pos_neighbour.y][pos_neighbour.x] != '.')
                                 {
-                                    count_neighbour += (ferry.read(pos_neighbour.x, pos_neighbour.y) == '#');
+                                    count_neighbour += (ferry_s_temp[pos_neighbour.y][pos_neighbour.x] == '#');
                                     break;
                                 }
                             }
@@ -66,22 +52,22 @@ private:
 
                     if (occupied && count_neighbour >= max_occupied)
                     {
-                        ferry_temp.write(x, y, 'L');
-                        changed = true;
+                        ferry_s[y][x] = 'L';
                     }
 
                     if (!occupied && count_neighbour == 0)
                     {
-                        ferry_temp.write(x, y, '#');
-                        changed = true;
+                        ferry_s[y][x] = '#';
                     }
                 }
             }
+        } while (ferry_s != ferry_s_temp);
 
-            std::swap(ferry, ferry_temp);
-        }
+        int32_t total = std::accumulate(std::begin(ferry_s), std::end(ferry_s), 0, [](int total, const auto& row) {
+            return total + std::count(std::begin(row), std::end(row), '#');
+        });
 
-        return ferry.countAll('#');
+        return total;
     }
 
 public:

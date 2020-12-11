@@ -9,9 +9,8 @@
 template<class T>
 class Map2DBase {
 public:
-	std::vector<v2> neighbours = { v2(0, -1), v2(0, 1), v2(1, 0), v2(-1, 0) };
-
-	Map2DBase(T _emptyCell)
+	
+    Map2DBase(T _emptyCell)
 		: _minX(std::numeric_limits<int32_t>::max())
 		, _minY(std::numeric_limits<int32_t>::max())
 		, _maxX(std::numeric_limits<int32_t>::min())
