@@ -268,7 +268,7 @@ void DrawMap(std::map<v2, int8_t>& map, bool resetScreen = true)
     {
         for (int x = minX; x <= maxX; ++x)
         {
-            int val = map[v2(x, y)];
+            int8_t val = map[v2(x, y)];
             
             result += val;
         }

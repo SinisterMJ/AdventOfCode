@@ -113,7 +113,7 @@ private:
         return instance.value;
     }
 
-    int64_t part2(int64_t in)
+    int64_t part2(uint16_t in)
     {
         for (auto elem : allWires)
         {
@@ -166,7 +166,7 @@ public:
         input_regex = std::regex("([0-9]+)");
 
         int64_t result_1 = part1();
-        int64_t result_2 = part2(result_1);
+        int64_t result_2 = part2(static_cast<uint16_t>(result_1));
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 07 - Part 1: " << result_1 << std::endl

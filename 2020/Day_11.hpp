@@ -34,8 +34,8 @@ private:
                         for (int index = 1; index <= max_vector; ++index)
                         {
                             v2 pos_neighbour = pos + elem * index;
-                            if (in_range<int32_t>(pos_neighbour.x, 0, ferry_s_temp[y].size() - 1) &&
-                                in_range<int32_t>(pos_neighbour.y, 0, ferry_s_temp.size() - 1))
+                            if (in_range<int32_t>(pos_neighbour.x, 0, static_cast<int32_t>(ferry_s_temp[y].size()) - 1) &&
+                                in_range<int32_t>(pos_neighbour.y, 0, static_cast<int32_t>(ferry_s_temp.size()) - 1))
                             {
                                 if (ferry_s_temp[pos_neighbour.y][pos_neighbour.x] != '.')
                                 {
@@ -64,7 +64,7 @@ private:
         } while (ferry_s != ferry_s_temp);
 
         int32_t total = std::accumulate(std::begin(ferry_s), std::end(ferry_s), 0, [](int total, const auto& row) {
-            return total + std::count(std::begin(row), std::end(row), '#');
+            return total + static_cast<int32_t>(std::count(std::begin(row), std::end(row), '#'));
         });
 
         return total;

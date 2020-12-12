@@ -12,7 +12,7 @@ private:
     {
         int count = 0;
 
-        int pos = 0;
+        int64_t pos = 0;
 
         while ((pos = (input.find("\\\\", pos))) != std::string::npos)
         {
@@ -27,7 +27,7 @@ private:
     {
         int count = 0;
 
-        int pos = 0;
+        int64_t pos = 0;
 
         while ((pos = (input.find("\\\"", pos))) != std::string::npos)
         {
@@ -42,7 +42,7 @@ private:
     {
         int count = 0;
 
-        int pos = 0;
+        int64_t pos = 0;
 
         while ((pos = (input.find("\\x", pos))) != std::string::npos)
         {
@@ -53,9 +53,9 @@ private:
         return count;
     }
 
-    int32_t getLength(std::string input)
+    int64_t getLength(std::string input)
     {
-        int count = input.length() - 2;
+        int64_t count = input.length() - 2;
         for (int index = 0; index < input.size(); ++index)
         {
             if (input[index] == '\\')
@@ -73,7 +73,7 @@ private:
         return count;
     }
 
-    int32_t increaseLength(std::string input)
+    int64_t increaseLength(std::string input)
     {
         std::string result = "\"";
         result.reserve(input.size() * 2);
