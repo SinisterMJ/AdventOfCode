@@ -76,6 +76,7 @@ private:
     int32_t increaseLength(std::string input)
     {
         std::string result = "\"";
+        result.reserve(input.size() * 2);
         for (int index = 0; index < input.size(); ++index)
         {
             if (input[index] == '\"' || input[index] == '\\')
