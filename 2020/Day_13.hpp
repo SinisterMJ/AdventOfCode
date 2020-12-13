@@ -10,8 +10,10 @@
 
 class Day13 {
 private:
-    std::vector<int64_t> lines;
-    std::vector<int64_t> times;
+    /*std::vector<int64_t> lines;
+    std::vector<int64_t> times;*/
+
+    std::vector<std::pair<int64_t, int64_t>> busLines;
     
     void ReadBusses()
     {
@@ -22,14 +24,17 @@ private:
         {
             if (elem != "x")
             {
-                lines.push_back(std::stoi(elem));
-                int64_t modulo = (lines.back() - index) % lines.back();
+                int64_t num = std::stoi(elem);
+                int64_t modulo = (num - index) % num;
                 while (modulo < 0)
-                    modulo += lines.back();
-                times.push_back(modulo);
+                    modulo += num;
+
+                busLines.push_back(std::make_pair(num, modulo));
             }
             index++;
         }
+
+        std::sort(busLines.rbegin(), busLines.rend());
     }
 
     int64_t part1()
@@ -38,11 +43,11 @@ private:
 
         for (int index = depTime; ; ++index)
         {
-            for (auto elem : lines)
+            for (auto elem : busLines)
             {
-                if (index % elem == 0)
+                if (index % elem.first == 0)
                 {
-                    return elem * (index - depTime);
+                    return elem.first * (index - depTime);
                 }
             }
         }
@@ -51,16 +56,16 @@ private:
     int64_t part2()
     {
         int64_t prod = 1;
-        int64_t pos = 0;
+        int64_t pos = busLines[0].first;
 
-        for (int index = 0; index < lines.size(); ++index)
+        for (auto bus : busLines)
         {
-            while (pos % lines[index] != times[index])
+            while (pos % bus.first != bus.second)
             {
                 pos += prod;
             }
 
-            prod *= lines[index];
+            prod *= bus.first;
         }
 
         return pos;
