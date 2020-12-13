@@ -245,4 +245,47 @@ namespace std
   };
 }
 
+
+int64_t mulInv(int64_t a, int64_t b) {
+    int64_t b0 = b;
+    int64_t x0 = 0;
+    int64_t x1 = 1;
+
+    if (b == 1) {
+        return 1;
+    }
+
+    while (a > 1) {
+        int64_t q = a / b;
+        int64_t amb = a % b;
+        a = b;
+        b = amb;
+
+        int64_t xqx = x1 - q * x0;
+        x1 = x0;
+        x0 = xqx;
+    }
+
+    if (x1 < 0) {
+        x1 += b0;
+    }
+
+    return x1;
+}
+
+int64_t chineseRemainder(std::vector<int64_t> n, std::vector<int64_t> a) {
+    int64_t prod = 1;
+
+    for (auto elem : n)
+        prod *= elem;
+
+    int64_t sm = 0;
+    for (uint64_t i = 0; i < n.size(); i++) {
+        int64_t p = prod / n[i];
+        sm += a[i] * mulInv(p, n[i])*p;
+    }
+
+    return sm % prod;
+}
+
 #endif  // ADVENTOFCODE_AOC

@@ -13,50 +13,6 @@ private:
     std::vector<int64_t> lines;
     std::vector<int64_t> times;
     
-    int mulInv(int64_t a, int64_t b) {
-        int b0 = b;
-        int x0 = 0;
-        int x1 = 1;
-
-        if (b == 1) {
-            return 1;
-        }
-
-        while (a > 1) {
-            int64_t q = a / b;
-            int64_t amb = a % b;
-            a = b;
-            b = amb;
-
-            int64_t xqx = x1 - q * x0;
-            x1 = x0;
-            x0 = xqx;
-        }
-
-        if (x1 < 0) {
-            x1 += b0;
-        }
-
-        return x1;
-    }
-
-    int64_t chineseRemainder(std::vector<int64_t> n, std::vector<int64_t> a) {
-        //int64_t prod = std::reduce(std::execution::seq, n.begin(), n.end(), 1, [](int64_t a, int64_t b) { return a * b; });
-
-        int64_t prod = 1;
-        
-        for (auto elem : n)
-            prod *= elem;
-
-        int64_t sm = 0;
-        for (int64_t i = 0; i < n.size(); i++) {
-            int64_t p = prod / n[i];
-            sm += a[i] * mulInv(p, n[i])*p;
-        }
-
-        return sm % prod;
-    }
-
     void ReadBusses()
     {
         auto buses = util::split(inputVec[1], ',');
@@ -67,7 +23,9 @@ private:
             if (elem != "x")
             {
                 lines.push_back(std::stoi(elem));
-                int32_t modulo = lines.back() - index;
+                int64_t modulo = (lines.back() - index) % lines.back();
+                while (modulo < 0)
+                    modulo += lines.back();
                 times.push_back(modulo);
             }
             index++;
@@ -88,14 +46,24 @@ private:
                 }
             }
         }
-
-        return -1;
     }
 
     int64_t part2()
     {
-        auto result = chineseRemainder(lines, times);
-        return result;
+        int64_t prod = 1;
+        int64_t pos = 0;
+
+        for (int index = 0; index < lines.size(); ++index)
+        {
+            while (pos % lines[index] != times[index])
+            {
+                pos += prod;
+            }
+
+            prod *= lines[index];
+        }
+
+        return pos;
     }
 
     std::string inputString;
