@@ -67,11 +67,7 @@ private:
             if (elem != "x")
             {
                 lines.push_back(std::stoi(elem));
-
-                int32_t modulo = (lines.back() - index) % lines.back();
-                while (modulo < 0)
-                    modulo += lines.back();
-
+                int32_t modulo = lines.back() - index;
                 times.push_back(modulo);
             }
             index++;
