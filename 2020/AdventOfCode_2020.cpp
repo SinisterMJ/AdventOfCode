@@ -36,7 +36,7 @@ int main()
 
 	std::vector<int64_t> runTimes = { };
 		
-	/*Day01 mDay01; runTimes.push_back(mDay01.run());
+	Day01 mDay01; runTimes.push_back(mDay01.run());
 	std::cout << std::endl;
 		
     Day02 mDay02; runTimes.push_back(mDay02.run());
@@ -70,12 +70,12 @@ int main()
 	std::cout << std::endl;
 
     Day12 mDay12; runTimes.push_back(mDay12.run());
-	std::cout << std::endl;*/
+	std::cout << std::endl;
 
     Day13 mDay13; runTimes.push_back(mDay13.run());
 	std::cout << std::endl;
 
-    /*Day14 mDay14; runTimes.push_back(mDay14.run());
+    Day14 mDay14; runTimes.push_back(mDay14.run());
 	std::cout << std::endl;
 
     /*Day15 mDay15; runTimes.push_back(mDay15.run());
