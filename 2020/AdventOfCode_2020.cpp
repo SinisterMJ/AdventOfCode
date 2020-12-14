@@ -78,7 +78,7 @@ int main()
     Day14 mDay14; runTimes.push_back(mDay14.run());
 	std::cout << std::endl;
 
-    /*Day15 mDay15; runTimes.push_back(mDay15.run());
+    Day15 mDay15; runTimes.push_back(mDay15.run());
 	std::cout << std::endl;
 
     /*Day16 mDay16; runTimes.push_back(mDay16.run());
@@ -120,6 +120,6 @@ int main()
 
 	std::cout << std::endl << "Total time needed for all days: " << total_us << "[us]" << std::endl;
 
-	//getchar();
+	getchar();
 	return 0;
 }

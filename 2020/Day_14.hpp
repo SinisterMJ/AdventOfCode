@@ -22,7 +22,7 @@ private:
 
         for (int index = 0; index < mask.size(); ++index)
         {
-            int shift = mask.size() - index - 1;
+            int64_t shift = mask.size() - index - 1;
             if (mask[index] == '0')
                 andMask &= ~(int64_t(1) << shift);
             if (mask[index] == '1')
@@ -43,34 +43,45 @@ private:
         memory.clear();
 
         std::string currentMask = "";
-        
+        int64_t mask = 0;
+        int64_t orMask = ~(int64_t(0));
+        std::vector<int64_t> offsets;
+
         for (auto elem : inputVec)
         {
             if (elem.find("mask") != std::string::npos)
+            {
+                offsets.clear();
+                mask = 0;
+                orMask = ~(int64_t(0));
                 currentMask = elem.substr(7);
+                for (int index = 0; index < currentMask.size(); ++index)
+                {
+                    if (currentMask[index] == '1')
+                    {
+                        mask |= int64_t(1) << (35 - index);
+                    }
+                }
+
+                for (int index = 0; index < currentMask.size(); ++index)
+                {
+                    if (currentMask[index] == 'X')
+                    {
+                        orMask &= ~(int64_t(1) << (35 - index));
+                        offsets.push_back(int64_t(1) << (35 - index));
+                    }
+                }
+            }
             else
             {
                 std::regex_search(elem, number_match, extract);
                 int64_t address = std::stoll(number_match[1]);
                 int64_t value = std::stoll(number_match[2]);
 
-                std::vector<int64_t> offsets;
-                
-                for (int index = 0; index < currentMask.size(); ++index)
-                {
-                    if (currentMask[index] != 'X')
-                    {
-                        if (currentMask[index] == '1')
-                            address |= int64_t(1) << (35 - index);
-                    }
-                    else
-                    {
-                        address &= ~(int64_t(1) << (35 - index));
-                        offsets.push_back(int64_t(1) << (35 - index));
-                    }
-                }
+                address |= mask;
+                address &= orMask;
 
-                int32_t totalOps = std::pow(2, offsets.size());
+                int32_t totalOps = static_cast<int32_t>(std::pow(2, offsets.size()));
                 
                 for (int index = 0; index < totalOps; ++index)
                 {
@@ -78,10 +89,7 @@ private:
                     
                     for (int i = 0; i < offsets.size(); ++i)
                     {
-                        if ((index >> i) & 0x1)
-                        {
-                            currAdd += offsets[i];
-                        }
+                        currAdd += offsets[i] * ((index >> i) & 0x1);
                     }
 
                     memory[currAdd] = value;
