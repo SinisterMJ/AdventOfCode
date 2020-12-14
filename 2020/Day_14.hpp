@@ -54,63 +54,36 @@ private:
                 int64_t address = std::stoll(number_match[1]);
                 int64_t value = std::stoll(number_match[2]);
 
-                std::vector<std::string> addresses;
-                std::vector<std::string> intermediate;
+                std::vector<int64_t> offsets;
                 
                 for (int index = 0; index < currentMask.size(); ++index)
                 {
                     if (currentMask[index] != 'X')
                     {
-                        if (addresses.size() > 0)
-                        {
-                            for (auto add : addresses)
-                            {
-                                if (currentMask[index] == '0')
-                                {
-                                    intermediate.push_back(add + std::to_string(getBit(address, 35 - index)));
-                                }
-                                else
-                                {
-                                    intermediate.push_back(add + "1");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (currentMask[index] == '0')
-                            {
-                                intermediate.push_back(std::to_string(getBit(address, 35)));
-                            }
-                            else
-                            {
-                                intermediate.push_back("1");
-                            }
-                        }
+                        if (currentMask[index] == '1')
+                            address |= int64_t(1) << (35 - index);
                     }
                     else
                     {
-                        if (addresses.size() > 0)
+                        address &= ~(int64_t(1) << (35 - index));
+                        offsets.push_back(int64_t(1) << (35 - index));
+                    }
+                }
+
+                int32_t totalOps = std::pow(2, offsets.size());
+                
+                for (int index = 0; index < totalOps; ++index)
+                {
+                    int64_t currAdd = address;
+                    
+                    for (int i = 0; i < offsets.size(); ++i)
+                    {
+                        if ((index >> i) & 0x1)
                         {
-                            for (auto add : addresses)
-                            {
-                                intermediate.push_back(add + std::string(1, '0'));
-                                intermediate.push_back(add + std::string(1, '1'));
-                            }
-                        }
-                        else
-                        {
-                            intermediate.push_back(std::string(1, '0'));
-                            intermediate.push_back(std::string(1, '1'));
+                            currAdd += offsets[i];
                         }
                     }
 
-                    std::swap(addresses, intermediate);
-                    intermediate.clear();
-                }
-
-                for (auto add : addresses)
-                {
-                    int64_t currAdd = std::bitset<64>(add).to_ullong();
                     memory[currAdd] = value;
                 }
             }
