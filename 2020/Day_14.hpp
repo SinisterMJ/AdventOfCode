@@ -44,7 +44,7 @@ private:
 
         std::string currentMask = "";
         int64_t mask = 0;
-        int64_t andMask = ~(int64_t(0));
+        andMask = ~(int64_t(0));
         std::vector<int64_t> offsets;
 
         for (auto elem : inputVec)

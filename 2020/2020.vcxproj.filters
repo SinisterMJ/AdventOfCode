@@ -110,11 +110,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AdventOfCode_2020.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\includes\AccumulatorVM.cpp">
       <Filter>Headerdateien\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="AdventOfCode_2020.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

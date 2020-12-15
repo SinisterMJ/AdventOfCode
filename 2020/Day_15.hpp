@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2020_DAY15
 
 #include "../includes/aoc.h"
+#include <map>
 
 class Day15 {
 private:
@@ -11,31 +12,32 @@ private:
 
     int64_t runGame(int64_t numIterations)
     {
-        std::unordered_map<int64_t, int32_t> lastSpoken;
+        std::vector<int64_t> lastSpokenVec(numIterations, -1);
+
         for (int index = 0; index < numbers.size(); ++index)
         {
-            lastSpoken[numbers[index]] = index;
+            lastSpokenVec[numbers[index]] = index;
         }
 
         int64_t last = numbers.back();
         int64_t lastBefore = numbers[numbers.size() - 2];
 
-        for (int index = numbers.size(); index < numIterations; ++index)
+        for (int64_t index = numbers.size(); index < numIterations; ++index)
         {
-            int64_t last = numbers.back();
-            lastSpoken[numbers[index - 2]] = index - 2;
+            lastSpokenVec[lastBefore] = index - 2;
+            lastBefore = last;
 
-            if (lastSpoken.find(last) != lastSpoken.end())
+            if (lastSpokenVec[last] != -1)
             {
-                numbers.push_back(index - 1 - lastSpoken[last]);
+                last = index - 1 - lastSpokenVec[last];
             }
             else
             {
-                numbers.push_back(0);
+                last = 0;
             }
         }
 
-        return numbers.back();
+        return last;
     }
 
 public:
@@ -51,13 +53,9 @@ public:
         myTime.start();
 
         numbers = util::splitInt64(inputString, ',');
-        numbers = std::vector<int64_t>{ 5, 2,8, 16, 18, 0, 1 };
+
         int64_t result_1 = runGame(2020);
-
-        numbers = util::splitInt64(inputString, ',');
-        numbers = std::vector<int64_t>{ 5, 2,8, 16, 18, 0, 1 };
-
-        int64_t result_2 = runGame(30000000);
+        int64_t result_2 = runGame(30'000'000);
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 15 - Part 1: " << result_1 << '\n'
