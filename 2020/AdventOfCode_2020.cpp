@@ -35,54 +35,86 @@ int main()
 	int64_t total_us = 0;
 
 	std::vector<int64_t> runTimes = { };
-		
-	/*Day01 mDay01; runTimes.push_back(mDay01.run());
-	std::cout << std::endl;
-		
-    Day02 mDay02; runTimes.push_back(mDay02.run());
-	std::cout << std::endl;
-	
-    Day03 mDay03; runTimes.push_back(mDay03.run());
-	std::cout << std::endl;
-	
-    Day04 mDay04; runTimes.push_back(mDay04.run());
-	std::cout << std::endl;
+    
+    {
+        Day01 mDay01; runTimes.push_back(mDay01.run());
+        std::cout << std::endl;
+    }
+    
+    {
+        Day02 mDay02; runTimes.push_back(mDay02.run());
+        std::cout << std::endl;
+    }
 
-    Day05 mDay05; runTimes.push_back(mDay05.run());
-	std::cout << std::endl;
+    {
+        Day03 mDay03; runTimes.push_back(mDay03.run());
+        std::cout << std::endl;
+    }
 
-    Day06 mDay06; runTimes.push_back(mDay06.run());
-	std::cout << std::endl;
+    {
+        Day04 mDay04; runTimes.push_back(mDay04.run());
+        std::cout << std::endl;
+    }
 
-    Day07 mDay07; runTimes.push_back(mDay07.run());
-	std::cout << std::endl;
+    {
+        Day05 mDay05; runTimes.push_back(mDay05.run());
+        std::cout << std::endl;
+    }
 
-    Day08 mDay08; runTimes.push_back(mDay08.run());
-	std::cout << std::endl;
+    {
+        Day06 mDay06; runTimes.push_back(mDay06.run());
+        std::cout << std::endl;
+    }
 
-    Day09 mDay09; runTimes.push_back(mDay09.run());
-	std::cout << std::endl;
+    {
+        Day07 mDay07; runTimes.push_back(mDay07.run());
+        std::cout << std::endl;
+    }
 
-    Day10 mDay10; runTimes.push_back(mDay10.run());
-	std::cout << std::endl;
+    {
+        Day08 mDay08; runTimes.push_back(mDay08.run());
+        std::cout << std::endl;
+    }
 
-    Day11 mDay11; runTimes.push_back(mDay11.run());
-	std::cout << std::endl;
+    {
+        Day09 mDay09; runTimes.push_back(mDay09.run());
+        std::cout << std::endl;
+    }
 
-    Day12 mDay12; runTimes.push_back(mDay12.run());
-	std::cout << std::endl;
+    {
+        Day10 mDay10; runTimes.push_back(mDay10.run());
+        std::cout << std::endl;
+    }
 
-    Day13 mDay13; runTimes.push_back(mDay13.run());
-	std::cout << std::endl;*/
+    {
+        Day11 mDay11; runTimes.push_back(mDay11.run());
+        std::cout << std::endl;
+    }
 
-    Day14 mDay14; runTimes.push_back(mDay14.run());
-	std::cout << std::endl;
+    {
+        Day12 mDay12; runTimes.push_back(mDay12.run());
+        std::cout << std::endl;
+    }
 
-    Day15 mDay15; runTimes.push_back(mDay15.run());
-	std::cout << std::endl;
+    {
+        Day13 mDay13; runTimes.push_back(mDay13.run());
+        std::cout << std::endl;
+    }
 
-    /*Day16 mDay16; runTimes.push_back(mDay16.run());
-	std::cout << std::endl;
+    {
+        Day14 mDay14; runTimes.push_back(mDay14.run());
+        std::cout << std::endl;
+    }
+
+    {
+        Day15 mDay15; runTimes.push_back(mDay15.run());
+        std::cout << std::endl;
+    }
+
+    {
+        Day16 mDay16; runTimes.push_back(mDay16.run());
+        std::cout << std::endl;
+    }
 
     /*Day17 mDay17; runTimes.push_back(mDay17.run());
 	std::cout << std::endl;

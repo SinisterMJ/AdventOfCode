@@ -44,7 +44,7 @@ private:
 
         std::string currentMask = "";
         int64_t mask = 0;
-        int64_t orMask = ~(int64_t(0));
+        int64_t andMask = ~(int64_t(0));
         std::vector<int64_t> offsets;
 
         for (auto elem : inputVec)
@@ -53,7 +53,7 @@ private:
             {
                 offsets.clear();
                 mask = 0;
-                orMask = ~(int64_t(0));
+                andMask = ~(int64_t(0));
                 currentMask = elem.substr(7);
                 for (int index = 0; index < currentMask.size(); ++index)
                 {
@@ -67,7 +67,7 @@ private:
                 {
                     if (currentMask[index] == 'X')
                     {
-                        orMask &= ~(int64_t(1) << (35 - index));
+                        andMask &= ~(int64_t(1) << (35 - index));
                         offsets.push_back(int64_t(1) << (35 - index));
                     }
                 }
@@ -79,7 +79,7 @@ private:
                 int64_t value = std::stoll(number_match[2]);
 
                 address |= mask;
-                address &= orMask;
+                address &= andMask;
 
                 int32_t totalOps = static_cast<int32_t>(std::pow(2, offsets.size()));
                 
