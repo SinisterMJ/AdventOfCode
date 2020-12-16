@@ -12,11 +12,11 @@ private:
 
     int64_t runGame(int64_t numIterations)
     {
-        std::vector<int64_t> lastSpokenVec(numIterations, -1);
+        std::vector<int64_t> lastSpokenVec(numIterations);
 
         for (int index = 0; index < numbers.size(); ++index)
         {
-            lastSpokenVec[numbers[index]] = index;
+            lastSpokenVec[numbers[index]] = index + 1;
         }
 
         int64_t last = numbers.back();
@@ -24,12 +24,12 @@ private:
 
         for (int64_t index = numbers.size(); index < numIterations; ++index)
         {
-            lastSpokenVec[lastBefore] = index - 2;
+            lastSpokenVec[lastBefore] = index - 1;
             lastBefore = last;
 
-            if (lastSpokenVec[last] != -1)
+            if (lastSpokenVec[last] != 0)
             {
-                last = index - 1 - lastSpokenVec[last];
+                last = index - lastSpokenVec[last];
             }
             else
             {
