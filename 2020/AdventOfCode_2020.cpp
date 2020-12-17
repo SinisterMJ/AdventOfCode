@@ -120,10 +120,12 @@ int main()
         Day17 mDay17; runTimes.push_back(mDay17.run());
         std::cout << std::endl;
     }
-
-    /*Day18 mDay18; runTimes.push_back(mDay18.run());
-	std::cout << std::endl;
-
+    
+    {
+        Day18 mDay18; runTimes.push_back(mDay18.run());
+        std::cout << std::endl;
+    }
+    
     /*Day19 mDay19; runTimes.push_back(mDay19.run());
 	std::cout << std::endl;
 

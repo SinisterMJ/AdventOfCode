@@ -11,9 +11,9 @@ private:
     
     int64_t conway_cubes(bool cycle_w)
     {
-        int32_t max_x = inputVec[0].size() - 1;
+        int32_t max_x = static_cast<int32_t>(inputVec[0].size() - 1);
         int32_t min_x = 0;
-        int32_t max_y = inputVec.size() - 1;
+        int32_t max_y = static_cast<int32_t>(inputVec.size() - 1);
         int32_t min_y = 0;
         int32_t max_z = 0;
         int32_t max_w = 0;
@@ -37,7 +37,7 @@ private:
             {
                 for (int x = -1; x <= 1; x++)
                 {
-                    for (int w = -cycle_w; w <= cycle_w; w++)
+                    for (int w = -(cycle_w * 1); w <= (cycle_w * 1); w++)
                     {
                         if (x == 0 && y == 0 && z == 0 && w == 0)
                             continue;
