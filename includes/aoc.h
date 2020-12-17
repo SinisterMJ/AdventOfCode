@@ -227,6 +227,54 @@ bool operator >= (const v3& a, const v3& b) { return !(a < b); }
 v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
 v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
 
+struct v4
+{
+    v4() : x(0), y(0), z(0), w(0) { }
+    v4(int x, int y, int z, int w) : x(x), y(y), z(z), w(w) { }
+
+    int x;
+    int y;
+    int z;
+    int w;
+
+    v4& operator+= (const v4& b) { x += b.x; y += b.y; z += b.z; w += b.w; return *this; }
+
+    int& operator[](int index)
+    {
+        if (index == 0)
+            return x;
+        if (index == 1)
+            return y;
+        if (index == 2)
+            return z;
+        return w;
+    }
+
+    int operator[](int index) const
+    {
+        if (index == 0)
+            return x;
+        if (index == 1)
+            return y;
+        if (index == 2)
+            return z;
+
+        return w;
+    }
+};
+
+bool operator == (const v4& a, const v4& b) { return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w; }
+bool operator < (const v4& a, const v4& b) { return a.z != b.z ? a.z < b.z : a.x != b.x ? a.x < b.x : a.y != b.y ? a.y < b.y : a.w < b.w; }
+
+bool operator > (const v4& a, const v4& b) { return b < a; }
+bool operator != (const v4& a, const v4& b) { return !(a == b); }
+bool operator <= (const v4& a, const v4& b) { return !(b < a); }
+bool operator >= (const v4& a, const v4& b) { return !(a < b); }
+
+
+v4 operator + (const v4& a, const v4& b) { return v4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w); }
+v4 operator - (const v4& a, const v4& b) { return v4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w); }
+
 template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
 }

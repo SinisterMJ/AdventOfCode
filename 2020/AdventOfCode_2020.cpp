@@ -109,15 +109,17 @@ int main()
     {
         Day15 mDay15; runTimes.push_back(mDay15.run());
         std::cout << std::endl;
-    }*/
+    }
 
     {
         Day16 mDay16; runTimes.push_back(mDay16.run());
         std::cout << std::endl;
-    }
+    }*/
 
-    /*Day17 mDay17; runTimes.push_back(mDay17.run());
-	std::cout << std::endl;
+    {
+        Day17 mDay17; runTimes.push_back(mDay17.run());
+        std::cout << std::endl;
+    }
 
     /*Day18 mDay18; runTimes.push_back(mDay18.run());
 	std::cout << std::endl;

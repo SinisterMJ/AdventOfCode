@@ -82,15 +82,17 @@ private:
     int64_t part2() 
     {
         int64_t result = 1;
-        std::vector<std::pair<std::string, std::set<int32_t>>> setLists;
+        std::vector<std::pair<std::string, std::set<int8_t>>> setLists;
         for (auto key : values)
         {
-            std::set<int32_t> indexes = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
+            std::set<int8_t> indexes;
+            for (int index = 0; index < tickets[0].size(); ++index)
+                indexes.insert(index);
 
             for (auto ticket : tickets)
             {
-                std::set<int32_t> valid;
-                std::set<int32_t> combined;
+                std::set<int8_t> valid;
+                std::set<int8_t> combined;
 
                 for (int index = 0; index < ticket.size(); ++index)
                 {
