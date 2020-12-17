@@ -18,7 +18,7 @@ private:
         int32_t max_z = 0;
         int32_t max_w = 0;
 
-        std::map<v4, bool> space4;
+        std::map<v4, bool> space;
         std::map<v4, bool> space_next;
         std::vector<v4> neighbours;
 
@@ -27,7 +27,7 @@ private:
             for (int x = 0; x < inputVec[0].size(); ++x)
             {
                 v4 pos4(x, y, 0, 0);
-                space4[pos4] = (inputVec[y][x] == '#');
+                space[pos4] = (inputVec[y][x] == '#');
             }
         }
 
@@ -50,26 +50,26 @@ private:
 
         for (int cycle = 0; cycle < 6; ++cycle)
         {
-            for (int z = -max_z - 1; z <= max_z + 1; z++)
+            for (int z = 0; z <= max_z + 1; z++)
             {
                 for (int y = min_y - 1; y <= max_y + 1; y++)
                 {
                     for (int x = min_x - 1; x <= max_x + 1; x++)
                     {
-                        for (int w = -max_w - cycle_w; w <= max_w + cycle_w; w++)
+                        for (int w = 0; w <= max_w + cycle_w; w++)
                         {
                             v4 pos(x, y, z, w);
-                            bool value = space4[pos];
-
                             int32_t activeNeighbours = 0;
 
                             for (auto elem : neighbours)
                             {
                                 v4 neigh = pos + elem;
-                                activeNeighbours += space4[neigh];
+                                neigh.w = std::abs(neigh.w);
+                                neigh.z = std::abs(neigh.z);
+                                activeNeighbours += space[neigh];
                             }
 
-                            space_next[pos] = value ? in_range(activeNeighbours, 2, 3) : activeNeighbours == 3;
+                            space_next[pos] = space[pos] ? in_range(activeNeighbours, 2, 3) : activeNeighbours == 3;
                         }
                     }
                 }
@@ -85,12 +85,22 @@ private:
             if (cycle_w)
                 max_w++;
 
-            std::swap(space4, space_next);
+            std::swap(space, space_next);
         }
 
         int64_t active = 0;
-        for (auto elem : space4)
-            active += elem.second;
+                
+        for (auto elem : space)
+        {
+            int32_t val = elem.second;
+
+            if (elem.first.z > 0)
+                val *= 2;
+            if (elem.first.w > 0)
+                val *= 2;
+
+            active += val;
+        }
 
         return active;
     }
