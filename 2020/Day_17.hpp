@@ -8,8 +8,8 @@ class Day17 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
-    std::map<v3, uint8_t> space;
-    std::map<v4, uint8_t> space4;
+    std::map<v3, bool> space;
+    std::map<v4, bool> space4;
     int32_t max_x;
     int32_t min_x;
     int32_t max_y;
@@ -19,7 +19,7 @@ private:
 
     int64_t part1() 
     {
-        std::map<v3, uint8_t> space_next;
+        std::map<v3, bool> space_next;
         std::vector<v3> neighbours;
 
         for (int z = -1; z <= 1; z++)
@@ -45,44 +45,35 @@ private:
                     for (int x = min_x - 1; x <= max_x + 1; x++)
                     {
                         v3 pos(x, y, z);
-                        uint8_t value = '.';
-                        if (space.find(pos) != space.end())
-                        {
-                            value = space[pos];
-                        }
+                        bool value = space[pos];
 
                         int32_t activeNeighbours = 0;
-
                         for (auto elem : neighbours)
                         {
                             v3 neigh = pos + elem;
-                            if (space.find(neigh) != space.end())
-                            {
-                                activeNeighbours += (space[neigh] == '#');
-                            }
+                            activeNeighbours += space[neigh];
                         }
 
-                        if (value == '#')
+                        if (value)
                         {
                             if (!in_range(activeNeighbours, 2, 3))
                             {
-                                space_next[pos] = '.';
+                                space_next[pos] = false;
                             }
                             else
                             {
-                                space_next[pos] = '#';
+                                space_next[pos] = true;
                             }
                         }
-
-                        if (value == '.')
+                        else
                         {
                             if (activeNeighbours == 3)
                             {
-                                space_next[pos] = '#';
+                                space_next[pos] = true;
                             }
                             else
                             {
-                                space_next[pos] = '.';
+                                space_next[pos] = false;
                             }
                         }
                     }
@@ -101,7 +92,7 @@ private:
         int32_t active = 0;
         for (auto elem : space)
         {
-            active += (elem.second == '#');
+            active += elem.second;
         }
 
         return active;
@@ -109,7 +100,7 @@ private:
 
     int64_t part2()
     {
-        std::map<v4, uint8_t> space_next;
+        std::map<v4, bool> space_next;
         std::vector<v4> neighbours;
 
         for (int z = -1; z <= 1; z++)
@@ -140,44 +131,36 @@ private:
                         for (int w = -max_w - 1; w <= max_w + 1; w++)
                         {
                             v4 pos(x, y, z, w);
-                            uint8_t value = '.';
-                            if (space4.find(pos) != space4.end())
-                            {
-                                value = space4[pos];
-                            }
+                            bool value = space4[pos];
 
                             int32_t activeNeighbours = 0;
 
                             for (auto elem : neighbours)
                             {
                                 v4 neigh = pos + elem;
-                                if (space4.find(neigh) != space4.end())
-                                {
-                                    activeNeighbours += (space4[neigh] == '#');
-                                }
+                                activeNeighbours += space4[neigh];
                             }
 
-                            if (value == '#')
+                            if (value)
                             {
                                 if (!in_range(activeNeighbours, 2, 3))
                                 {
-                                    space_next[pos] = '.';
+                                    space_next[pos] = false;
                                 }
                                 else
                                 {
-                                    space_next[pos] = '#';
+                                    space_next[pos] = true;
                                 }
                             }
-
-                            if (value == '.')
+                            else
                             {
                                 if (activeNeighbours == 3)
                                 {
-                                    space_next[pos] = '#';
+                                    space_next[pos] = true;
                                 }
                                 else
                                 {
-                                    space_next[pos] = '.';
+                                    space_next[pos] = false;
                                 }
                             }
                         }
@@ -199,7 +182,7 @@ private:
         int32_t active = 0;
         for (auto elem : space4)
         {
-            active += (elem.second == '#');
+            active += elem.second;
         }
 
         return active;
@@ -229,8 +212,8 @@ public:
             {
                 v3 pos(x, y, 0);
                 v4 pos4(x, y, 0, 0);
-                space[pos] = inputVec[y][x];
-                space4[pos4] = inputVec[y][x];
+                space[pos] = (inputVec[y][x] == '#');
+                space4[pos4] = (inputVec[y][x] == '#');
             }
         }
 
