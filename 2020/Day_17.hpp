@@ -89,7 +89,7 @@ private:
         }
 
         int64_t active = 0;
-                
+
         for (auto elem : space)
         {
             int32_t val = elem.second;
