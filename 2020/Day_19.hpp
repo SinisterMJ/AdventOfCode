@@ -11,14 +11,14 @@ private:
         uint8_t character;
     };
 
-    std::map<int32_t, Rule> rules;
+    std::unordered_map<int32_t, Rule> rules;
     std::string inputString;
     std::vector<std::string> inputVec;
     std::vector<std::string> messages;
 
     std::vector<std::string> parse(int rule_id, std::string message)
     {
-        Rule ru = rules[rule_id];
+        Rule& ru = rules[rule_id];
         if (ru.character != 0)
         {
             // return the rest of the message
@@ -31,17 +31,17 @@ private:
 
         std::vector<std::string> possible_rest_messages{ };
 
-        for (auto subrule : ru.subrules)
+        for (auto& subrule : ru.subrules)
         {
             std::vector<std::string> possibleSuffixes{ message };
             std::vector<std::string> possibleSuffixesAfter{ };
 
             for (auto id : subrule) 
             {
-                for (auto singleSuffix : possibleSuffixes)
+                for (auto& singleSuffix : possibleSuffixes)
                 {
                     auto temp = parse(id, singleSuffix);
-                    for (auto elem : temp)
+                    for (auto& elem : temp)
                     {
                         possibleSuffixesAfter.push_back(elem);
                     }
@@ -51,7 +51,7 @@ private:
                 std::swap(possibleSuffixesAfter, possibleSuffixes);
             }
 
-            for (auto elem : possibleSuffixes)
+            for (auto& elem : possibleSuffixes)
             {
                 possible_rest_messages.push_back(elem);
             }
