@@ -9,52 +9,55 @@ private:
     struct Rule {
         std::vector<std::vector<int32_t>> subrules;
         uint8_t character;
-        std::vector<std::string> allForms;
     };
 
-    std::unordered_map<int32_t, Rule> rules;
+    std::map<int32_t, Rule> rules;
     std::string inputString;
     std::vector<std::string> inputVec;
+    std::vector<std::string> messages;
 
-    std::vector<std::string> buildRules(int id) 
+    std::vector<std::string> parse(int rule_id, std::string message)
     {
-        std::vector<std::string> innerResult;
-        if (rules[id].character != 0)
+        Rule ru = rules[rule_id];
+        if (ru.character != 0)
         {
-            innerResult.push_back(std::string(1, rules[id].character));
-            return innerResult;
+            // return the rest of the message
+            if (ru.character == message[0])
+                return std::vector<std::string>{ message.substr(1) };
+            
+            // no match, return no result
+            return std::vector<std::string>{ };
         }
 
-        if (rules[id].allForms.size() > 0)
-            return rules[id].allForms;
+        std::vector<std::string> possible_rest_messages{ };
 
-        for (auto subList : rules[id].subrules)
+        for (auto subrule : ru.subrules)
         {
-            std::vector<std::vector<std::string>> results;
-            for (auto elem : subList)
-            {
-                results.push_back(buildRules(elem));
-            }
+            std::vector<std::string> possibleSuffixes{ message };
+            std::vector<std::string> possibleSuffixesAfter{ };
 
-            if (results.size() > 1)
+            for (auto id : subrule) 
             {
-                for (int i = 0; i < results[0].size(); ++i)
+                for (auto singleSuffix : possibleSuffixes)
                 {
-                    for (int j = 0; j < results[1].size(); ++j)
+                    auto temp = parse(id, singleSuffix);
+                    for (auto elem : temp)
                     {
-                        innerResult.push_back(results[0][i] + results[1][j]);
+                        possibleSuffixesAfter.push_back(elem);
                     }
                 }
+
+                possibleSuffixes.clear();
+                std::swap(possibleSuffixesAfter, possibleSuffixes);
             }
-            else
+
+            for (auto elem : possibleSuffixes)
             {
-                for (auto elem : results[0])
-                    innerResult.push_back(elem);
+                possible_rest_messages.push_back(elem);
             }
         }
 
-        rules[id].allForms = innerResult;
-        return rules[id].allForms;
+        return possible_rest_messages;
     }
 
     void readRules() 
@@ -95,6 +98,10 @@ private:
 
                 rules[std::stoi(rule_match[1])] = temp;
             }
+            else {
+                if (elem != "")
+                    messages.push_back(elem);
+            }
         }
     }
 
@@ -115,16 +122,43 @@ public:
 
         readRules();
 
-        auto allPasswords = buildRules(0);
-
-        for (auto message : inputVec)
+        for (auto message : messages)
         {
-            if (std::find(allPasswords.begin(), allPasswords.end(), message) != allPasswords.end())
+            auto suffixes = parse(0, message);
+
+            if (std::find(suffixes.begin(), suffixes.end(), "") != suffixes.end())
             {
                 result_1++;
             }
         }
 
+        // Change rules according to part 2
+        Rule new_8;
+        std::vector<int32_t> rule1{ 42 };
+        std::vector<int32_t> rule2{ 42, 8 };
+        new_8.subrules.push_back(rule1);
+        new_8.subrules.push_back(rule2);
+        new_8.character = 0;
+
+        rules[8] = new_8;
+
+        Rule new_11;
+        std::vector<int32_t> rule1_11{ 42, 31 };
+        std::vector<int32_t> rule2_11{ 42, 11, 31 };
+        new_11.subrules.push_back(rule1_11);
+        new_11.subrules.push_back(rule2_11);
+        new_11.character = 0;
+        rules[11] = new_11;
+
+        for (auto message : messages)
+        {
+            auto suffixes = parse(0, message);
+
+            if (std::find(suffixes.begin(), suffixes.end(), "") != suffixes.end())
+            {
+                result_2++;
+            }
+        }
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 19 - Part 1: " << result_1 << '\n'
