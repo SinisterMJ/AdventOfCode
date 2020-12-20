@@ -187,46 +187,24 @@ private:
     {
         std::map<v2, uint8_t> layout_new(input);
 
-        for (int y = 0; y < 120; ++y)
+        for (int y = 0; y < 96; ++y)
         {
-            for (int x = 0; x < 120; ++x)
+            for (int x = 0; x < 96; ++x)
             {
-                std::cout << input[v2(x, y)];
-            }
-            std::cout << std::endl;
-        }
-
-        std::cout << std::endl;
-
-        for (int y = 0; y < 120; ++y)
-        {
-            for (int x = 0; x < 120; ++x)
-            {
-                input[v2(x, y)] = layout_new[v2(x, 119 - y)];
+                input[v2(x, y)] = layout_new[v2(x, 95 - y)];
             }
         }
-
-        for (int y = 0; y < 120; ++y)
-        {
-            for (int x = 0; x < 120; ++x)
-            {
-                std::cout << input[v2(x, y)];
-            }
-            std::cout << std::endl;
-        }
-
-        std::cout << std::endl;
     }
 
     void rotate_90_cw(std::map<v2, uint8_t>& input)
     {
         std::map<v2, uint8_t> layout_new(input);
 
-        for (int y = 0; y < 120; ++y)
+        for (int y = 0; y < 96; ++y)
         {
-            for (int x = 0; x < 120; ++x)
+            for (int x = 0; x < 96; ++x)
             {
-                input[v2(x, y)] = layout_new[v2(y, 119 - x)];
+                input[v2(x, y)] = layout_new[v2(y, 95 - x)];
             }
         }
     }
@@ -338,11 +316,11 @@ private:
         {            
             for (int x = 0; x < 12; ++x)
             {
-                v2 pos(0, y * 10);
-                for (int grid_y = 0; grid_y < 10; ++grid_y, pos.y++)
+                v2 pos(0, y * 8);
+                for (int grid_y = 1; grid_y < 9; ++grid_y, pos.y++)
                 {                    
-                    pos.x = x * 10;
-                    for (int grid_x = 0; grid_x < 10; ++grid_x, pos.x++)
+                    pos.x = x * 8;
+                    for (int grid_x = 1; grid_x < 9; ++grid_x, pos.x++)
                     {
                         v2 pos_tile(grid_x, grid_y);
                         grid[pos] = tiles[gridTiles[v2(x, y)]].layout[pos_tile];
@@ -356,15 +334,18 @@ private:
     {
         int32_t monsterCount = 0;
         int32_t patternCount = 0;
+        int32_t waveCount = 0;
+
         for (auto& elem : pattern)
         {
             patternCount += std::count(elem.begin(), elem.end(), '#');
         }
 
-        for (int y = 1; y < 119; ++y)
+        for (int y = 0; y < 96; ++y)
         {
-            for (int x = 1; x < 119; ++x)
+            for (int x = 0; x < 96; ++x)
             {
+                waveCount += grid[v2(x, y)] == '#';
                 int32_t match = 0;
                 for (int y_m = 0; y_m < pattern.size(); ++y_m)
                 {
@@ -382,7 +363,7 @@ private:
             }
         }
 
-        return monsterCount * patternCount;
+        return waveCount - monsterCount * patternCount;
     }
     
     std::string inputString;
@@ -407,10 +388,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int64_t waveCount = std::count(inputString.begin(), inputString.end(), '#');
-
         int32_t currentId = -1;
-        std::vector<std::string> tileLines{ };
+        std::vector<std::string> tileLines { };
         for (int index = 0; index < inputVec.size(); ++index)
         {
             if (inputVec[index].find("Tile ") != std::string::npos)
@@ -462,54 +441,23 @@ public:
             }
         }
 
-        //std::vector<std::string> sampleGrid{
-        //    ".####...#####..#...###..",
-        //    "#####..#..#.#.####..#.#.",
-        //    ".#.#...#.###...#.##.##..",
-        //    "#.#.##.###.#.##.##.#####",
-        //    "..##.###.####..#.####.##",
-        //    "...#.#..##.##...#..#..##",
-        //    "#.##.#..#.#..#..##.#.#..",
-        //    ".###.##.....#...###.#...",
-        //    "#.####.#.#....##.#..#.#.",
-        //    "##...#..#....#..#...####",
-        //    "..#.##...###..#.#####..#",
-        //    "....#.##.#.#####....#...",
-        //    "..##.##.###.....#.##..#.",
-        //    "#...#...###..####....##.",
-        //    ".#.##...#.##.#.#.###...#",
-        //    "#.###.#..####...##..#...",
-        //    "#.###...#.##...#.######.",
-        //    ".###.###.#######..#####.",
-        //    "..##.#..#..#.#######.###",
-        //    "#.#..##.########..#..##.",
-        //    "#.#####..#.#...##..#....",
-        //    "#....##..#.#########..##",
-        //    "#...#.....#..##...###.##",
-        //    "#..###....##.#...##.##.#" 
-        //};
-
-        //std::map<v2, uint8_t> sampleInput;
-        //for (int y = 0; y < sampleGrid.size(); ++y)
-        //{
-        //    for (int x = 0; x < sampleGrid[y].size(); ++x)
-        //    {
-        //        sampleInput[v2(x, y)] = sampleGrid[y][x];
-        //    }
-        //}
-
-        //int testCount = part2(sampleInput, monster);
-
         buildGrid(cornerID);
 
         int64_t result_1 = multiply;
-        int64_t result_2 = 0;
+        int64_t result_2 = part2(grid, monster);
+
+        int32_t wave_count = 0;
+        for (auto elem : grid)
+        {
+            wave_count += elem.second == '#';
+        }
         
         int count = 0;
-        while (result_2 == 0)
+        while (result_2 == wave_count)
         {
-            result_2 = part2(grid, monster);
             rotate_90_cw(grid);
+            result_2 = part2(grid, monster);
+            
             count++;
             if (count == 4)
                 flip_y(grid);
