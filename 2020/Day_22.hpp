@@ -89,37 +89,25 @@ private:
             deck_1.pop_front();
             deck_2.pop_front();
 
+            bool player_1_wins = val_1 > val_2;;
             // Enter recursive combat
             if (val_1 <= deck_1.size() && val_2 <= deck_2.size())
             {
                 std::deque<int64_t> sub_1(deck_1.begin(), deck_1.begin() + val_1);
                 std::deque<int64_t> sub_2(deck_2.begin(), deck_2.begin() + val_2);
 
-                auto player_1_wins = playRound(sub_1, sub_2);
+                player_1_wins = playRound(sub_1, sub_2);
+            }
 
-                if (player_1_wins)
-                {
-                    deck_1.push_back(val_1);
-                    deck_1.push_back(val_2);
-                }
-                else
-                {
-                    deck_2.push_back(val_2);
-                    deck_2.push_back(val_1);
-                }
+            if (player_1_wins)
+            {
+                deck_1.push_back(val_1);
+                deck_1.push_back(val_2);
             }
             else
             {
-                if (val_1 > val_2)
-                {
-                    deck_1.push_back(val_1);
-                    deck_1.push_back(val_2);
-                }
-                else
-                {
-                    deck_2.push_back(val_2);
-                    deck_2.push_back(val_1);
-                }
+                deck_2.push_back(val_2);
+                deck_2.push_back(val_1);
             }
         }
 
@@ -131,16 +119,8 @@ private:
         int64_t result = 0;
         std::deque<int64_t> deck_1(player_1.begin(), player_1.end());
         std::deque<int64_t> deck_2(player_2.begin(), player_2.end());
-
-        playRound(deck_1, deck_2);
-
-        std::deque<int64_t> finalDeck;
-
-        if (deck_1.size() > 0)
-            finalDeck = deck_1;
-        else
-            finalDeck = deck_2;
-
+        std::deque<int64_t> finalDeck = playRound(deck_1, deck_2) ? deck_1 : deck_2;
+                
         for (; finalDeck.size() > 0; )
         {
             result += finalDeck.size() * finalDeck.front();
@@ -191,9 +171,6 @@ public:
         }
 
         int64_t result_1 = part1();
-
-        /*player_1 = std::vector<int64_t>{ 9, 2, 6, 3, 1 };
-        player_2 = std::vector<int64_t>{ 5, 8, 4, 7, 10 };*/
         int64_t result_2 = part2();
 
         int64_t time = myTime.usPassed();
