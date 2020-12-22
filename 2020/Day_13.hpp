@@ -54,7 +54,7 @@ private:
     }
 
     int64_t part2()
-    {
+    {        
         int64_t prod = 1;
         int64_t pos = busLines[0].first;
 

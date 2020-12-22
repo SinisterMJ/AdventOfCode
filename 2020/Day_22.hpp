@@ -2,9 +2,145 @@
 #define ADVENTOFCODE2020_DAY22
 
 #include "../includes/aoc.h"
+#include <queue>
 
-class Day22 {
+class Day22 
+{
 private:
+    int64_t part1() 
+    {
+        int64_t result = 0;
+        std::queue<int64_t> deck_1;
+        std::queue<int64_t> deck_2;
+
+        for (auto elem : player_1)
+        {
+            deck_1.push(elem);
+        }
+
+        for (auto elem : player_2)
+        {
+            deck_2.push(elem);
+        }
+
+        while (deck_1.size() > 0 && deck_2.size() > 0)
+        {
+            int64_t val_1 = deck_1.front(); deck_1.pop();
+            int64_t val_2 = deck_2.front(); deck_2.pop();
+
+            if (val_1 > val_2)
+            {
+                deck_1.push(val_1);
+                deck_1.push(val_2);
+            }
+
+            if (val_1 < val_2)
+            {
+                deck_2.push(val_2);
+                deck_2.push(val_1);
+            }
+        }
+
+        std::queue<int64_t> finalDeck;
+
+        if (deck_1.size() > 0)
+            finalDeck = deck_1;
+        else
+            finalDeck = deck_2;
+
+        for ( ; finalDeck.size() > 0; )
+        {
+            result += finalDeck.size() * finalDeck.front();
+            finalDeck.pop();
+        }
+
+        return result;
+    }
+
+    bool playRound(std::deque<int64_t>& deck_1, std::deque<int64_t>& deck_2)
+    {
+        std::vector< std::pair<std::deque<int64_t>, std::deque<int64_t>> > history;
+
+        while (deck_1.size() > 0 && deck_2.size() > 0)
+        {
+            auto currentHistory = std::make_pair(deck_1, deck_2);
+
+            // Rule 1 of recursive combat
+            if (std::find(history.begin(), history.end(), currentHistory) != history.end())
+                return true;
+
+            history.push_back(currentHistory);
+
+            int64_t val_1 = deck_1.front();
+            int64_t val_2 = deck_2.front();
+
+            deck_1.pop_front();
+            deck_2.pop_front();
+
+            // Enter recursive combat
+            if (val_1 <= deck_1.size() && val_2 <= deck_2.size())
+            {
+                std::deque<int64_t> sub_1(deck_1.begin(), deck_1.begin() + val_1);
+                std::deque<int64_t> sub_2(deck_2.begin(), deck_2.begin() + val_2);
+
+                auto player_1_wins = playRound(sub_1, sub_2);
+
+                if (player_1_wins)
+                {
+                    deck_1.push_back(val_1);
+                    deck_1.push_back(val_2);
+                }
+                else
+                {
+                    deck_2.push_back(val_2);
+                    deck_2.push_back(val_1);
+                }
+            }
+            else
+            {
+                if (val_1 > val_2)
+                {
+                    deck_1.push_back(val_1);
+                    deck_1.push_back(val_2);
+                }
+                else
+                {
+                    deck_2.push_back(val_2);
+                    deck_2.push_back(val_1);
+                }
+            }
+        }
+
+        return deck_1.size() > 0;
+    }
+
+    int64_t part2()
+    {
+        int64_t result = 0;
+        std::deque<int64_t> deck_1(player_1.begin(), player_1.end());
+        std::deque<int64_t> deck_2(player_2.begin(), player_2.end());
+
+        playRound(deck_1, deck_2);
+
+        std::deque<int64_t> finalDeck;
+
+        if (deck_1.size() > 0)
+            finalDeck = deck_1;
+        else
+            finalDeck = deck_2;
+
+        for (; finalDeck.size() > 0; )
+        {
+            result += finalDeck.size() * finalDeck.front();
+            finalDeck.pop_front();
+        }
+
+        return result;
+    }
+
+    std::vector<int64_t> player_1;
+    std::vector<int64_t> player_2;
+
     std::string inputString;
     std::vector<std::string> inputVec;
 public:
@@ -19,8 +155,32 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int64_t result_1 = 0;
-        int64_t result_2 = 0;
+        bool player_two = false;
+        for (auto elem : inputVec)
+        {
+            if (elem == "Player 2:")
+            {
+                player_two = true;
+            }
+
+            if (elem.find("Player") != std::string::npos)
+            {
+                continue;
+            }
+
+            int64_t val = std::stoll(elem);
+
+            if (player_two)
+                player_2.push_back(val);
+            else
+                player_1.push_back(val);
+        }
+
+        int64_t result_1 = part1();
+
+        /*player_1 = std::vector<int64_t>{ 9, 2, 6, 3, 1 };
+        player_2 = std::vector<int64_t>{ 5, 8, 4, 7, 10 };*/
+        int64_t result_2 = part2();
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 22 - Part 1: " << result_1 << '\n'
