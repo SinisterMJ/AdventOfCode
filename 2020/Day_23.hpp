@@ -56,7 +56,6 @@ private:
         Node* currentCup = cups_dll[cups_start[0]];
         
         for (int rounds = 0; rounds < rounds_total; ++rounds)
-        //for (int rounds = 0; rounds < 100; ++rounds)
         {            
             Node* cup1 = currentCup->next;
             Node* cup2 = cup1->next;
@@ -89,8 +88,6 @@ private:
             currentCup = currentCup->next;
         }
 
-        // find the 1
-
         int64_t result = cups_dll[1]->next->val * cups_dll[1]->next->next->val;
 
         if (part1)
@@ -105,6 +102,10 @@ private:
             }
         }
         
+        for (int index = 0; index < num_cups; index++)
+        {
+            delete cups_dll[index];
+        }
         return result;
     }
 

@@ -13,7 +13,7 @@ private:
         int64_t result = 0;
         std::deque<int64_t> deck_1;
         std::deque<int64_t> deck_2;
-
+        
         for (auto elem : player_1)
         {
             deck_1.push_back(elem);
@@ -45,9 +45,9 @@ private:
         std::deque<int64_t> finalDeck;
 
         if (deck_1.size() > 0)
-            finalDeck = deck_1;
+            finalDeck = std::move(deck_1);
         else
-            finalDeck = deck_2;
+            finalDeck = std::move(deck_2);
 
         for (; finalDeck.size() > 0; )
         {
@@ -83,11 +83,8 @@ private:
 
             history_int.insert(currentHist_int);
 
-            int64_t val_1 = deck_1.front();
-            int64_t val_2 = deck_2.front();
-
-            deck_1.pop_front();
-            deck_2.pop_front();
+            int64_t val_1 = deck_1.front(); deck_1.pop_front();
+            int64_t val_2 = deck_2.front(); deck_2.pop_front();
 
             bool player_1_wins = val_1 > val_2;;
             // Enter recursive combat
@@ -96,8 +93,13 @@ private:
             {
                 std::deque<int64_t> sub_1(deck_1.begin(), deck_1.begin() + val_1);
                 std::deque<int64_t> sub_2(deck_2.begin(), deck_2.begin() + val_2);
-
-                player_1_wins = playRound(sub_1, sub_2);
+                auto max_1 = *std::max_element(sub_1.begin(), sub_1.end());
+                auto max_2 = *std::max_element(sub_2.begin(), sub_2.end());
+                
+                if ((max_1 > max_2) && (max_1 > sub_1.size() + sub_2.size()))
+                    player_1_wins = true;
+                else
+                    player_1_wins = playRound(sub_1, sub_2);
             }
 
             if (player_1_wins)
@@ -120,7 +122,7 @@ private:
         int64_t result = 0;
         std::deque<int64_t> deck_1(player_1.begin(), player_1.end());
         std::deque<int64_t> deck_2(player_2.begin(), player_2.end());
-        std::deque<int64_t> finalDeck = playRound(deck_1, deck_2) ? deck_1 : deck_2;
+        std::deque<int64_t> finalDeck = playRound(deck_1, deck_2) ? std::move(deck_1) : std::move(deck_2);
                 
         for (; finalDeck.size() > 0; )
         {
