@@ -91,7 +91,8 @@ private:
 
             bool player_1_wins = val_1 > val_2;;
             // Enter recursive combat
-            if (val_1 <= deck_1.size() && val_2 <= deck_2.size())
+            if (val_1 <= static_cast<int32_t>(deck_1.size()) && 
+                val_2 <= static_cast<int32_t>(deck_2.size()))
             {
                 std::deque<int64_t> sub_1(deck_1.begin(), deck_1.begin() + val_1);
                 std::deque<int64_t> sub_2(deck_2.begin(), deck_2.begin() + val_2);

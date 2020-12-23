@@ -180,7 +180,7 @@ private:
     };
 
     std::map<int32_t, Tile> tiles;
-    std::map<v2, uint32_t> gridTiles;
+    std::map<v2, int32_t> gridTiles;
     std::map<v2, uint8_t> grid;
 
     void flip_y(std::map<v2, uint8_t>& input)
@@ -209,7 +209,7 @@ private:
         }
     }
 
-    void buildGrid(int64_t startGrid) 
+    void buildGrid(int32_t startGrid) 
     {
         auto borderStart = tiles[startGrid].getBorders();
 
@@ -338,7 +338,7 @@ private:
 
         for (auto& elem : pattern)
         {
-            patternCount += std::count(elem.begin(), elem.end(), '#');
+            patternCount += static_cast<int32_t>(std::count(elem.begin(), elem.end(), '#'));
         }
 
         for (int y = 0; y < 96; ++y)
@@ -420,7 +420,7 @@ public:
         }
 
         int64_t multiply = 1;
-        int64_t cornerID = -1;
+        int32_t cornerID = -1;
 
         for (auto& tile : tiles)
         {
