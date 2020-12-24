@@ -96,7 +96,7 @@ private:
                 auto max_1 = *std::max_element(sub_1.begin(), sub_1.end());
                 auto max_2 = *std::max_element(sub_2.begin(), sub_2.end());
                 
-                if ((max_1 > max_2) && (max_1 > sub_1.size() + sub_2.size()))
+                if ((max_1 > max_2) && (max_1 > static_cast<int32_t>(sub_1.size() + sub_2.size())))
                     player_1_wins = true;
                 else
                     player_1_wins = playRound(sub_1, sub_2);

@@ -63,7 +63,7 @@ private:
 
             Node* cup4 = currentCup->next->next->next->next;
 
-            int32_t targetCup = currentCup->val - 1;
+            int64_t targetCup = currentCup->val - 1;
             if (targetCup < min)
                 targetCup = max;
 
@@ -121,7 +121,7 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        for (int64_t index = 0; index < inputString.size(); ++index)
+        for (uint64_t index = 0; index < inputString.size(); ++index)
         {
             if (inputString[index] == '\n') break;
 
