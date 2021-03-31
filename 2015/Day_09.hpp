@@ -2,40 +2,115 @@
 #define ADVENTOFCODE2015_DAY09
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include <map>
+#include <tuple>
 
 class Day09 {
 private:
-	std::string inputString;
+    std::vector<std::string> inputVec;
+        
+    std::map<std::pair<std::string, std::string>, int64_t> connections;
+    std::set<std::string> cities;
+    std::vector<std::string> vecCities;
+    
+    void buildConnections()
+    {
+        for (auto line : inputVec)
+        {
+            auto first_idx = line.find(" to ");
+            auto second_idx = line.find(" = ");
+            auto from = line.substr(0, first_idx);
+            auto to = line.substr(first_idx + 4, second_idx - first_idx - 4);
+            auto distance = line.substr(second_idx + 3);
+            int64_t i_distance = std::stoi(distance);
+
+            std::pair<std::string, std::string> key;
+
+            key = from.compare(to) < 0 ? std::make_pair(from, to) : std::make_pair(to, from);
+            connections[key] = i_distance;
+
+            cities.insert(from);
+            cities.insert(to);
+        }
+
+        for (auto city : cities)
+            vecCities.push_back(city);
+    }
+    
+    int64_t part1()
+    {
+        std::sort(vecCities.begin(), vecCities.end());
+        int64_t minDistance = std::numeric_limits<int64_t>::max();
+
+        do
+        {
+            int64_t currentDistance = 0;
+
+            for (int index = 1; index < vecCities.size(); ++index)
+            {
+                auto from = vecCities[index - 1];
+                auto to = vecCities[index];
+
+                std::pair<std::string, std::string> key;
+                key = from.compare(to) < 0 ? std::make_pair(from, to) : std::make_pair(to, from);
+
+                currentDistance += connections[key];
+            }
+
+            minDistance = std::min(currentDistance, minDistance);
+        }
+        while (std::next_permutation(vecCities.begin(), vecCities.end()));
+
+        return minDistance;
+    }
+
+    int64_t part2()
+    {
+        std::sort(vecCities.begin(), vecCities.end());
+        int64_t maxDistance = 0;
+
+        do
+        {
+            int64_t currentDistance = 0;
+
+            for (int index = 1; index < vecCities.size(); ++index)
+            {
+                auto from = vecCities[index - 1];
+                auto to = vecCities[index];
+
+                std::pair<std::string, std::string> key;
+                key = from.compare(to) < 0 ? std::make_pair(from, to) : std::make_pair(to, from);
+
+                currentDistance += connections[key];
+            }
+
+            maxDistance = std::max(currentDistance, maxDistance);
+        } while (std::next_permutation(vecCities.begin(), vecCities.end()));
+
+        return maxDistance;
+    }
+
 public:
 	Day09()
 	{
-		inputString = util::readFile("..\\inputs\\2015\\input_9.txt");
+        inputVec = util::readFileLines("..\\inputs\\2015\\input_9.txt");
 	}
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
-		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
-		IntcodeVM vm1;
-		std::vector<int64_t> input = { 1 };
-		vm1.addInput(input);
-		vm1.initializeCommands(commands);
-		auto result1 = vm1.runCommands();
-				
-		IntcodeVM vm2;
-		std::vector<int64_t> input2 = { 2 };
-		vm2.addInput(input2);
-		vm2.initializeCommands(commands);
-		auto result2 = vm2.runCommands();
+        buildConnections();
+        int64_t result_1 = part1();
+        int64_t result_2 = part2();
 
-		std::cout << "Day 09, Part 1: " << result1[0] << std::endl
-				  << "Day 09, Part 2: " << result2[0] << std::endl;
+        int64_t time = myTime.usPassed();
+        std::cout << "Day 13 - Part 1: " << result_1 << '\n'
+                  << "Day 13 - Part 2: " << result_2 << '\n';
 
-		return myTime.usPassed();
-	}
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2015_DAY09

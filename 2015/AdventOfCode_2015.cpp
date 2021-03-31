@@ -51,15 +51,15 @@ int main()
 	std::cout << std::endl;
 
 	Day06 mDay06; runTimes.push_back(mDay06.run());
-	std::cout << std::endl;*/
+	std::cout << std::endl;
 
 	Day07 mDay07; runTimes.push_back(mDay07.run());
 	std::cout << std::endl;
 
 	Day08 mDay08; runTimes.push_back(mDay08.run());
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 
-	/*Day09 mDay09; runTimes.push_back(mDay09.run());
+	Day09 mDay09; runTimes.push_back(mDay09.run());
 	std::cout << std::endl;
 
 	/*Day10 mDay10; runTimes.push_back(mDay10.run());

@@ -10,7 +10,7 @@ y = str(datetime.datetime.now().year)
 if len(sys.argv) >= 2:
 	y = sys.argv[1]
 
-cookie = {'session': "53616c7465645f5f89c3b7e16683ddd949a7e0ad4148e7bca3e580bc9b33164e9da938e025b48ea1d966a9727fada7ed"}
+cookie = {'session': "53616c7465645f5f60da271d2ea359adb48d5c6f19ff37664bb0ae08fb946971a0856e3a133c190919f4c7000b5cd434"}
 homepage = requests.get('https://adventofcode.com/'+y+'/leaderboard/private', cookies=cookie)
 for id in re.compile(r"(?<=\/"+y+r"\/leaderboard\/private\/view\/)(\d+)").findall(homepage.content.decode()):
     print("\n"*5)
