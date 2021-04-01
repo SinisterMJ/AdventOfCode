@@ -35,10 +35,11 @@ namespace util
         int64_t usPassed() { auto end = std::chrono::steady_clock::now(); return std::chrono::duration_cast<std::chrono::microseconds>(end - startP).count(); }
 		int64_t msPassed() { auto end = std::chrono::steady_clock::now(); return std::chrono::duration_cast<std::chrono::milliseconds>(end - startP).count(); }
     };
+
 	static inline std::string readFile(const std::string& path)
 	{
 		FILE* f;
-		fopen_s(&f, path.c_str(), "r");
+		fopen_s(&f, path.c_str(), "rb+");
 		if (f == nullptr)
 			return "";
 
@@ -55,7 +56,7 @@ namespace util
 			s[fsize] = 0;
 
 			input = std::string(s);
-			while(input.back() == '\n')
+			while(input.back() == '\n' || input.back() == '\r')
 				input.pop_back();
 		}
 

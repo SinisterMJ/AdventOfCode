@@ -57,18 +57,18 @@ int main()
 	std::cout << std::endl;
 
 	Day08 mDay08; runTimes.push_back(mDay08.run());
-	std::cout << std::endl;
+	std::cout << std::endl
 
 	Day09 mDay09; runTimes.push_back(mDay09.run());
 	std::cout << std::endl;
 
 	Day10 mDay10; runTimes.push_back(mDay10.run());
-	std::cout << std::endl;*/
-
-	Day11 mDay11; runTimes.push_back(mDay11.run());
 	std::cout << std::endl;
 
-	/*Day12 mDay12; runTimes.push_back(mDay12.run());
+	Day11 mDay11; runTimes.push_back(mDay11.run());
+	std::cout << std::endl;*/
+
+	Day12 mDay12; runTimes.push_back(mDay12.run());
 	std::cout << std::endl;
 
 	/*Day13 mDay13; runTimes.push_back(mDay13.run());

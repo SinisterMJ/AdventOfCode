@@ -31,8 +31,6 @@ private:
                 max_y = std::max(max_y, y);
             }
 
-            if (_id == 3793)
-                int breakHere = 0;
             updateBorders();
         }
 

@@ -1,145 +1,91 @@
 #ifndef ADVENTOFCODE2015_DAY12
 #define ADVENTOFCODE2015_DAY12
 
-#include <regex>
-
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include <regex>
+#include "../includes/nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 class Day12 {
 private:
-	struct Moon {
-		v3 position;
-		v3 velocity;
+    std::string inputString;
+    std::vector<std::string> inputVec;
 
-		struct Status {
-			v3 position;
-			v3 velocity;
-		};
+    int64_t part1()
+    {
+        std::regex wsaq_re("-?[0-9]+");
+        std::regex_token_iterator<std::string::iterator> it(inputString.begin(), inputString.end(), wsaq_re);
+        std::regex_token_iterator<std::string::iterator> rend;
 
-		Status initial;
+        int64_t result = 0;
 
-		Moon(int x, int y, int z) : position(x, y, z)
-		{
-			initial.position = position;
-			initial.velocity = velocity;
-		}
+        while (it != rend)
+        {
+            int64_t query = std::stoi(*it);
+            result += query;
+            it++;
+        }
 
-		void changeVelocity(const Moon& other)
-		{
-			for (int index = 0; index < 3; ++index)
-			{
-				velocity[index] += position[index] < other.position[index];
-				velocity[index] -= position[index] > other.position[index];
-			}
-		}
+        return result;
+    }
 
-		void move()
-		{
-			position += velocity;
-		}
+    static bool has_red_value(const json& _json)
+    {
+        return std::any_of(_json.cbegin(), _json.cend(), [](const json& value) { return value.is_string() && value.get<std::string>() == "red"; });
+    }
 
-		bool getCircular(int index)
-		{
-			return  (position[index] == initial.position[index]) &&
-				(velocity[index] == initial.velocity[index]);
-		}
+    static int64_t calc(const json&  input)
+    {
+        if (input.is_number())
+            return input.get<int>();
 
-		int64_t energy()
-		{
-			int64_t kinEnergy = std::abs(velocity.x) + std::abs(velocity.y) + std::abs(velocity.z);
-			int64_t posEnergy = std::abs(position.x) + std::abs(position.y) + std::abs(position.z);
-			return kinEnergy * posEnergy;
-		}
-	};
+        if (input.is_string())
+            return 0;
 
-	int64_t gcd(int64_t a, int64_t b)
-	{
-		if (a == 0)
-			return b;
-		return gcd(b % a, a);
-	}
+        if (input.is_array() || input.is_object())
+        {
+            if (input.is_object() && has_red_value(input))
+            {
+                return 0;
+            }
 
-	int64_t lcm(int64_t a, int64_t b)
-	{
-		return (a * b) / gcd(a, b);
-	}
+            return std::accumulate(input.cbegin(), input.cend(), 0, [](int sum, const json& element) { return sum + calc(element); } );
+        }
 
-	int64_t getTotalEnergy(std::vector<Moon>& moons)
-	{
-		int64_t result = 0;
-		for (int i = 0; i < moons.size(); ++i)
-			result += moons[i].energy();
+        return 0;
+    }
 
-		return result;
-	}
+    int64_t part2()
+    {
+        auto data = json::parse(inputString);
 
-	void performStep(std::vector<Moon>& moons)
-	{
-		for (int i = 0; i < moons.size(); ++i)
-		{
-			for (int j = i + 1; j < moons.size(); ++j)
-			{
-				moons[i].changeVelocity(moons[j]);
-				moons[j].changeVelocity(moons[i]);
-			}
-		}
+        return calc(data);
+        
+        return 0;
+    }
 
-		for (int i = 0; i < moons.size(); ++i)
-			moons[i].move();
-	}
-
-	std::vector<std::string> input;
 public:
-	Day12()
-	{
-		input = util::readFileLines("..\\inputs\\2015\\input_12.txt");
-	}
+    Day12()
+    {
+        inputString = util::readFile("..\\inputs\\2015\\input_12.txt");
+        inputVec = util::readFileLines("..\\inputs\\2015\\input_12.txt", '\n', true);
+    }
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
-		std::vector<Moon> moons;
-		int64_t periodic[3] = { -1, -1, -1 };
+        int64_t result_1 = part1();
+        int64_t result_2 = part2();
 
-		std::regex moon_regex("x=(.*), y=(.*), z=(.*)>");
-		std::smatch moon_match;
-		for (auto elem : input)
-		{
-			if (std::regex_search(elem, moon_match, moon_regex) && moon_match.size() >= 4)
-				moons.push_back(Moon(std::stoi(moon_match[1]), std::stoi(moon_match[2]), std::stoi(moon_match[3])));
-		}
+        int64_t time = myTime.usPassed();
+        std::cout << "Day 12 - Part 1: " << result_1 << '\n'
+                  << "Day 12 - Part 2: " << result_2 << '\n';
 
-		for (int sim = 0;; ++sim)
-		{
-			if (sim == 1000)
-				std::cout << "Day 12 - Part 1: " << getTotalEnergy(moons) << std::endl;
-
-			performStep(moons);
-
-			for (int dimension = 0; dimension < 3; ++dimension)
-			{
-				if (periodic[dimension] != -1)
-					continue;
-
-				bool periodicByDimension = true;
-
-				for (int i = 0; i < moons.size(); ++i)
-					periodicByDimension &= moons[i].getCircular(dimension);
-
-				if (periodicByDimension)
-					periodic[dimension] = sim + 1;
-			}
-
-			if (periodic[0] != -1 && periodic[1] != -1 && periodic[2] != -1 && sim >= 1000)
-				break;
-		}
-
-		std::cout << "Day 12 - Part 2: " << lcm(periodic[0], lcm(periodic[1], periodic[2])) << std::endl;
-		return myTime.usPassed();
-	}
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2015_DAY12
