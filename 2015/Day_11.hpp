@@ -9,104 +9,130 @@
 
 class Day11 {
 private:
-	struct Hull {
-		v2 position;
-		int color;
-	};
-
-	v2 turn(v2 in, int64_t dir)
-	{
-		dir = 2 * dir - 1;
-		return v2(in.y * static_cast<int32_t>(dir), -in.x * static_cast<int32_t>(dir));
-	}
-
-	std::map<v2, int> runPaintJob(v2 startDir, int startColor, std::vector<int64_t>& commands)
-	{
-		std::map<v2, int> currentColor;
-
-		Hull currentHull;
-		currentHull.position = v2(0, 0);
-		currentHull.color = startColor;
-		v2 curDir = startDir;
-
-		IntcodeVM vm;
-		vm.initializeCommands(commands);
-
-		do
-		{
-			std::vector<int64_t> input = { currentHull.color };
-			vm.addInput(input);
-			auto output = vm.runCommands();
-
-			currentHull.color = static_cast<int32_t>(output[0]);
-			currentColor[currentHull.position] = currentHull.color;
-
-			curDir = turn(curDir, output[1]);
-			currentHull.position += curDir;
-			currentHull.color = 0;
-
-			if (currentColor.find(currentHull.position) != currentColor.end())
-			{
-				currentHull.color = currentColor[currentHull.position];
-			}
-		} while (!(vm.hasTerminated()));
-
-		return currentColor;
-	}
-
 	std::string inputString;
+
+    std::string increment(std::string input)
+    {
+        std::string result = input;
+
+        // Shortcut for i o l
+        for (int8_t index = 0; index < 8; ++index)
+        {
+            if (result[index] == 'i' || result[index] == 'o' || result[index] == 'l')
+            {
+                result[index]++;
+                for (int8_t subIdx = index + 1; subIdx < 8; ++subIdx)
+                {
+                    result[subIdx] = 'a';
+                }
+
+                return result;
+            }
+        }
+        
+        for (int8_t index = 7; index >= 0; --index)
+        {
+            if (result[index] == 'z')
+            {
+                result[index] = 'a';
+            }
+            else
+            {
+                result[index]++;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    bool checkValid(std::string password)
+    {
+        // Rule 1
+        bool foundTriple = false;
+        for (int8_t index = 0; index < 6 && !foundTriple; ++index)
+        {
+            auto a = password[index + 0];
+            auto b = password[index + 1];
+            auto c = password[index + 2];
+
+            if ((a + 1 == b) && (b + 1 == c))
+                foundTriple = true;
+        }
+
+        if (!foundTriple)
+            return false;
+
+        // Rule 2
+        if (password.find('i') != std::string::npos ||
+            password.find('o') != std::string::npos ||
+            password.find('l') != std::string::npos)
+            return false;
+
+        // Rule 3
+        bool foundFirstDouble = false;
+        int8_t firstDouble = '0';
+        for (int8_t index = 0; index < 7; ++index)
+        {
+            if (password[index] == password[index + 1] && password[index] != firstDouble)
+            {
+                if (foundFirstDouble)
+                    return true;
+
+                foundFirstDouble = true;
+                firstDouble = password[index];
+                index++;
+            }
+        }
+
+        return false;
+    }
+
+    std::string part1()
+    {
+        std::string current = increment(inputString);
+
+        while (!checkValid(current))
+        {
+            current = increment(current);
+        }
+
+        return current;
+    }
+
+    std::string part2(std::string start)
+    {
+        std::string current = increment(start);
+
+        while (!checkValid(current))
+        {
+            current = increment(current);
+        }
+
+        return current;
+    }
+
 public:
 	Day11()
 	{
 		inputString = util::readFile("..\\inputs\\2015\\input_11.txt");
 	}
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
-		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
+        auto result_1 = part1();
+        auto result_2 = part2(result_1);
+        
+        int64_t time = myTime.usPassed();
 
-		std::map<v2, int> currentColor1 = runPaintJob(v2(0, 1), 0, commands);
-		std::map<v2, int> currentColor2 = runPaintJob(v2(0, 1), 1, commands);
-				
-		int minX = 0, maxX = 0;
-		int minY = 0, maxY = 0;
+        std::cout << "Day 11 - Part 1: " << result_1 << '\n'
+                  << "Day 11 - Part 2: " << result_2 << '\n';
 
-		for (auto elem : currentColor2)
-		{
-			minX = std::min(minX, elem.first.x);
-			maxX = std::max(maxX, elem.first.x);
-			minY = std::min(minY, elem.first.y);
-			maxY = std::max(maxY, elem.first.y);
-		}
-
-		std::string result = "";
-		for (int y = maxY; y >= minY; --y)
-		{
-			for (int x = minX; x <= maxX; ++x)
-			{
-				v2 pos(x, y);
-				if (currentColor2.find(pos) != currentColor2.end())
-				{
-					if (currentColor2[pos] == 1)
-						result += static_cast<unsigned char>(0xFE);
-					else
-						result += " ";
-				}
-				else
-					result += " ";
-			}
-			result += "\n";
-		}
-		
-		std::cout << "Day 11 - Part 1: " << currentColor1.size() << std::endl
-				  << "Day 11 - Part 2: " << std::endl 
-				  << result << std::endl;
-
-		return myTime.usPassed();
-	}
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2015_DAY11
