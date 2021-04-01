@@ -2,116 +2,125 @@
 #define ADVENTOFCODE2015_DAY13
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
-#include "../includes/Map2DBase.h"
-
 #include <map>
 #include <algorithm>
+#include <regex>
 
-#define NOMINMAX
-#include <Windows.h>
 
 class Day13 {
 private:
-	void DrawMapClass(Map2DBase<int>& map, int score)
-	{	
-		std::map<int32_t, uint8_t> dict;
-		dict[0] = ' ';
-		dict[1] = static_cast<uint8_t>(0xFE);
-		dict[2] = '#';
-		dict[3] = '-';
-		dict[4] = 'o';
-		DrawMap(map.getMap(), dict);
+    std::vector<std::string> inputVec;
 
-		std::cout << "Score: " << score << std::endl;
-		Sleep(30);
-	}
+    std::map<std::string, std::map<std::string, int32_t>> connections;
+    std::set<std::string> names;
+    std::vector<std::string> vecNames;
 
-	std::string input;
+    void buildConnections()
+    {
+        // Alice would gain 2 happiness units by sitting next to Bob.
+        std::regex reg("(\\S+) would (\\S+) ([0-9]+) happiness units by sitting next to (\\S+)\\.");
+
+        std::smatch seating_match;
+
+        for (auto line : inputVec)
+        {
+            std::regex_search(line, seating_match, reg);
+
+            std::string first_name = seating_match[1];
+            bool positive = (seating_match[2] == "gain");
+            int32_t value = std::stoi(seating_match[3]);
+            std::string second_name = seating_match[4];
+
+            connections[first_name][second_name] = 2 * positive * value - value;
+
+            names.insert(first_name);
+        }
+
+        for (auto name : names)
+            vecNames.push_back(name);
+    }
+
+    int64_t part1()
+    {
+        std::sort(vecNames.begin(), vecNames.end());
+        int64_t maxHappiness = std::numeric_limits<int64_t>::min();
+
+        do
+        {
+            int64_t currentHappiness = 0;
+
+            for (int index = 0; index < vecNames.size(); ++index)
+            {
+                int indexSourceLeft = (index - 1 + vecNames.size()) % vecNames.size();
+                int indexSourceRight = (index + 1) % vecNames.size();
+
+                std::string name = vecNames[index];
+                std::string name_left  = vecNames[indexSourceLeft];
+                std::string name_right = vecNames[indexSourceRight];
+
+                currentHappiness += connections[name][name_left];
+                currentHappiness += connections[name][name_right];
+            }
+
+            maxHappiness = std::max(maxHappiness, currentHappiness);
+        } while (std::next_permutation(vecNames.begin(), vecNames.end()));
+
+        return maxHappiness;
+    }
+
+    int64_t part2()
+    {
+        vecNames.push_back("me");
+        std::sort(vecNames.begin(), vecNames.end());
+        int64_t maxHappiness = std::numeric_limits<int64_t>::min();
+
+        do
+        {
+            int64_t currentHappiness = 0;
+
+            for (int index = 0; index < vecNames.size(); ++index)
+            {
+                if (vecNames[index] == "me")
+                    continue;
+
+                int indexSourceLeft = (index - 1 + vecNames.size()) % vecNames.size();
+                int indexSourceRight = (index + 1) % vecNames.size();
+
+                std::string name = vecNames[index];
+                std::string name_left = vecNames[indexSourceLeft];
+                std::string name_right = vecNames[indexSourceRight];
+
+                currentHappiness += connections[name][name_left];
+                currentHappiness += connections[name][name_right];
+            }
+
+            maxHappiness = std::max(maxHappiness, currentHappiness);
+        } while (std::next_permutation(vecNames.begin(), vecNames.end()));
+
+        return maxHappiness;
+    }
+
 public:
-	Day13()
-	{
-		input = util::readFile("..\\inputs\\2015\\input_13.txt");
-	}
+    Day13()
+    {
+        inputVec = util::readFileLines("..\\inputs\\2015\\input_13.txt");
+    }
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
-		std::vector<int64_t> commands = util::splitInt64(input, ',');
-		std::map<v2, int> tileMap;
+        buildConnections();
+        int64_t result_1 = part1();
+        int64_t result_2 = part2();
 
-		int result = 0;
+        int64_t time = myTime.usPassed();
+        std::cout << "Day 13 - Part 1: " << result_1 << '\n'
+                  << "Day 13 - Part 2: " << result_2 << '\n';
 
-		{
-			IntcodeVM vm;
-			vm.initializeCommands(commands);
-
-			auto output = vm.runCommands();
-
-			for (int index = 0; index < output.size(); index += 3)
-			{
-				v2 pos = v2(static_cast<int>(output[index]), static_cast<int>(output[index + 1]));
-				tileMap[pos] = static_cast<int>(output[index + 2]);
-			}
-
-
-			for (auto elem : tileMap)
-			{
-				if (elem.second == 2)
-					result++;
-			}
-		}
-		int minX, minY, maxX, maxY;
-		minX = minY = std::numeric_limits<int>::max();
-		maxX = maxX = std::numeric_limits<int>::min();
-
-		for (auto elem : tileMap)
-		{
-			minX = std::min(minX, elem.first.x);
-			maxX = std::max(maxX, elem.first.x);
-			minY = std::min(minY, elem.first.y);
-			maxY = std::max(maxY, elem.first.y);
-		}
-
-		v2 size(maxX - minX + 1, maxY - minY + 1);
-		Map2DBase<int> gameMap(0);
-
-		for (auto elem : tileMap)
-			gameMap.write(elem.first, elem.second);
-
-		IntcodeVM vm;
-		commands[0] = 2;
-		vm.initializeCommands(commands);
-
-		while (!vm.hasTerminated())
-		{
-			v2 currBall = gameMap.find(4);
-			v2 currPad = gameMap.find(3);
-
-			std::vector<int64_t> input = { sgn(currBall.x - currPad.x) };
-			vm.addInput(input);
-
-			auto output = vm.runCommands();
-
-			for (int index = 0; index < output.size(); index += 3)
-			{
-				v2 pos = v2(static_cast<int>(output[index]), static_cast<int>(output[index + 1]));
-				tileMap[pos] = static_cast<int>(output[index + 2]);
-
-				if (gameMap.validIndex(pos))
-					gameMap.write(pos, tileMap[pos]);
-			}
-
-			//DrawMapClass(gameMap, tileMap[v2(-1, 0)]);
-		}
-
-		std::cout << "Day 13 - Part 1: " << result << std::endl
-				  << "Day 13 - Part 2: " << tileMap[v2(-1, 0)] << std::endl;
-
-		return myTime.usPassed();
-	}
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2015_DAY13
