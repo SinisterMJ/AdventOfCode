@@ -11,104 +11,97 @@
 
 class Day14 {
 private:
-	typedef std::pair<std::string, int64_t> Material;
-	typedef std::map<std::string, std::pair<int64_t, std::vector<Material>>> Element;
+    struct Reindeer {
+        int64_t speed;
+        int64_t duration;
+        int64_t pause;
+        std::string name;
+        int64_t points;
+        int32_t currentDistance;  
+        int64_t interval;
+    };
 
-	bool checkPath(std::string input, std::string superior, Element& reactions)
-	{
-		if (input == "ORE")
-			return false;
+    std::vector<Reindeer> reindeers;
 
-		if (input == superior)
-			return true;
+    void buildFliers()
+    {
+        // Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.
+        std::regex reg("(\\S+) can fly ([0-9]+) km/s for ([0-9]+) second., but then must rest for ([0-9]+) second.");
 
-		auto elem = reactions[superior];
+        std::smatch deer_match;
 
-		for (auto source : elem.second)
-		{
-			if (checkPath(input, source.first, reactions))
-				return true;
-		}
+        for (auto line : input)
+        {
+            std::regex_search(line, deer_match, reg);
 
-		return false;
-	}
+            Reindeer entry;
 
-	int64_t calcOreUsage(Element& reactions, int64_t count)
-	{
-		bool allOres = false;
+            entry.name = deer_match[1];
+            entry.speed = std::stoi(deer_match[2]);
+            entry.duration = std::stoi(deer_match[3]);
+            entry.pause = std::stoi(deer_match[4]);
+            entry.points = 0;
+            entry.currentDistance = 0;
+            entry.interval = entry.duration + entry.pause;
 
-		std::map<std::string, int64_t> requiredMats;
-		std::map<std::string, int64_t> warehouse = { };
-		std::map<std::string, int64_t> temp;
+            reindeers.push_back(entry);
+        }
+    }
 
-		requiredMats["FUEL"] = count;
-		int64_t totalOre = 0;
+    int64_t distanceCovered(const Reindeer& entry, int64_t flytime)
+    {
+        int64_t distance_one_interval = entry.duration * entry.speed;
 
-		while (requiredMats.size() > 0)
-		{
-			temp.clear();
+        int64_t distanceCovered = (flytime / entry.interval) * distance_one_interval;
+        int64_t remainingSeconds = flytime - (flytime / entry.interval) * entry.interval;
 
-			for (auto elem : requiredMats)
-			{
-				std::string name = elem.first;
-				int64_t quantity = std::max<int64_t>(0, elem.second - warehouse[elem.first]);
-				auto input = reactions[elem.first];
-				int64_t outputQuantity = input.first;
-				int64_t multiple = static_cast<int64_t>(std::ceil(static_cast<double>(quantity) / outputQuantity));
+        if (remainingSeconds > entry.duration)
+            distanceCovered += entry.duration * entry.speed;
+        else
+            distanceCovered += remainingSeconds * entry.speed;
 
-				warehouse[elem.first] += multiple * outputQuantity - elem.second;
+        return distanceCovered;
+    }
 
-				for (auto outputElem : reactions[elem.first].second)
-				{
-					if (outputElem.first == "ORE")
-						totalOre += multiple * outputElem.second;
-					else
-						temp[outputElem.first] += multiple * outputElem.second;
-				}
-			}
+    int64_t part1()
+    { 
+        int64_t maxDistance = 0;
 
-			requiredMats.swap(temp);
-		}
+        for (auto entry : reindeers)
+        {
+            maxDistance = std::max(maxDistance, distanceCovered(entry, 2503));
+        }
 
-		return totalOre;
-	}
+        return maxDistance;
+    }
 
+    int64_t part2()
+    {
+        for (int duration = 1; duration <= 2503; ++duration)
+        {
+            int64_t maxDistance = 0;
+            for (auto& entry : reindeers)
+            {
+                auto distance = distanceCovered(entry, duration);
+                entry.currentDistance = distance;
+                maxDistance = std::max(maxDistance, distance);
+            }
 
-	int64_t calcFuelOutcome(Element& reactions, int64_t inputOre)
-	{
-		int64_t lowerEstimate = inputOre / calcOreUsage(reactions, 1);
-		int64_t higherEstimate = 2 * lowerEstimate;
+            for (auto& entry : reindeers)
+            {
+                if (entry.currentDistance == maxDistance)
+                    entry.points++;
+            }
+        }
 
-		while (calcOreUsage(reactions, higherEstimate) < inputOre)
-		{
-			lowerEstimate = higherEstimate;
-			higherEstimate *= 2;
-		}
+        int64_t maxPoints = 0;
+        for (auto entry : reindeers)
+        {
+            maxPoints = std::max(maxPoints, entry.points);
+        }
 
-		int64_t mid = (lowerEstimate + higherEstimate) / 2;
-		int64_t resMid = 0;
-
-		while (lowerEstimate <= higherEstimate)
-		{
-			resMid = calcOreUsage(reactions, mid);
-			if (resMid > inputOre)
-			{
-				higherEstimate = mid - 1;
-			}
-
-			if (resMid < inputOre)
-			{
-				lowerEstimate = mid + 1;
-			}
-
-			if (resMid == inputOre)
-				return mid;
-
-			mid = (lowerEstimate + higherEstimate) / 2;
-		}
-
-		return mid;
-	}
+        return maxPoints;
+    }
 
 	std::vector<std::string> input;
 public:
@@ -117,41 +110,22 @@ public:
 		input = util::readFileLines("..\\inputs\\2015\\input_14.txt");
 	}
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
-		Element reactions;
+        buildFliers();
 
-		for (auto elem : input)
-		{
-			std::string output = elem.substr(elem.find("=>") + 3);
-			std::string input = elem.substr(0, elem.find("=>"));
-			auto inputs = util::split(input, ',');
-			for (auto& str : inputs)
-				if (str[0] == ' ')
-					str = str.substr(1);
+        int64_t result_1 = part1();
+        int64_t result_2 = part2();
 
-			auto out = util::split(output, ' ');
-			reactions[out[1]] = std::make_pair(std::stoi(out[0]), std::vector<std::pair<std::string, int64_t>>());
+        int64_t time = myTime.usPassed();
+        std::cout << "Day 14 - Part 1: " << result_1 << '\n'
+                  << "Day 14 - Part 2: " << result_2 << '\n';
 
-			for (auto str : inputs)
-			{
-				auto in = util::split(str, ' ');
-				reactions[out[1]].second.push_back(std::make_pair(in[1], std::stoi(in[0])));
-			}
-		}
-
-		int64_t result1 = calcOreUsage(reactions, 1);
-		int64_t result2 = calcFuelOutcome(reactions, 1000000000000);
-
-
-		std::cout << "Day 14 - Part 1: " << result1 << std::endl
-				  << "Day 14 - Part 2: " << result2 << std::endl;
-
-		return myTime.usPassed();
-	}
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2015_DAY14

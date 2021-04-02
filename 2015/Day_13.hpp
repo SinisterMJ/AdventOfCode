@@ -37,7 +37,10 @@ private:
         }
 
         for (auto name : names)
+        {
             vecNames.push_back(name);
+            connections[name]["me"] = 0;
+        }
     }
 
     int64_t part1()
