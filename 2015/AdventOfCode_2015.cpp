@@ -72,12 +72,12 @@ int main()
 	std::cout << std::endl;
 
 	Day13 mDay13; runTimes.push_back(mDay13.run());
-	std::cout << std::endl;*/
-
-	Day14 mDay14; runTimes.push_back(mDay14.run());
 	std::cout << std::endl;
 
-	/*Day15 mDay15; runTimes.push_back(mDay15.run());
+	Day14 mDay14; runTimes.push_back(mDay14.run());
+	std::cout << std::endl;*/
+
+	Day15 mDay15; runTimes.push_back(mDay15.run());
 	std::cout << std::endl;
 
 	/*Day16 mDay16; runTimes.push_back(mDay16.run());

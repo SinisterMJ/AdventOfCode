@@ -17,8 +17,9 @@ private:
         int64_t pause;
         std::string name;
         int64_t points;
-        int32_t currentDistance;  
+        int64_t currentDistance;  
         int64_t interval;
+        int64_t distance_one_interval;
     };
 
     std::vector<Reindeer> reindeers;
@@ -43,6 +44,7 @@ private:
             entry.points = 0;
             entry.currentDistance = 0;
             entry.interval = entry.duration + entry.pause;
+            entry.distance_one_interval = entry.duration * entry.speed;
 
             reindeers.push_back(entry);
         }
@@ -50,9 +52,7 @@ private:
 
     int64_t distanceCovered(const Reindeer& entry, int64_t flytime)
     {
-        int64_t distance_one_interval = entry.duration * entry.speed;
-
-        int64_t distanceCovered = (flytime / entry.interval) * distance_one_interval;
+        int64_t distanceCovered = (flytime / entry.interval) * entry.distance_one_interval;
         int64_t remainingSeconds = flytime - (flytime / entry.interval) * entry.interval;
 
         if (remainingSeconds > entry.duration)
@@ -67,7 +67,7 @@ private:
     { 
         int64_t maxDistance = 0;
 
-        for (auto entry : reindeers)
+        for (auto& entry : reindeers)
         {
             maxDistance = std::max(maxDistance, distanceCovered(entry, 2503));
         }
@@ -95,7 +95,7 @@ private:
         }
 
         int64_t maxPoints = 0;
-        for (auto entry : reindeers)
+        for (const auto& entry : reindeers)
         {
             maxPoints = std::max(maxPoints, entry.points);
         }

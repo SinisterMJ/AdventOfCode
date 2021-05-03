@@ -50,7 +50,7 @@ private:
                 return 0;
             }
 
-            return std::accumulate(input.cbegin(), input.cend(), 0, [](int sum, const json& element) { return sum + calc(element); } );
+            return std::accumulate(input.cbegin(), input.cend(), static_cast<int64_t>(0), [](int64_t sum, const json& element) { return sum + calc(element); } );
         }
 
         return 0;
@@ -59,10 +59,7 @@ private:
     int64_t part2()
     {
         auto data = json::parse(inputString);
-
         return calc(data);
-        
-        return 0;
     }
 
 public:

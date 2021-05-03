@@ -21,7 +21,7 @@ Path(filePath).mkdir(parents=True, exist_ok=True)
 if os.path.isfile(fileName):
     print ("File exist. No request should be done.")
 	
-cookies = dict(session='53616c7465645f5f60da271d2ea359adb48d5c6f19ff37664bb0ae08fb946971a0856e3a133c190919f4c7000b5cd434')
+cookies = dict(session='53616c7465645f5f045b98e93d9db96ac1d69c47af605fbdaf45c4e28e2fd5a7a10aeb0c69b52af606334578b66cb4f5')
 r = requests.get("https://adventofcode.com/" + str(year) + "/day/" + str(day) + "/input", cookies=cookies)
 file = open(fileName, "w") 
 file.write(r.text)

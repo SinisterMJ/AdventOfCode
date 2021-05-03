@@ -54,8 +54,8 @@ private:
 
             for (int index = 0; index < vecNames.size(); ++index)
             {
-                int indexSourceLeft = (index - 1 + vecNames.size()) % vecNames.size();
-                int indexSourceRight = (index + 1) % vecNames.size();
+                auto indexSourceLeft = (index - 1 + vecNames.size()) % vecNames.size();
+                auto indexSourceRight = (index + 1) % vecNames.size();
 
                 std::string name = vecNames[index];
                 std::string name_left  = vecNames[indexSourceLeft];
@@ -86,8 +86,8 @@ private:
                 if (vecNames[index] == "me")
                     continue;
 
-                int indexSourceLeft = (index - 1 + vecNames.size()) % vecNames.size();
-                int indexSourceRight = (index + 1) % vecNames.size();
+                auto indexSourceLeft = (index - 1 + vecNames.size()) % vecNames.size();
+                auto indexSourceRight = (index + 1) % vecNames.size();
 
                 std::string name = vecNames[index];
                 std::string name_left = vecNames[indexSourceLeft];

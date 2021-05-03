@@ -1,227 +1,114 @@
 #ifndef ADVENTOFCODE2015_DAY15
 #define ADVENTOFCODE2015_DAY15
 
-#include <map>
-
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include <regex>
 
-#define NOMINMAX
-#include <Windows.h>
-
-class Day15 {
+class Day15 
+{
 private:
-	const v2 north = v2(0, -1);
-	const v2 south = v2(0, 1);
-	const v2 west = v2(1, 0);
-	const v2 east = v2(-1, 0);
 
-	void DrawMapClass(std::map<v2, int>& map, v2 currentPos)
-	{
-		std::map<v2, int32_t> copy(map);
+    struct ingredient {
+        std::string name;
+        int64_t capacity;
+        int64_t durability;
+        int64_t flavor;
+        int64_t texture;
+        int64_t calories;
+    };
 
-		int minX = 0;
-		int minY = 0;
-		int maxX = 0;
-		int maxY = 0;
-		for (auto elem : map)
-		{
-			minX = std::min(minX, elem.first.x);
-			maxX = std::max(maxX, elem.first.x);
-			minY = std::min(minY, elem.first.y);
-			maxY = std::max(maxY, elem.first.y);
-		}
-		for (int y = minY; y <= maxY; ++y)
-		{
-			for (int x = minX; x <= maxX; ++x)
-			{
-				if (copy.find(v2(x, y)) == copy.end())
-					copy[v2(x, y)] = 4;
-			}
-		}
-		
-		copy[currentPos] = 3;
+    std::vector<ingredient> list;
 
-		std::map<int32_t, uint8_t> dict;
-		dict[0] = 0xFE;
-		dict[1] = '.';
-		dict[2] = 'o';
-		dict[3] = 'R';
-		dict[4] = ' ';
+    int64_t part1()
+    {
+        std::regex reg("(\\S+): capacity (-?[0-9]+), durability (-?[0-9]+), flavor (-?[0-9]+), texture (-?[0-9]+), calories (-?[0-9]+)");
+        std::smatch ingred_match;
 
-		DrawMap(copy, dict);
+        for (auto line : inputVec)
+        {
+            std::regex_search(line, ingred_match, reg);
 
-		Sleep(15);
-	}
+            ingredient entry;
 
-	int64_t chooseDirection(std::map<v2, int>& oxygenMap, std::map<v2, int>& flood, v2& currentPos)
-	{
-		if (oxygenMap.find(currentPos + north) == oxygenMap.end())
-		{
-			return 1;
-		}
-		if (oxygenMap.find(currentPos + south) == oxygenMap.end())
-		{
-			return 2;
-		}
-		if (oxygenMap.find(currentPos + west) == oxygenMap.end())
-		{
-			return 3;
-		}
-		if (oxygenMap.find(currentPos + east) == oxygenMap.end())
-		{
-			return 4;
-		}
+            entry.name = ingred_match[1];
+            entry.capacity = std::stoi(ingred_match[2]);
+            entry.durability = std::stoi(ingred_match[3]);
+            entry.flavor = std::stoi(ingred_match[4]);
+            entry.texture = std::stoi(ingred_match[5]);
+            entry.calories = std::stoi(ingred_match[6]);
 
-		int val = flood[currentPos];
+            list.push_back(entry);
+        }
 
-		if (flood.find(currentPos + north) != flood.end())
-		{
-			if (flood[currentPos + north] < val)
-				return 1;
-		}
+        int64_t max = 0;
 
-		if (flood.find(currentPos + south) != flood.end())
-		{
-			if (flood[currentPos + south] < val)
-				return 2;
-		}
+        for (int a = 0; a <= 100; a++)
+        {
+            for (int b = 0; b <= 100 - a; ++b)
+            {
+                for (int c = 0; c <= 100 - a - b; ++c)
+                {
+                    int d = 100 - a - b - c;
+                        
+                    int32_t cap = list[0].capacity * a + list[1].capacity * b + list[2].capacity * c + list[3].capacity * d;
+                    int32_t dur = list[0].durability * a + list[1].durability * b + list[2].durability * c + list[3].durability * d;
+                    int32_t fla = list[0].flavor * a + list[1].flavor * b + list[2].flavor * c + list[3].flavor * d;
+                    int32_t tex = list[0].texture * a + list[1].texture * b + list[2].texture * c + list[3].texture * d;
 
-		if (flood.find(currentPos + west) != flood.end())
-		{
-			if (flood[currentPos + west] < val)
-				return 3;
-		}
+                    cap = cap < 0 ? 0 : cap;
+                    dur = dur < 0 ? 0 : dur;
+                    fla = fla < 0 ? 0 : fla;
+                    tex = tex < 0 ? 0 : tex;
 
-		if (flood.find(currentPos + east) != flood.end())
-		{
-			if (flood[currentPos + east] < val)
-				return 4;
-		}
+                    int64_t res = cap * dur * fla * tex;
+                    max = std::max(res, max);
+                }
+            }
+        }
 
-		return 1;
-	}
+        return max;
+    }
 
-	int64_t findShortestPath(std::vector<int64_t>& commands, std::map<v2, int>& oxygenMap)
-	{
-		IntcodeVM repairRobot;
-		repairRobot.initializeCommands(commands);
-		std::map<v2, int> floodFill;
+    int64_t part2()
+    {        
+        int64_t max = 0;
 
-		oxygenMap[v2(0, 0)] = 1;
-		floodFill[v2(0, 0)] = 0;
+        for (int a = 0; a <= 100; a++)
+        {
+            for (int b = 0; b <= 100 - a; ++b)
+            {
+                for (int c = 0; c <= 100 - a - b; ++c)
+                {
+                    int d = 100 - a - b - c;
+                    
+                    int32_t cal = list[0].calories * a + list[1].calories * b + list[2].calories * c + list[3].calories * d;
+                    if (cal != 500)
+                        continue;
 
-		{
-			bool mapcomplete = false;
-			v2 currentPos;
-			while (!mapcomplete)
-			{
-				int64_t input = chooseDirection(oxygenMap, floodFill, currentPos);
-				std::vector<int64_t> inputV = { input };
+                    int32_t cap = list[0].capacity * a + list[1].capacity * b + list[2].capacity * c + list[3].capacity * d;
+                    int32_t dur = list[0].durability * a + list[1].durability * b + list[2].durability * c + list[3].durability * d;
+                    int32_t fla = list[0].flavor * a + list[1].flavor * b + list[2].flavor * c + list[3].flavor * d;
+                    int32_t tex = list[0].texture * a + list[1].texture * b + list[2].texture * c + list[3].texture * d;
+                    
+                    cap = cap < 0 ? 0 : cap;
+                    dur = dur < 0 ? 0 : dur;
+                    fla = fla < 0 ? 0 : fla;
+                    tex = tex < 0 ? 0 : tex;
+                    
+                    int64_t res = cap * dur * fla * tex;
+                    max = std::max(res, max);
+                }
+            }
+        }
 
-				int step = floodFill[currentPos];
+        return max;
+    }
 
-				repairRobot.addInput(inputV);
-				auto output = repairRobot.runCommands();
-
-				v2 direction;
-				{
-					if (input == 1)
-						direction = north;
-					if (input == 2)
-						direction = south;
-					if (input == 3)
-						direction = west;
-					if (input == 4)
-						direction = east;
-				}
-
-				oxygenMap[currentPos + direction] = static_cast<int32_t>(output[0]);
-				if (output[0] != 0)
-				{
-					currentPos += direction;
-					if (floodFill.find(currentPos) == floodFill.end())
-					{
-						floodFill[currentPos] = step + 1;
-					}
-				}
-
-				// DrawMapClass(oxygenMap, currentPos);
-
-				if (currentPos == v2(0, 0))
-				{
-					if (oxygenMap.find(currentPos + north) != oxygenMap.end() &&
-						oxygenMap.find(currentPos + south) != oxygenMap.end() &&
-						oxygenMap.find(currentPos + west) != oxygenMap.end() &&
-						oxygenMap.find(currentPos + east) != oxygenMap.end())
-					{
-						mapcomplete = true;;
-					}
-				}
-			}
-		}
-
-		for (auto elem : oxygenMap)
-		{
-			if (elem.second == 2)
-				return floodFill[elem.first];
-		}
-
-		return 0;
-	}
-
-	void fillFromOxygen(std::map<v2, int>& oxygenMap, std::map<v2, int>& bfsMap, v2 currentPos, int value)
-	{
-		if (bfsMap.find(currentPos + north) == bfsMap.end() && oxygenMap[currentPos + north] == 1)
-			bfsMap[currentPos + north] = value + 1;
-
-		if (bfsMap.find(currentPos + south) == bfsMap.end() && oxygenMap[currentPos + south] == 1)
-			bfsMap[currentPos + south] = value + 1;
-
-		if (bfsMap.find(currentPos + west) == bfsMap.end() && oxygenMap[currentPos + west] == 1)
-			bfsMap[currentPos + west] = value + 1;
-
-		if (bfsMap.find(currentPos + east) == bfsMap.end() && oxygenMap[currentPos + east] == 1)
-			bfsMap[currentPos + east] = value + 1;
-	}
-
-	int64_t floodFromOxygen(std::map<v2, int>& oxygenMap)
-	{
-		std::map<v2, int> bfsMap;
-		int totalCount = 0;
-		v2 startPos;
-
-		for (auto elem : oxygenMap)
-		{
-			if (elem.second == 2)
-				startPos = elem.first;
-
-			if (elem.second == 2 || elem.second == 1)
-				totalCount++;
-		}
-
-		int val = 0;
-		bfsMap[startPos] = val;
-
-		while (bfsMap.size() < totalCount)
-		{
-			for (auto elem : bfsMap)
-			{
-				if (elem.second == val)
-					fillFromOxygen(oxygenMap, bfsMap, elem.first, val);
-			}
-			val++;
-		}
-
-
-		return val;
-	}
-
-	std::string inputString;
+	std::vector<std::string> inputVec;
 public:
 	Day15()
 	{
-		inputString = util::readFile("..\\inputs\\2015\\input_15.txt");
+		inputVec = util::readFileLines("..\\inputs\\2015\\input_15.txt");
 	}
 
 	int64_t run()
@@ -229,11 +116,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
-		std::map<v2, int> oxygenMap;
-
-		int64_t result1 = findShortestPath(commands, oxygenMap);
-		int64_t result2 = floodFromOxygen(oxygenMap);
+		int64_t result1 = part1();
+        int64_t result2 = part2();
 
 		std::cout << "Day 15 - Part 1: " << result1 << std::endl
 				  << "Day 15 - Part 2: " << result2 << std::endl;
