@@ -50,10 +50,10 @@ private:
                 {
                     int d = 100 - a - b - c;
                         
-                    int32_t cap = list[0].capacity * a + list[1].capacity * b + list[2].capacity * c + list[3].capacity * d;
-                    int32_t dur = list[0].durability * a + list[1].durability * b + list[2].durability * c + list[3].durability * d;
-                    int32_t fla = list[0].flavor * a + list[1].flavor * b + list[2].flavor * c + list[3].flavor * d;
-                    int32_t tex = list[0].texture * a + list[1].texture * b + list[2].texture * c + list[3].texture * d;
+                    int64_t cap = list[0].capacity * a + list[1].capacity * b + list[2].capacity * c + list[3].capacity * d;
+                    int64_t dur = list[0].durability * a + list[1].durability * b + list[2].durability * c + list[3].durability * d;
+                    int64_t fla = list[0].flavor * a + list[1].flavor * b + list[2].flavor * c + list[3].flavor * d;
+                    int64_t tex = list[0].texture * a + list[1].texture * b + list[2].texture * c + list[3].texture * d;
 
                     cap = cap < 0 ? 0 : cap;
                     dur = dur < 0 ? 0 : dur;
@@ -81,14 +81,14 @@ private:
                 {
                     int d = 100 - a - b - c;
                     
-                    int32_t cal = list[0].calories * a + list[1].calories * b + list[2].calories * c + list[3].calories * d;
+                    int64_t cal = list[0].calories * a + list[1].calories * b + list[2].calories * c + list[3].calories * d;
                     if (cal != 500)
                         continue;
 
-                    int32_t cap = list[0].capacity * a + list[1].capacity * b + list[2].capacity * c + list[3].capacity * d;
-                    int32_t dur = list[0].durability * a + list[1].durability * b + list[2].durability * c + list[3].durability * d;
-                    int32_t fla = list[0].flavor * a + list[1].flavor * b + list[2].flavor * c + list[3].flavor * d;
-                    int32_t tex = list[0].texture * a + list[1].texture * b + list[2].texture * c + list[3].texture * d;
+                    int64_t cap = list[0].capacity * a + list[1].capacity * b + list[2].capacity * c + list[3].capacity * d;
+                    int64_t dur = list[0].durability * a + list[1].durability * b + list[2].durability * c + list[3].durability * d;
+                    int64_t fla = list[0].flavor * a + list[1].flavor * b + list[2].flavor * c + list[3].flavor * d;
+                    int64_t tex = list[0].texture * a + list[1].texture * b + list[2].texture * c + list[3].texture * d;
                     
                     cap = cap < 0 ? 0 : cap;
                     dur = dur < 0 ? 0 : dur;

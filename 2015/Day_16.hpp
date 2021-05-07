@@ -4,101 +4,90 @@
 #include <map>
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include <regex>
 
 class Day16 {
 private:
-	std::vector<int32_t> fftPattern = { 0, 1, 0, -1 };
 
-	int32_t getLastDigit(int32_t input)
+	std::map<int32_t, std::map<std::string, int32_t>> allSues;
+
+	int64_t part1(std::map<std::string, int32_t> sue)
 	{
-		return std::abs(input) % 10;
-	}
+		std::regex reg("Sue ([0-9]+): (\\S+): ([0-9]+), (\\S+): ([0-9]+), (\\S+): ([0-9]+)");
+		std::smatch sue_match;
 
-	int32_t fft(std::vector<int32_t>& signal, int32_t fftLength)
-	{
-		int32_t index = 0;
-		int32_t result = 0;
-
-		while (index < signal.size())
+		for (auto line : inputLines)
 		{
-			int32_t indexFFT = ((index + 1) / fftLength) % 4;
+			std::regex_search(line, sue_match, reg);
 
-			if (fftPattern[indexFFT] == 1)
-				result += signal[index];
-			if (fftPattern[indexFFT] == -1)
-				result -= signal[index];
+			std::map<std::string, int32_t> entry;
 
-			index++;
+			entry[sue_match[2]] = std::stoi(sue_match[3]);
+			entry[sue_match[4]] = std::stoi(sue_match[5]);
+			entry[sue_match[6]] = std::stoi(sue_match[7]);
+
+			allSues[std::stoi(sue_match[1])] = entry;
 		}
 
-		return getLastDigit(result);
-	}
-
-	int32_t getResult1(std::vector<int32_t> inputSignal)
-	{
-		std::vector<int32_t> temporary;
-		temporary.resize(inputSignal.size());
-
-		int32_t result = 0;
-
-		for (int32_t run = 0; run < 100; ++run)
+		for (auto& entry : allSues)
 		{
-			for (int32_t index = 1; index <= inputSignal.size(); ++index)
+			bool match = true;
+
+			for (auto& key : sue)
 			{
-				temporary[index - 1] = fft(inputSignal, index);
+				if (entry.second.find(key.first) != entry.second.end())
+				{
+					match &= (entry.second[key.first] == key.second);
+				}
 			}
-			std::swap(temporary, inputSignal);
+			
+			if (match)
+				return entry.first;
 		}
 
-		for (int32_t index = 0; index < 8; ++index)
-		{
-			result = result * 10 + inputSignal[index];
-		}
-
-		return result;
+		return 0;
 	}
 
-	int32_t getResult2(std::vector<int32_t> inputSignal)
+	int64_t part2(std::map<std::string, int32_t> sue)
 	{
-		std::vector<int32_t> repeatedSignal;
-		int32_t result = 0;
-
-		int32_t neededDigits = 10000 * static_cast<int32_t>(inputSignal.size());
-		repeatedSignal.reserve(neededDigits);
-
-		int32_t offset = 0;
-
-		for (int32_t index = 0; index < 7; ++index)
-			offset = offset * 10 + inputSignal[index];
-
-		int32_t unnecessary = offset / static_cast<int32_t>(inputSignal.size());
-		offset -= unnecessary * static_cast<int32_t>(inputSignal.size());
-
-		for (int32_t i = 0; i < (10000 - unnecessary); ++i)
-			repeatedSignal.insert(repeatedSignal.end(), inputSignal.begin(), inputSignal.end());
-
-		for (int32_t run = 0; run < 100; ++run)
+		for (auto& entry : allSues)
 		{
-			int32_t val = repeatedSignal.back();
-			for (int32_t index = static_cast<int32_t>(repeatedSignal.size()) - 2; index >= offset; --index)
+			bool match = true;
+
+			for (auto& key : sue)
 			{
-				val = (val + repeatedSignal[index]) % 10;
-				repeatedSignal[index] = val;
+				if (entry.second.find(key.first) != entry.second.end())
+				{
+					if (key.first != "cats" && key.first != "trees" && key.first != "pomerians" && key.first != "goldfish")
+						match &= (entry.second[key.first] == key.second);
+					else
+					{
+						if (key.first == "cats" || key.first == "trees")
+						{
+							match &= (entry.second[key.first] > key.second);
+						}
+						else
+						{
+							match &= (entry.second[key.first] < key.second);
+						}
+					}
+				}
 			}
+
+			if (match)
+				return entry.first;
 		}
 
-		for (int32_t index = offset; index < offset + 8; ++index)
-			result = 10 * result + repeatedSignal[index];
-
-		return result;
+		return 0;
 	}
 
 	std::string inputString;
+	std::vector<std::string> inputLines;
 public:
 	Day16()
 	{
 		inputString = util::readFile("..\\inputs\\2015\\input_16.txt");
+		inputLines = util::readFileLines("..\\inputs\\2015\\input_16.txt");
 	}
 
 	int64_t run()
@@ -106,18 +95,21 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-		std::vector<int32_t> inputSignal;
+		std::map<std::string, int32_t> present;
 
-		for (int32_t index = 0; index < inputString.length(); ++index)
-		{
-			std::string digit = inputString.substr(index, 1);
-			if (digit == "\n")
-				break;
-			inputSignal.push_back(std::stoi(digit));
-		}
+		present["children"] = 3;
+		present["cats"] = 7;
+		present["samoyeds"] = 2;
+		present["pomeranians"] = 3;
+		present["akitas"] = 0;
+		present["vizslas"] = 0;
+		present["goldfish"] = 5;
+		present["trees"] = 3;
+		present["cars"] = 2;
+		present["perfumes"] = 1;
 
-		int64_t result1 = getResult1(inputSignal);
-		int64_t result2 = getResult2(inputSignal);
+		int64_t result1 = part1(present);
+		int64_t result2 = part2(present);
 
 		std::cout << "Day 16 - Part 1: " << result1 << std::endl
 				  << "Day 16 - Part 2: " << result2 << std::endl;

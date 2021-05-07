@@ -57,7 +57,7 @@ int main()
 	std::cout << std::endl;
 
 	Day08 mDay08; runTimes.push_back(mDay08.run());
-	std::cout << std::endl
+	std::cout << std::endl;
 
 	Day09 mDay09; runTimes.push_back(mDay09.run());
 	std::cout << std::endl;
@@ -75,24 +75,24 @@ int main()
 	std::cout << std::endl;
 
 	Day14 mDay14; runTimes.push_back(mDay14.run());
-	std::cout << std::endl;*/
+	std::cout << std::endl;
 
 	Day15 mDay15; runTimes.push_back(mDay15.run());
 	std::cout << std::endl;
 
-	/*Day16 mDay16; runTimes.push_back(mDay16.run());
+	Day16 mDay16; runTimes.push_back(mDay16.run());
 	std::cout << std::endl;
 
-	/*Day17 mDay17; runTimes.push_back(mDay17.run());
+	Day17 mDay17; runTimes.push_back(mDay17.run());
 	std::cout << std::endl;
 
-	/*Day18 mDay18; runTimes.push_back(mDay18.run());
+	Day18 mDay18; runTimes.push_back(mDay18.run());
 	std::cout << std::endl;
 
-	/*Day19 mDay19; runTimes.push_back(mDay19.run());
-	std::cout << std::endl;
+	Day19 mDay19; runTimes.push_back(mDay19.run());
+	std::cout << std::endl;*/
 
-	/*Day20 mDay20; runTimes.push_back(mDay20.run());
+	Day20 mDay20; runTimes.push_back(mDay20.run());
 	std::cout << std::endl;
 
 	/*Day21 mDay21; runTimes.push_back(mDay21.run());

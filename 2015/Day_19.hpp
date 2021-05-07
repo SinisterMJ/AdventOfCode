@@ -2,84 +2,106 @@
 #define ADVENTOFCODE2015_DAY19
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
-#include "../includes/Map2DBase.h"
-#include <algorithm>
-#include <numeric>
-#include <map>
-#include <deque>
 #include <set>
-#include <unordered_set>
 
 class Day19 {
 private:
-	std::string inputString;
+	std::vector<std::string> inputLines;
 	
-	int64_t calcResult1(std::vector<int64_t>& commands)
-	{		
-		int64_t result = 0;
-		for (int y = 0; y < 50; ++y)
-		{
-			for (int x = 0; x < 50; ++x)
-			{
-				IntcodeVM vm;
-				vm.initializeCommands(commands);
+	struct Reaction {
+		std::string input;
+		std::string output;
+	};
 
-				std::vector<int64_t> input = { x, y };
-				vm.addInput(input);
-				auto output = vm.runCommands();
-				result += output.back();
+	std::vector<Reaction> reactionList;
+	std::string molecule;
+
+	void buildReactions()
+	{
+		for (auto& line : inputLines)
+		{
+			if (line.find(" => ") != std::string::npos)
+			{
+				auto pos = line.find(" => ");
+				Reaction entry;
+				entry.input = line.substr(0, pos);
+				entry.output = line.substr(pos + 4);
+				reactionList.push_back(entry);
 			}
 		}
-		return result;
+
+		molecule = inputLines.back();
 	}
 
-	int64_t getBeam(std::vector<int64_t>& commands, v2 pos)
+	int64_t part1()
 	{
-		IntcodeVM vm;
-		vm.initializeCommands(commands);
+		std::set<std::string> uniqueOutcomes;
 
-		std::vector<int64_t> input = { pos.x, pos.y };
-		vm.addInput(input);
-		auto output = vm.runCommands();
-
-		return output.back();
-	}
-
-	int64_t calcResult2(std::vector<int64_t>& commands)
-	{
-		int x = 99; int y = 0;
-
-		while (true)
+		for (int position = 0; position < molecule.size(); ++position)
 		{
-			// Meet upper border of line.
-			while (getBeam(commands, v2(x, y)) == 0)
-				y++;
-						
-			if (getBeam(commands, v2(x - 99, y + 99)) == 1)
-				return (x - 99) * 10000 + y;
-
-			x++;
+			for (auto& entry : reactionList)
+			{
+				if (molecule.substr(position, entry.input.size()) == entry.input)
+				{
+					std::string copy = molecule.substr(0, position) + entry.output + molecule.substr(position + entry.input.size());
+					uniqueOutcomes.insert(copy);
+				}
+			}
 		}
 
-		return 0;
+		return uniqueOutcomes.size();
+	}
+
+	int64_t countUpper(std::string str)
+	{
+		int upper = 0;
+		for (int i = 0; i < str.length(); i++)
+		{
+			if (str[i] >= 'A' && str[i] <= 'Z')
+				upper++;
+		}
+		
+		return upper;
+	}
+
+	int64_t count(std::string input, std::string search)
+	{
+		int64_t pos = 0;
+		int64_t count = 0;
+		while ((pos = input.find(search, pos)) != std::string::npos)
+		{
+			count++;
+			pos += search.length();
+		}
+
+		return count;
+	}
+
+	int64_t part2()
+	{
+		int64_t countRN = count(molecule, "Rn");
+		int64_t countAR = count(molecule, "Ar");
+		int64_t countY = count(molecule, "Y");
+		int64_t countUp = countUpper(molecule);
+
+		return countUp - countRN - countAR - 2 * countY - 1;
 	}
 
 public:
 	Day19()
 	{
-		inputString = util::readFile("..\\inputs\\2015\\input_19.txt");
+		inputLines = util::readFileLines("..\\inputs\\2015\\input_19.txt");
 	}
 
 	int64_t run()
 	{
 		util::Timer myTime;
 		myTime.start();
-
-		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
 		
-		int64_t result1 = calcResult1(commands);
-		int64_t result2 = calcResult2(commands);
+		buildReactions();
+
+		int64_t result1 = part1();
+		int64_t result2 = part2();
 
 		std::cout << "Day 19 - Part 1: " << result1 << std::endl;
 		std::cout << "Day 19 - Part 2: " << result2 << std::endl;
