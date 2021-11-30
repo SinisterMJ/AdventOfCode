@@ -87,7 +87,7 @@ private:
         {
             std::set<int8_t> indexes;
             for (int index = 0; index < tickets[0].size(); ++index)
-                indexes.insert(index);
+                indexes.insert(static_cast<char>(index));
 
             for (auto ticket : tickets)
             {
@@ -98,7 +98,7 @@ private:
                 {
                     if (in_range(ticket[index], key.second[0].first, key.second[0].second) ||
                         in_range(ticket[index], key.second[1].first, key.second[1].second))
-                        valid.insert(index);
+                        valid.insert(static_cast<char>(index));
                 }
 
                 std::set_intersection(indexes.begin(), indexes.end(), valid.begin(), valid.end(), std::inserter(combined, combined.begin()));

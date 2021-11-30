@@ -328,7 +328,7 @@ private:
         }
     }
 
-    int64_t part2(std::map<v2, uint8_t> grid, std::vector<std::string> pattern) 
+    int64_t part2(std::map<v2, uint8_t> grid_input, std::vector<std::string> pattern) 
     {
         int32_t monsterCount = 0;
         int32_t patternCount = 0;
@@ -343,13 +343,13 @@ private:
         {
             for (int x = 0; x < 96; ++x)
             {
-                waveCount += grid[v2(x, y)] == '#';
+                waveCount += grid_input[v2(x, y)] == '#';
                 int32_t match = 0;
                 for (int y_m = 0; y_m < pattern.size(); ++y_m)
                 {
                     for (int x_m = 0; x_m < pattern[y_m].size(); ++x_m)
                     {
-                        if (pattern[y_m][x_m] == '#' && grid[v2(x + x_m, y + y_m)] == '#')
+                        if (pattern[y_m][x_m] == '#' && grid_input[v2(x + x_m, y + y_m)] == '#')
                             match++;
                     }
                 }
@@ -450,14 +450,14 @@ public:
             wave_count += elem.second == '#';
         }
         
-        int count = 0;
+        int count_rotations = 0;
         while (result_2 == wave_count)
         {
             rotate_90_cw(grid);
             result_2 = part2(grid, monster);
             
-            count++;
-            if (count == 4)
+            count_rotations++;
+            if (count_rotations == 4)
                 flip_y(grid);
         }
 

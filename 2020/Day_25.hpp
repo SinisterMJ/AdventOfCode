@@ -53,7 +53,6 @@ public:
         myTime.start();
 
         int64_t result_1 = part1();
-        int64_t result_2 = 0;
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 25 - Part 1: " << result_1 << '\n';
