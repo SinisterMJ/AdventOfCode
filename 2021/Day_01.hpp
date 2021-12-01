@@ -12,28 +12,26 @@ private:
 	std::string inputString;
     std::vector<int64_t> numbers;
 
-    int64_t part1()
+    int64_t counts(int offset)
     {
         int count = 0;
-        for (int i = 1; i < numbers.size(); i++)
+        for (int i = offset; i < numbers.size(); i++)
         {
-            if (numbers[i] > numbers[i - 1])
+            if (numbers[i] > numbers[i - offset])
                 count++;
         }
 
         return count;
     }
 
+    int64_t part1()
+    {
+        return counts(1);
+    }
+
     int64_t part2()
     {
-        int count = 0;
-        for (int i = 3; i < numbers.size(); i++)
-        {
-            if (numbers[i] > numbers[i - 3])
-                count++;
-        }
-
-        return count;
+        return counts(3);
     }
 
 public:
