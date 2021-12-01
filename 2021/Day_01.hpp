@@ -10,6 +10,31 @@ private:
 	
 	std::vector<std::string> inputVector;
 	std::string inputString;
+    std::vector<int64_t> numbers;
+
+    int64_t part1()
+    {
+        int count = 0;
+        for (int i = 1; i < numbers.size(); i++)
+        {
+            if (numbers[i] > numbers[i - 1])
+                count++;
+        }
+
+        return count;
+    }
+
+    int64_t part2()
+    {
+        int count = 0;
+        for (int i = 3; i < numbers.size(); i++)
+        {
+            if (numbers[i] > numbers[i - 3])
+                count++;
+        }
+
+        return count;
+    }
 
 public:
 	Day01()
@@ -20,13 +45,12 @@ public:
 
 	int64_t run()
 	{
-		std::vector<int32_t> numbers = util::ConvertToInt(inputVector);
-
 		util::Timer myTime;
 		myTime.start();
-
-		int result_1 = -1;
-		int result_2 = -1;
+        numbers = util::ConvertToInt64(inputVector);
+        
+		int64_t result_1 = part1();
+		int64_t result_2 = part2();
 
         int64_t time = myTime.usPassed();
 
