@@ -2,42 +2,21 @@
 #define ADVENTOFCODE2021_DAY15
 
 #include "../includes/aoc.h"
-#include <map>
 
 class Day15 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
-    std::vector<int64_t> numbers;
+    std::vector<int64_t> adapters;
 
-    int64_t runGame(int64_t numIterations)
+    int64_t part1()
     {
-        std::vector<int64_t> lastSpokenVec(numIterations);
+        return 0;
+    }
 
-        for (int index = 0; index < numbers.size(); ++index)
-        {
-            lastSpokenVec[numbers[index]] = index + 1;
-        }
-
-        int64_t last = numbers.back();
-        int64_t lastBefore = numbers[numbers.size() - 2];
-
-        for (int64_t index = numbers.size(); index < numIterations; ++index)
-        {
-            lastSpokenVec[lastBefore] = index - 1;
-            lastBefore = last;
-
-            if (lastSpokenVec[last] != 0)
-            {
-                last = index - lastSpokenVec[last];
-            }
-            else
-            {
-                last = 0;
-            }
-        }
-
-        return last;
+    int64_t part2()
+    {
+        return 0;
     }
 
 public:
@@ -52,17 +31,18 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        numbers = util::splitInt64(inputString, ',');
+        adapters = util::ConvertToInt64(inputVec);
 
-        int64_t result_1 = runGame(2021);
-        int64_t result_2 = runGame(30'000'000);
+        int64_t result_1 = part1();
+        int64_t result_2 = part2();
 
         int64_t time = myTime.usPassed();
-        std::cout << "Day 15 - Part 1: " << result_1 << '\n'
-                  << "Day 15 - Part 2: " << result_2 << '\n';
+        std::cout
+            << "Day 15 - Part 1: " << result_1 << '\n'
+            << "Day 15 - Part 2: " << result_2 << '\n';
 
         return time;
     }
 };
 
-#endif  // ADVENTOFCODE2021_DAY15
+#endif  // ADVENTOFCODE2021_DAY10

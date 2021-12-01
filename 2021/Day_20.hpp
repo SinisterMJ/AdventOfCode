@@ -25,8 +25,9 @@ public:
         int64_t result_2 = 0;
 
         int64_t time = myTime.usPassed();
-        std::cout << "Day 20 - Part 1: " << result_1 << '\n'
-                  << "Day 20 - Part 2: " << result_2 << '\n';
+        std::cout 
+            << "Day 20 - Part 1: " << result_1 << '\n'
+            << "Day 20 - Part 2: " << result_2 << '\n';
 
         return time;
     }

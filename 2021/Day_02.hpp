@@ -2,7 +2,6 @@
 #define ADVENTOFCODE2021_DAY02
 
 #include "../includes/aoc.h"
-//#include <regex>
 
 class Day02 {
 private:
