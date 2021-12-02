@@ -9,6 +9,31 @@ private:
 	std::string inputString;
     std::vector<std::string> inputVector;
 
+    int64_t forward = 0;
+    int64_t depth_1 = 0;
+    int64_t depth_2 = 0;
+
+    void solve()
+    {
+        for (auto line : inputVector)
+        {
+            if (line.find("forward") != std::string::npos)
+            {
+                int32_t value = std::stoi(line.substr(8));
+                forward += value;
+                depth_2 += depth_1 * value;
+            }
+            if (line.find("down") != std::string::npos)
+            {
+                depth_1 += std::stoi(line.substr(5));
+            }
+            if (line.find("up") != std::string::npos)
+            {
+                depth_1 -= std::stoi(line.substr(3));
+            }
+        }
+    }
+
 public:
 	Day02()
 	{
@@ -21,8 +46,10 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-        int32_t result_1 = 0;
-        int32_t result_2 = 0;
+        solve();
+
+        int32_t result_1 = forward * depth_1;
+        int32_t result_2 = forward * depth_2;
 
         int64_t time = myTime.usPassed();
 
