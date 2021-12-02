@@ -3,12 +3,12 @@
 
 #include "../includes/aoc.h"
 #include <regex>
+#include <vector>
+#include <memory>
 
 class Day06 {
 private:
-	std::vector<std::string> inputVec;
-    std::map<v2, bool> lightMap;
-    std::map<v2, int32_t> lightMap_2;
+	std::vector<std::string> inputVec;    
 public:
 	Day06()
 	{
@@ -20,6 +20,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
+        std::unique_ptr<bool[]> lightMap(new bool[1000 * 1000]);
+        std::unique_ptr<int32_t[]> lightMap_2(new int32_t[1000 * 1000]);
+                
         int64_t result_1 = 0;
         int64_t result_2 = 0;
 
@@ -40,14 +43,14 @@ public:
                 id = 1;
             if (light_match[1] == "toggle")
                 id = 2;
-
+            
             for (int y = y_min; y <= y_max; ++y)
             {
                 for (int x = x_min; x <= x_max; ++x)
                 {
-                    auto& val = lightMap[v2(x, y)];
-                    auto& val_2 = lightMap_2[v2(x, y)];
-                    
+                    bool& val = lightMap[y * 1000 + x];
+                    int32_t& val_2 = lightMap_2[y * 1000 + x];
+
                     val_2 += id;
 
                     if (val_2 < 0)
@@ -63,14 +66,10 @@ public:
             }
         }
 
-        for (auto elem : lightMap)
+        for (int32_t i = 0; i < 1000 * 1000; ++i)
         {
-            result_1 += elem.second;
-        }
-
-        for (auto elem : lightMap_2)
-        {
-            result_2 += elem.second;
+            result_1 += lightMap[i];
+            result_2 += lightMap_2[i];
         }
 
         int64_t time = myTime.usPassed();
