@@ -20,19 +20,13 @@ private:
 			int count_1 = 0;
 
 			for (auto& line : inputs)
-			{
 				if (line[i] == '1')
 					count_1++;
-			}
-
+			
 			if (count_1 > inputs.size() / 2)
-			{
 				gamma = gamma + 1;
-			}
 			else
-			{
 				epsilon += 1;
-			}
 		}
 
 		return epsilon * gamma;
@@ -49,26 +43,20 @@ private:
 			int count_1 = 0;
 
 			for (auto& line : tempList)
-			{
 				if (line[i] == '1')
 					count_1++;
-			}
 
 			if (count_1 * 2 >= tempList.size())
 			{
 				for (auto& line : tempList)
-				{
 					if (line[i] == '1')
 						oxygens.push_back(line);
-				}
 			}
 			else
 			{
 				for (auto& line : tempList)
-				{
 					if (line[i] == '0')
 						oxygens.push_back(line);
-				}
 			}
 
 			tempList = oxygens;
@@ -89,18 +77,14 @@ private:
 			if (count_1 * 2 >= tempList.size())
 			{
 				for (auto& line : tempList)
-				{
 					if (line[i] == '0')
 						co2.push_back(line);
-				}
 			}
 			else
 			{
 				for (auto& line : tempList)
-				{
 					if (line[i] == '1')
 						co2.push_back(line);
-				}
 			}
 
 			tempList = co2;
