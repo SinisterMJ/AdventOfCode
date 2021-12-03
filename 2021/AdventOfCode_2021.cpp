@@ -39,24 +39,24 @@ int main()
     /*{
         Day01 mDay01; runTimes.push_back(mDay01.run());
         std::cout << std::endl;
-    }*/
+    }
     
     {
         Day02 mDay02; runTimes.push_back(mDay02.run());
         std::cout << std::endl;
     }
 
-    /*{
+    {
         Day03 mDay03; runTimes.push_back(mDay03.run());
         std::cout << std::endl;
-    }
+    }*/
 
     {
         Day04 mDay04; runTimes.push_back(mDay04.run());
         std::cout << std::endl;
     }
 
-    {
+    /*{
         Day05 mDay05; runTimes.push_back(mDay05.run());
         std::cout << std::endl;
     }

@@ -6,7 +6,6 @@
 class Day20 {
 private:
 	int64_t input{ 33100000 };
-	std::vector<int64_t> primes;
 
 	int64_t part1()
 	{
