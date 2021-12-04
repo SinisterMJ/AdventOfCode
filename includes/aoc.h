@@ -101,8 +101,8 @@ namespace util
         return elems;
     }
 
-	std::vector<int> splitInt(const std::string &s, char delim) {
-		std::vector<int> elems;
+	std::vector<int32_t> splitInt(const std::string &s, char delim) {
+		std::vector<int32_t> elems;
 		std::stringstream ss(s);
 		std::string number;
 		while (std::getline(ss, number, delim)) {

@@ -2,56 +2,97 @@
 #define ADVENTOFCODE2017_DAY04
 
 #include "../includes/aoc.h"
-#include "../includes/MD5.h"
+#include <set>
+#include <algorithm>
 
 class Day04 {
 private:
-	std::string inputString;
-public:
-	Day04()
-	{
-		inputString = util::readFile("..\\inputs\\2017\\input_4.txt");
-        inputString = inputString.substr(0, inputString.find('\n'));
-	}
+    std::string inputString;
+    std::vector<std::string> inputVec;
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t part1()
+    {
+        int64_t total = 0;
 
-        int result_1 = 0;
-        int result_2 = 0;
-
-        for (int index = 0;; ++index)
+        for (auto& line : inputVec)
         {
-            std::string password = inputString + std::to_string(index);
-            std::string hashed = md5(password);
+            std::set<std::string> seen;
+            auto list = util::split(line, ' ');
 
             bool valid = true;
-            for (int i = 0; i < 5; ++i)
-            {
-                if (hashed[i] != '0')
-                    valid = false;
-            }
 
-            if (valid)
+            for (auto& pw : list)
             {
-                if (result_1 == 0)
-                    result_1 = index;
-                
-                if (hashed[5] == '0')
+                if (seen.find(pw) == seen.end())
                 {
-                    result_2 = index;
+                    seen.insert(pw);
+                }
+                else
+                {
+                    valid = false;
                     break;
                 }
             }
+
+            total += valid;
         }
 
-		std::cout << "Day 04 - Part 1: " << result_1 << std::endl
-				  << "Day 04 - Part 2: " << result_2 << std::endl;
+        return total;
+    }
 
-		return myTime.usPassed();
-	}
+    int64_t part2()
+    {
+        int64_t total = 0;
+
+        for (auto& line : inputVec)
+        {
+            std::set<std::string> seen;
+            auto list = util::split(line, ' ');
+
+            bool valid = true;
+
+            for (auto& pw : list)
+            {
+                std::sort(pw.begin(), pw.end());
+                if (seen.find(pw) == seen.end())
+                {
+                    seen.insert(pw);
+                }
+                else
+                {
+                    valid = false;
+                    break;
+                }
+            }
+
+            total += valid;
+        }
+
+        return total;
+    }
+
+public:
+    Day04()
+    {
+        inputString = util::readFile("..\\inputs\\2017\\input_4.txt");
+        inputVec = util::readFileLines("..\\inputs\\2017\\input_4.txt", '\n', true);
+    }
+
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
+
+        int64_t result_1 = part1();
+        int64_t result_2 = part2();
+
+        int64_t time = myTime.usPassed();
+        std::cout
+            << "Day 04 - Part 1: " << result_1 << '\n'
+            << "Day 04 - Part 2: " << result_2 << '\n';
+
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2017_DAY04

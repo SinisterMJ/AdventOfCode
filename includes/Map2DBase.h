@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <map>
 #include "aoc.h"
 
 #define NOMINMAX
@@ -88,6 +89,16 @@ public:
 
         return neighbours;
     }
+
+	static v2 turnLeft(v2 input)
+	{
+		return v2(-input.y, input.x);
+	}
+
+	static v2 turnRight(v2 input)
+	{
+		return v2(input.y, -input.x);
+	}
 
 	T read(int32_t x, int32_t y)
 	{

@@ -7,7 +7,6 @@ class Day19 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
-    std::vector<int64_t> adapters;
 
     int64_t part1()
     {
@@ -30,8 +29,6 @@ public:
     {
         util::Timer myTime;
         myTime.start();
-
-        adapters = util::ConvertToInt64(inputVec);
 
         int64_t result_1 = part1();
         int64_t result_2 = part2();

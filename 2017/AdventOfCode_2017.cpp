@@ -35,25 +35,25 @@ int main()
 	int64_t lastTime = 0;
 	std::vector<int64_t> runTimes = { };
 		
-	Day01 mDay01; runTimes.push_back(mDay01.run());
+	/*Day01 mDay01; runTimes.push_back(mDay01.run());
 	std::cout << std::endl;
 		
 	Day02 mDay02; runTimes.push_back(mDay02.run());
 	std::cout << std::endl;
 	
-	/*Day03 mDay03; runTimes.push_back(mDay03.run());
+	Day03 mDay03; runTimes.push_back(mDay03.run());
 	std::cout << std::endl;
 	
 	Day04 mDay04; runTimes.push_back(mDay04.run());
 	std::cout << std::endl;
 
 	Day05 mDay05; runTimes.push_back(mDay05.run());
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 
 	Day06 mDay06; runTimes.push_back(mDay06.run());
 	std::cout << std::endl;
 
-	Day07 mDay07; runTimes.push_back(mDay07.run());
+	/*Day07 mDay07; runTimes.push_back(mDay07.run());
 	std::cout << std::endl;
 
 	Day08 mDay08; runTimes.push_back(mDay08.run());

@@ -2,84 +2,79 @@
 #define ADVENTOFCODE2017_DAY06
 
 #include "../includes/aoc.h"
-#include <regex>
+#include <set>
+#include <array>
+#include <map>
 
 class Day06 {
 private:
-	std::vector<std::string> inputVec;
-    std::map<v2, bool> lightMap;
-    std::map<v2, int32_t> lightMap_2;
-public:
-	Day06()
-	{
-		inputVec = util::readFileLines("..\\inputs\\2017\\input_6.txt");
-	}
+    std::string inputString;
+    std::vector<std::string> inputVector;
+    std::array<int32_t, 16> initial;
 
-	int64_t run()
-	{
+    std::pair<int64_t, int64_t> solve()
+    {
+        int count = 0;
+        std::map<std::array<int32_t, 16>, int32_t> seen;
+        seen[initial] = 0;
+
+        std::array<int32_t, 16> current;
+        std::copy_n(initial.begin(), 16, current.begin());
+
+        while (true)
+        {
+            int32_t maxBlocks = *std::max_element(current.begin(), current.end());
+            int32_t index = 0;
+            for (; current[index] != maxBlocks; ++index)
+            {
+            }
+
+            current[index] = 0;
+
+            for (; maxBlocks > 0; --maxBlocks)
+            {
+                index = (index + 1) % current.size();
+                current[index] += 1;
+            }
+
+            ++count;
+
+            if (seen.find(current) != seen.end())
+                break;
+
+            seen[current] = count;
+        }
+
+        return std::make_pair(count, count - seen[current]);
+    }
+
+public:
+    Day06()
+    {
+        inputString = util::readFile("..\\inputs\\2017\\input_6.txt");
+        inputVector = util::readFileLines("..\\inputs\\2017\\input_6.txt");
+    }
+
+    int64_t run()
+    {
         util::Timer myTime;
         myTime.start();
 
-        int64_t result_1 = 0;
-        int64_t result_2 = 0;
+        auto numVec = util::splitInt(inputString, '\t');
+        std::copy_n(numVec.begin(), 16, initial.begin());
 
-        std::regex light_regex("(.*) ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)");
-        std::smatch light_match;
-
-        for (auto elem : inputVec)
-        {
-            std::regex_search(elem, light_match, light_regex);
-            
-            int x_min = std::stoi(light_match[2]);
-            int y_min = std::stoi(light_match[3]);
-            int x_max = std::stoi(light_match[4]);
-            int y_max = std::stoi(light_match[5]);
-
-            int id = -1;
-            if (light_match[1] == "turn on")
-                id = 1;
-            if (light_match[1] == "toggle")
-                id = 2;
-
-            for (int y = y_min; y <= y_max; ++y)
-            {
-                for (int x = x_min; x <= x_max; ++x)
-                {
-                    auto& val = lightMap[v2(x, y)];
-                    auto& val_2 = lightMap_2[v2(x, y)];
-                    
-                    val_2 += id;
-
-                    if (val_2 < 0)
-                        val_2 = 0;
-
-                    if (id == -1)
-                        val = false;
-                    if (id == 1)
-                        val = true;
-                    if (id == 2)
-                        val ^= 1;
-                }
-            }
-        }
-
-        for (auto elem : lightMap)
-        {
-            result_1 += elem.second;
-        }
-
-        for (auto elem : lightMap_2)
-        {
-            result_2 += elem.second;
-        }
+        auto result = solve();
+        int32_t result_1 = result.first;
+        int32_t result_2 = result.second;
 
         int64_t time = myTime.usPassed();
 
-        std::cout << "Day 06 - Part 1: " << result_1 << std::endl
-                  << "Day 06 - Part 2: " << result_2 << std::endl;
+        std::cout 
+            << "Day 06 - Part 1: " << result_1 << '\n'
+            << "Day 06 - Part 2: " << result_2 << '\n';
 
         return time;
-	}
+    }
 };
 
 #endif  // ADVENTOFCODE2017_DAY06
