@@ -27,9 +27,7 @@ private:
 			for (int offset = 0; offset < 5; ++offset)
 			{
 				std::vector<int32_t> row = util::splitInt(inputs[i + 1 + offset], ' ');
-				std::array<int32_t, 5> tempArray;
-				std::copy_n(row.begin(), 5, tempArray.begin());
-				board[offset] = (tempArray);
+				std::copy_n(row.begin(), 5, board[offset].begin());
 			}
 
 			bingoBoards.push_back(board);
@@ -38,10 +36,11 @@ private:
 
 	int64_t part1_2(bool erase)
 	{
-		std::set<int32_t> drawn = std::set<int32_t>();
-
 		for (auto number : bingodraws)
 		{
+			if (drawn.find(number) != drawn.end())
+				continue;
+
 			drawn.insert(number);
 			for (int index = 0; index < bingoBoards.size(); ++index)
 			{
