@@ -6,7 +6,7 @@
 class Day02 {
 private:
 
-	std::string inputString;
+    std::string inputString;
     std::vector<std::string> inputVector;
 
     int64_t forward = 0;
@@ -35,16 +35,16 @@ private:
     }
 
 public:
-	Day02()
-	{
-		inputString = util::readFile("..\\inputs\\2021\\input_2.txt");
+    Day02()
+    {
+        inputString = util::readFile("..\\inputs\\2021\\input_2.txt");
         inputVector = util::readFileLines("..\\inputs\\2021\\input_2.txt");
-	}
-    
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    }
+
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
         solve();
 
@@ -57,7 +57,7 @@ public:
                   << "Day 02 - Part 2: " << result_2 << '\n';
 
         return time;
-	}
+    }
 };
 
 #endif  // ADVENTOFCODE2021_DAY02
