@@ -6,6 +6,49 @@
 class Day02 {
 private:
 	std::vector<std::string> inputVec;
+	std::vector<std::vector<int32_t>> numbers;
+	
+	void prepare_data()
+	{
+		for (auto& line : inputVec)
+		{
+			auto numbers_single = util::splitInt(line, '\t');
+			std::sort(numbers_single.begin(), numbers_single.end());
+			numbers.push_back(numbers_single);
+		}
+	}
+
+	int64_t part1()
+	{
+		int64_t result = 0;
+
+		for (auto& numberLine : numbers)
+		{
+			result += numberLine[numberLine.size() - 1] - numberLine[0];
+		}
+
+		return result;
+	}
+
+	int64_t part2()
+	{
+		int64_t result = 0;
+
+		for (auto& numberLine : numbers)
+		{
+			for (int i = 0; i < numberLine.size() - 1; ++i)
+			{
+				for (int j = i + 1; j < numberLine.size(); ++j)
+				{
+					if (numberLine[j] % numberLine[i] == 0)
+						result += numberLine[j] / numberLine[i];
+				}
+			}
+		}
+
+		return result;
+	}
+
 public:
 	Day02()
 	{
@@ -17,17 +60,10 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-        int64_t result_1 = 0;
-        int64_t result_2 = 0;
+		prepare_data();
 
-        for (auto elem : inputVec)
-        {
-            std::vector<int32_t> sides = util::splitInt(elem, 'x');
-            std::sort(sides.begin(), sides.end());
-
-            result_1 += 3 * sides[0] * sides[1] + 2 * sides[0] * sides[2] + 2 * sides[1] * sides[2];
-            result_2 += 2 * (sides[0] + sides[1]) + sides[0] * sides[1] * sides[2];
-        }
+        int64_t result_1 = part1();
+        int64_t result_2 = part2();
 
         int64_t time = myTime.usPassed();
 
