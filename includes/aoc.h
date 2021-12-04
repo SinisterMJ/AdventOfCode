@@ -106,6 +106,8 @@ namespace util
 		std::stringstream ss(s);
 		std::string number;
 		while (std::getline(ss, number, delim)) {
+            if (number == "")
+                continue;
 			elems.push_back(std::stoi(number));
 		}
 		return elems;
