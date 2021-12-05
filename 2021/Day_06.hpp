@@ -9,6 +9,18 @@ private:
     std::string inputString;
     std::vector<std::string> inputVector;
 
+    int64_t part1() 
+    {
+        int64_t result = 0;
+        return result;
+    }
+
+    int64_t part2()
+    {
+        int64_t result = 0;
+        return result;
+    }
+
 public:
     Day06()
     {
@@ -21,8 +33,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int32_t result_1 = 0;
-        int32_t result_2 = 0;
+        int32_t result_1 = part1();
+        int32_t result_2 = part2();
 
         int64_t time = myTime.usPassed();
 

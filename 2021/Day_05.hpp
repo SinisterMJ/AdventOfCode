@@ -54,12 +54,12 @@ private:
             if (slope_x != 0 && slope_y != 0 && !use_diagonals)
                 continue;
 
-            for (int i = y1, j = x1; i != y2 || j != x2; i += slope_y, j += slope_x)
+            for (int i = y1, j = x1;
+                i != (y2 + slope_y) || j != (x2 + slope_x);
+                i += slope_y, j += slope_x)
             {
                 lines[v2(j, i)] = lines[v2(j, i)] + 1;
             }
-            
-            lines[v2(x2, y2)] = lines[v2(x2, y2)] + 1;            
         }
 
         int result = 0;
