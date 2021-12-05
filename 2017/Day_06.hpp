@@ -64,8 +64,8 @@ public:
         std::copy_n(numVec.begin(), 16, initial.begin());
 
         auto result = solve();
-        int64_t result_1 = result.first;
-        int64_t result_2 = result.second;
+        auto result_1 = result.first;
+        auto result_2 = result.second;
 
         int64_t time = myTime.usPassed();
 

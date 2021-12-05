@@ -117,8 +117,8 @@ public:
         util::Timer myTime;
         myTime.start();
         
-        int64_t result_1 = conway_cubes(false);
-        int64_t result_2 = conway_cubes(true);
+        auto result_1 = conway_cubes(false);
+        auto result_2 = conway_cubes(true);
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 17 - Part 1: " << result_1 << '\n'

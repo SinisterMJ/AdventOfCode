@@ -33,8 +33,8 @@ public:
 
         adapters = util::ConvertToInt64(inputVec);
 
-        int64_t result_1 = part1();
-        int64_t result_2 = part2();
+        auto result_1 = part1();
+        auto result_2 = part2();
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 13 - Part 1: " << result_1 << '\n'

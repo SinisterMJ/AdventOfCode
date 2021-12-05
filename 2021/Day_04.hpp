@@ -93,8 +93,8 @@ public:
         myTime.start();
 
         build_boards();
-        int64_t result_1 = part1_2(false);
-        int64_t result_2 = part1_2(true);
+        auto result_1 = part1_2(false);
+        auto result_2 = part1_2(true);
 
         int64_t time = myTime.usPassed();
 

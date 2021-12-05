@@ -44,8 +44,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int64_t result_1 = solve(false);
-        int64_t result_2 = solve(true);
+        auto result_1 = solve(false);
+        auto result_2 = solve(true);
 
         int64_t time = myTime.usPassed();
 

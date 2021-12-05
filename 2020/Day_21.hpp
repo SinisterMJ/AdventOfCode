@@ -147,7 +147,7 @@ public:
 
         ReadFood();
 
-        int64_t result_1 = part1();
+        auto result_1 = part1();
         std::string result_2 = part2();
 
         int64_t time = myTime.usPassed();

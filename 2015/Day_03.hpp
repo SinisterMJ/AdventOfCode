@@ -21,8 +21,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
         
-        int64_t result_1 = 0;
-        int64_t result_2 = 0;
+        auto result_1 = 0;
+        auto result_2 = 0;
         
         std::map<v2, int32_t> visited_1;
         std::map<v2, int32_t> visited_2;

@@ -64,8 +64,8 @@ public:
         myTime.start();
 
         auto res = solve();
-        int64_t result_1 = res.first;
-        int64_t result_2 = res.second;
+        auto result_1 = res.first;
+        auto result_2 = res.second;
 
         int64_t time = myTime.usPassed();
         std::cout

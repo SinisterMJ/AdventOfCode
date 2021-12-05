@@ -82,8 +82,8 @@ public:
         util::Timer myTime;
         myTime.start();
                                 
-        int64_t result_1 = runFerry(4, 1);
-        int64_t result_2 = runFerry(5, std::numeric_limits<int32_t>::max());
+        auto result_1 = runFerry(4, 1);
+        auto result_2 = runFerry(5, std::numeric_limits<int32_t>::max());
         
         int64_t time = myTime.usPassed();
         std::cout << "Day 11 - Part 1: " << result_1 << '\n'

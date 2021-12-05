@@ -23,8 +23,8 @@ public:
         std::unique_ptr<bool[]> lightMap(new bool[1000 * 1000]);
         std::unique_ptr<int32_t[]> lightMap_2(new int32_t[1000 * 1000]);
                 
-        int64_t result_1 = 0;
-        int64_t result_2 = 0;
+        auto result_1 = 0;
+        auto result_2 = 0;
 
         std::regex light_regex("(.*) ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)");
         std::smatch light_match;

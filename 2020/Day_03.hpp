@@ -37,7 +37,7 @@ public:
 
         std::vector<std::pair<int32_t, int32_t>> vPaths = { {1, 1}, {3, 1}, {5, 1}, {7, 1}, {1, 2} };
 
-        int64_t result_1 = trees_hit(vPaths[1]);
+        auto result_1 = trees_hit(vPaths[1]);
         int64_t result_2 = 1;
         
         for (auto elem : vPaths)

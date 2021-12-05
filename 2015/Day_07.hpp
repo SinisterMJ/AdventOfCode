@@ -165,8 +165,8 @@ public:
         not_regex = std::regex("NOT (\\w+)");
         input_regex = std::regex("([0-9]+)");
 
-        int64_t result_1 = part1();
-        int64_t result_2 = part2(static_cast<uint16_t>(result_1));
+        auto result_1 = part1();
+        auto result_2 = part2(static_cast<uint16_t>(result_1));
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 07 - Part 1: " << result_1 << std::endl

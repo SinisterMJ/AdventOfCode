@@ -20,7 +20,7 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int64_t result_1 = 0;
+        auto result_1 = 0;
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 25 - Part 1: " << result_1 << '\n';

@@ -61,7 +61,7 @@ private:
         return;
     }
 
-    int64_t calc_weights(std::string node)
+    int32_t calc_weights(std::string node)
     {
         auto& temp = allDiscs[node];
         
@@ -165,7 +165,7 @@ public:
         std::string result_1 = part1();
         calc_weights(result_1);
 
-        int64_t result_2 = part2(result_1, 0);
+        auto result_2 = part2(result_1, 0);
 
         int64_t time = myTime.usPassed();
 

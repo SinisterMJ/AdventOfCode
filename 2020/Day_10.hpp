@@ -57,8 +57,8 @@ public:
         std::sort(adapters.begin(), adapters.end());
         adapters.push_back(adapters.back() + 3);
         
-        int64_t result_1 = getDifferences();
-        int64_t result_2 = getCountPerm();
+        auto result_1 = getDifferences();
+        auto result_2 = getCountPerm();
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 10 - Part 1: " << result_1 << '\n'

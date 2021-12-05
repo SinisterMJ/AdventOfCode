@@ -101,8 +101,8 @@ public:
 
 		parse_commands();
 		auto maxes = solve();
-        int64_t result_1 = maxes.first;
-        int64_t result_2 = maxes.second;
+        auto result_1 = maxes.first;
+        auto result_2 = maxes.second;
 
 		std::cout << "Day 08 - Part 1: " << result_1 << std::endl
 				  << "Day 08 - Part 2: " << result_2 << std::endl;

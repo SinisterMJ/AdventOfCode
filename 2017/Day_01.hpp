@@ -35,8 +35,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-        int64_t result_1 = part1_2(1);
-        int64_t result_2 = part1_2(static_cast<int32_t>(input.length()) / 2);
+        auto result_1 = part1_2(1);
+        auto result_2 = part1_2(static_cast<int32_t>(input.length()) / 2);
 
 		int64_t time = myTime.usPassed();
 

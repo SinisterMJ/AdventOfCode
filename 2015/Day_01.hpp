@@ -18,8 +18,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
         		
-        int64_t result_1 = std::count(input.begin(), input.end(), '(') - std::count(input.begin(), input.end(), ')');
-        int64_t result_2 = 0;
+        auto result_1 = std::count(input.begin(), input.end(), '(') - std::count(input.begin(), input.end(), ')');
+        auto result_2 = 0;
 
         for (int index = 0; index < input.size(); ++index)
         {

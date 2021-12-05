@@ -54,8 +54,8 @@ public:
 
         numbers = util::splitInt64(inputString, ',');
 
-        int64_t result_1 = runGame(2020);
-        int64_t result_2 = runGame(30'000'000);
+        auto result_1 = runGame(2020);
+        auto result_2 = runGame(30'000'000);
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 15 - Part 1: " << result_1 << '\n'

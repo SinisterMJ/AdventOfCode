@@ -128,8 +128,8 @@ public:
             cups_start.push_back(inputString[index] - '0');
         }
 
-        int64_t result_1 = runGame(9, 100, true);
-        int64_t result_2 = runGame(1'000'000, 10'000'000, false);
+        auto result_1 = runGame(9, 100, true);
+        auto result_2 = runGame(1'000'000, 10'000'000, false);
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 23 - Part 1: " << result_1 << '\n'

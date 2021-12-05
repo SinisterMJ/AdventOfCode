@@ -102,8 +102,8 @@ public:
         
         ReadPassports();
               
-        int64_t result_1 = static_cast<int64_t>(inputPassports.size());
-        int64_t result_2 = 0;
+        auto result_1 = static_cast<int64_t>(inputPassports.size());
+        auto result_2 = 0;
 
         for (auto elem : inputPassports)
         {

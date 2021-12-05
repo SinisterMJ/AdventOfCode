@@ -54,7 +54,7 @@ private:
             if (slope_x != 0 && slope_y != 0 && !use_diagonals)
                 continue;
 
-            for (int i = y1, j = x1;
+            for (int64_t i = y1, j = x1;
                 i != (y2 + slope_y) || j != (x2 + slope_x);
                 i += slope_y, j += slope_x)
             {

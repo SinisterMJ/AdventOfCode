@@ -441,8 +441,8 @@ public:
 
         buildGrid(cornerID);
 
-        int64_t result_1 = multiply;
-        int64_t result_2 = part2(grid, monster);
+        auto result_1 = multiply;
+        auto result_2 = part2(grid, monster);
 
         int32_t wave_count = 0;
         for (auto elem : grid)
