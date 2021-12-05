@@ -9,6 +9,8 @@
 #include <chrono>
 #include <cctype>
 #include <algorithm>
+#include <map>
+#include <set>
 
 template <class T>
 inline void hash_combine(std::size_t & seed, const T & v)
