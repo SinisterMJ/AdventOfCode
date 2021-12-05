@@ -14,8 +14,8 @@ private:
 		for (int i = 0; i < input.length(); ++i)
 		{
 			int j = i + offset;
-			if (j >= input.length())
-				j -= input.length();
+			if (j >= static_cast<int32_t>(input.length()))
+				j -= static_cast<int32_t>(input.length());
 
 			if (input[i] == input[j])
 				result += input[i] - '0';
@@ -36,7 +36,7 @@ public:
 		myTime.start();
 
         int64_t result_1 = part1_2(1);
-        int64_t result_2 = part1_2(input.length() / 2);
+        int64_t result_2 = part1_2(static_cast<int32_t>(input.length()) / 2);
 
 		int64_t time = myTime.usPassed();
 

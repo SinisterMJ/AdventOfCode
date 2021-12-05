@@ -2,68 +2,91 @@
 #define ADVENTOFCODE2017_DAY10
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
-#include "../includes/Map2DBase.h"
+#include <vector>
+#include <sstream>
 
 class Day10 {
 private:
 	std::string input;
+    std::vector<int32_t> lengths;
+    std::array<uint8_t, 256> hash;
+
+    void swap_positions(int i, int j)
+    {        
+        i = i % 256;
+        j = j % 256;
+        std::swap(hash[i], hash[j]);
+    }
 
     int64_t part1()
     {
-
-        for (int index = 0; index < 40; ++index)
+        int skipSize = 0;
+        int position = 0;
+        
+        for (auto length : lengths)
         {
-            std::string nextStep = "";
-
-            int currCounter = 0;
-            char last = ' ';
-
-            for (int i = 0; i < input.size(); ++i, ++currCounter)
+            for (int i = position, j = position + length - 1; i < j; ++i, --j)
             {
-                if (input.at(i) != last && last != ' ')
-                {
-                    nextStep += std::to_string(currCounter) + last;
-                    currCounter = 0;
-                }
-
-                last = input.at(i);
+                swap_positions(i, j);
             }
 
-            nextStep += std::to_string(currCounter) + last;
-
-            std::swap(nextStep, input);
+            position += length + skipSize;
+            skipSize++;
+            position = position % 256;
         }
 
-        return static_cast<int64_t>(input.size());
+        return hash[0] * hash[1];
     }
 
-    int64_t part2()
+    std::string part2()
     {
-        for (int index = 0; index < 10; ++index)
+        // Reset the hash
+        for (int i = 0; i < 256; ++i)
+            hash[i] = i;
+
+        int skipSize = 0;
+        int position = 0;
+
+        lengths.clear();
+
+        for (auto ch : input)
+            lengths.push_back(ch);
+        
+        lengths.push_back(17);
+        lengths.push_back(31);
+        lengths.push_back(73);
+        lengths.push_back(47);
+        lengths.push_back(23);
+
+        for (int index = 0; index < 64; ++index)
         {
-            std::string nextStep = "";
-
-            int currCounter = 0;
-            char last = ' ';
-
-            for (int i = 0; i < input.size(); ++i, ++currCounter)
+            for (auto length : lengths)
             {
-                if (input.at(i) != last && last != ' ')
+                for (int i = position, j = position + length - 1; i < j; ++i, --j)
                 {
-                    nextStep += std::to_string(currCounter) + last;
-                    currCounter = 0;
+                    swap_positions(i, j);
                 }
 
-                last = input.at(i);
+                position += length + skipSize;
+                skipSize++;
+                position = position % 256;
             }
-
-            nextStep += std::to_string(currCounter) + last;
-
-            std::swap(nextStep, input);
         }
 
-        return static_cast<int64_t>(input.size());
+        std::ostringstream result;
+        
+        for (int offset = 0; offset < 16; ++offset)
+        {
+            uint8_t number = 0;
+            for (int index = 0; index < 16; ++index)
+            {
+                number = number ^ hash[offset * 16 + index];
+            }
+
+            result << std::hex << static_cast<int>(number);
+        }
+
+        return result.str();
     }
 
 public:
@@ -77,12 +100,18 @@ public:
         util::Timer myTime;
         myTime.start();
 
+        for (int i = 0; i < 256; ++i)
+            hash[i] = i;
+
+        lengths = util::splitInt(input, ',');
+
         int64_t result_1 = part1();
-        int64_t result_2 = part2();
+        std::string result_2 = part2();
 
         int64_t time = myTime.usPassed();
-        std::cout << "Day 10 - Part 1: " << result_1 << '\n'
-                  << "Day 10 - Part 2: " << result_2 << '\n';
+        std::cout 
+            << "Day 10 - Part 1: " << result_1 << '\n'
+            << "Day 10 - Part 2: " << result_2 << '\n';
 
         return time;
     }

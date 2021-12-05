@@ -14,7 +14,7 @@ private:
         int64_t result = 0;
         int32_t position = 0;
 
-        auto commandList = util::ConvertToInt64(inputs);
+        auto commandList = util::ConvertToInt(inputs);
 
         while (position >= 0 && position < commandList.size())
         {
@@ -44,8 +44,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int32_t result_1 = solve(false);
-        int32_t result_2 = solve(true);
+        int64_t result_1 = solve(false);
+        int64_t result_2 = solve(true);
 
         int64_t time = myTime.usPassed();
 

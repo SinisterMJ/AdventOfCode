@@ -2,95 +2,91 @@
 #define ADVENTOFCODE2017_DAY08
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include <map>
 
 class Day08 {
 private:
 	std::vector<std::string> inputVec;
 
-    int32_t getCountBackslash(std::string input)
-    {
-        int count = 0;
+	struct Command {
+		std::string reg1;		
+		int32_t increment;
+		std::string reg2;
+		std::string operation;
+		int32_t number;
+	};
 
-        int64_t pos = 0;
+	std::vector<Command> allCommands;
 
-        while ((pos = (input.find("\\\\", pos))) != std::string::npos)
-        {
-            pos += 2;
-            count++;
-        }
+	void parse_commands()
+	{
+		for (auto& line : inputVec)
+		{
+			Command entry;
+			auto values = util::split(line, ' ');
+			entry.reg1 = values[0];
+			entry.increment = std::stoi(values[2]);
+			
+			if (values[1] == "dec")
+				entry.increment = -entry.increment;
 
-        return count;
-    }
+			entry.reg2 = values[4];
+			entry.operation = values[5];
+			entry.number = std::stoi(values[6]);
 
-    int32_t getCountQuotes(std::string input)
-    {
-        int count = 0;
+			allCommands.push_back(entry);
+		}
+	}
 
-        int64_t pos = 0;
+	std::pair<int32_t, int32_t> solve()
+	{
+		std::map<std::string, int32_t> registers;
+		int32_t foreverMax = 0;
 
-        while ((pos = (input.find("\\\"", pos))) != std::string::npos)
-        {
-            pos += 2;
-            count++;
-        }
+		for (auto& cmd : allCommands)
+		{
+			auto value = registers[cmd.reg2];
 
-        return count;
-    }
+			bool execute = false;
 
-    int32_t getCountHex(std::string input)
-    {
-        int count = 0;
+			if (cmd.operation == "==")
+				if (value == cmd.number)
+					execute = true;
+			
+			if (cmd.operation == "<=")
+				if (value <= cmd.number)
+					execute = true;
 
-        int64_t pos = 0;
+			if (cmd.operation == "<")
+				if (value < cmd.number)
+					execute = true;
 
-        while ((pos = (input.find("\\x", pos))) != std::string::npos)
-        {
-            pos += 4;
-            count++;
-        }
+			if (cmd.operation == ">=")
+				if (value >= cmd.number)
+					execute = true;
 
-        return count;
-    }
+			if (cmd.operation == ">")
+				if (value > cmd.number)
+					execute = true;
 
-    int64_t getLength(std::string input)
-    {
-        int64_t count = input.length() - 2;
-        for (int index = 0; index < input.size(); ++index)
-        {
-            if (input[index] == '\\')
-            {
-                count--;
-                index++;
-                if (input[index] == 'x')
-                {
-                    count -= 2;
-                    index += 2;
-                }
-            }
-        }
+			if (cmd.operation == "!=")
+				if (value != cmd.number)
+					execute = true;
 
-        return count;
-    }
+			if (execute)
+				registers[cmd.reg1] += cmd.increment;
 
-    int64_t increaseLength(std::string input)
-    {
-        std::string result = "\"";
-        result.reserve(input.size() * 2);
-        for (int index = 0; index < input.size(); ++index)
-        {
-            if (input[index] == '\"' || input[index] == '\\')
-            {
-                result += "\\";
-            }
+			foreverMax = std::max(foreverMax, registers[cmd.reg1]);
+		}
 
-            result += input[index];
-        }
+		int32_t max = 0;
+		for (auto& reg : registers)
+		{
+			max = std::max(max, reg.second);
+		}
 
-        result += "\"";
-
-        return result.size();
-    }
+		return std::make_pair(max, foreverMax);
+	}
 
 public:
 	Day08()
@@ -102,15 +98,11 @@ public:
 	{
 		util::Timer myTime;
 		myTime.start();
-        
-        int64_t result_1 = 0;
-        int64_t result_2 = 0;
 
-        for (auto elem : inputVec)
-        {
-            result_1 += elem.length() - getLength(elem);
-            result_2 += increaseLength(elem) - elem.length();
-        }
+		parse_commands();
+		auto maxes = solve();
+        int64_t result_1 = maxes.first;
+        int64_t result_2 = maxes.second;
 
 		std::cout << "Day 08 - Part 1: " << result_1 << std::endl
 				  << "Day 08 - Part 2: " << result_2 << std::endl;

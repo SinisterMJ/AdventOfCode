@@ -2,151 +2,153 @@
 #define ADVENTOFCODE2017_DAY07
 
 #include "../includes/aoc.h"
-#include <map>
+#include <unordered_map>
 #include <regex>
 
 class Day07 {
 private:
-    struct Wire {
-        uint16_t value;
-        std::string instruction;
-        bool written;
+    struct Disc {
+        std::vector<std::string> children;
+        std::string base;
+        int32_t weight;
+        std::string name;
+        int32_t sub_weight;
+
+        Disc() { weight = 0; name = ""; base = ""; sub_weight = -1; }
     };
 
-    std::map<std::string, Wire> allWires;
+    std::unordered_map<std::string, Disc> allDiscs;
 	std::vector<std::string> inputVec;
 
-    std::regex and_regex;
-    std::regex lshift_regex;
-    std::regex rshift_regex;
-    std::regex or_regex;
-    std::regex not_regex;
-    std::regex input_regex;
+    void ParseDiscs()
+    {        
+        for (auto& line : inputVec)
+        {
+            Disc noname;
+            if (line.find(" -> ") != std::string::npos)
+            {
+                noname.children = util::split(line.substr(line.find(" -> ") + 4), ',');
+            }
+            
+            std::string this_disc = line.substr(0, line.find(" -> "));
+            noname.name = this_disc.substr(0, this_disc.find(" "));
 
-    int16_t ParseWires(std::string node)
+            if (noname.name == "vazst")
+            {
+                int breakHere = 0;
+            }
+            auto pos1 = this_disc.find("(");
+            auto pos2 = this_disc.find(")");
+            noname.weight = std::stoi(this_disc.substr(pos1 + 1, pos2 - pos1 - 1));
+
+            if (noname.children.size() == 0)
+                noname.sub_weight = noname.weight;
+
+            std::string base = allDiscs[noname.name].base;
+            noname.base = base;
+
+            for (auto& child : noname.children)
+            {
+                child.erase(std::remove(child.begin(), child.end(), ' '), child.end());
+                auto temp = allDiscs[child];
+                temp.base = noname.name;
+                allDiscs[child] = temp;
+            }
+
+            allDiscs[noname.name] = noname;
+        }
+
+        return;
+    }
+
+    int64_t calc_weights(std::string node)
     {
-        try {
-            int val = std::stoi(node);
-            return val;
-        }
-        catch (...) {
-        }
+        auto& temp = allDiscs[node];
+        
+        if (temp.sub_weight > 0)
+            return temp.sub_weight;
 
-        Wire& instance = allWires[node];
+        int32_t total_weight = temp.weight;
 
-        std::smatch reg_match;
-
-        if (instance.written)
-            return instance.value;
-
-        std::regex_match(instance.instruction, reg_match, rshift_regex);
-
-        if (reg_match.size() > 1)
+        for (auto child : temp.children)
         {
-            std::string subNode = reg_match[1];
-            int shift = std::stoi(reg_match[2]);
-            instance.value = ParseWires(subNode) >> shift;
-            instance.written = true;
-            return instance.value;
+            total_weight += calc_weights(child);
         }
 
-        std::regex_match(instance.instruction, reg_match, not_regex);
+        temp.sub_weight = total_weight;
 
-        if (reg_match.size() > 1)
-        {
-            std::string subNode = reg_match[1];
-            instance.value = 0xFFFF ^ ParseWires(subNode);
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, lshift_regex);
-
-        if (reg_match.size() > 1)
-        {
-            std::string subNode = reg_match[1];
-            int shift = std::stoi(reg_match[2]);
-         
-            instance.value = ParseWires(subNode) << shift;
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, input_regex);
-
-        if (reg_match.size() > 1)
-        {
-            int val = std::stoi(reg_match[1]);
-
-            instance.value = val;
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, and_regex);
-
-        if (reg_match.size() > 1)
-        {
-            std::string subNode_1 = reg_match[1];
-            std::string subNode_2 = reg_match[2];
-
-            instance.value = ParseWires(subNode_1) & ParseWires(subNode_2);
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, or_regex);
-
-        if (reg_match.size() > 1)
-        {
-            std::string subNode_1 = reg_match[1];
-            std::string subNode_2 = reg_match[2];
-
-            instance.value = ParseWires(subNode_1) | ParseWires(subNode_2);
-            instance.written = true;
-            return instance.value;
-        }
-
-        instance.value = ParseWires(instance.instruction);
-        instance.written = true;
-
-        return instance.value;
+        return temp.sub_weight;
     }
 
-    int64_t part2(uint16_t in)
+    std::string part1()
     {
-        for (auto elem : allWires)
+        for (auto& disc : allDiscs)
         {
-            allWires[elem.first].written = false;
-            allWires[elem.first].value = 0;
+            if (disc.second.base == "")
+                return disc.second.name;
         }
-
-        allWires["b"].value = in;
-        allWires["b"].instruction = std::to_string(in);
-        allWires["b"].written = true;
-
-        return ParseWires("a");
+        return "";
     }
 
-    int64_t part1()
-    {   
-        for (auto elem : inputVec)
-        {
-            auto splitted = util::split(elem, " -> ");
-            Wire temp;
-            temp.instruction = splitted[0];
-            temp.written = false;
-
-            allWires[splitted[1]] = temp;
-        }
-
-        for (auto elem : allWires)
-        {
-            ParseWires(elem.first);
-        }
-
-        return ParseWires("a");
+    template<typename T>
+    std::vector<T> uniqueElements(const std::vector<T>& v) {
+        std::unordered_map<T, int> counts;
+        for (const auto& elem : v) ++counts[elem];
+        std::vector<T> result;
+        for (auto [elem, count] : counts)
+            if (count == 1)
+                result.push_back(elem);
+        return result;
     }
+
+    template<typename T>
+    std::vector<T> notUniqueElements(const std::vector<T>& v) {
+        std::unordered_map<T, int> counts;
+        for (const auto& elem : v) ++counts[elem];
+        std::vector<T> result;
+        for (auto [elem, count] : counts)
+            if (count > 1)
+                result.push_back(elem);
+        return result;
+    }
+
+    int64_t part2(std::string start, int32_t offset)
+    {
+        auto& disc = allDiscs[start];
+        
+        std::vector<int32_t> subs;
+        for (auto child : disc.children)
+        {
+            subs.push_back(allDiscs[child].sub_weight);
+        }
+
+        auto temp = uniqueElements(subs);
+        auto temp_2 = notUniqueElements(subs);
+
+        if (temp.size() <= 1)
+            return disc.weight + offset;
+
+        if (temp.size() == 2)
+        {
+            if (offset > 0)
+            {
+                
+            }
+        }
+
+        if (offset == 0)
+            offset = temp_2[0] - temp[0];
+        for (auto child : disc.children)
+        {
+            if (allDiscs[child].sub_weight == temp[0])
+            {
+                return part2(child, offset);
+            }
+        }
+
+        return 0;
+    }
+
 public:
 	Day07()
 	{
@@ -158,15 +160,13 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        and_regex = std::regex("(\\w+) AND (\\w+)");
-        lshift_regex = std::regex("(\\w+) LSHIFT ([0-9]+)");
-        rshift_regex = std::regex("(\\w+) RSHIFT ([0-9]+)");
-        or_regex = std::regex("(\\w+) OR (\\w+)");
-        not_regex = std::regex("NOT (\\w+)");
-        input_regex = std::regex("([0-9]+)");
+        ParseDiscs();
 
-        int64_t result_1 = part1();
-        int64_t result_2 = part2(static_cast<uint16_t>(result_1));
+        std::string result_1 = part1();
+        calc_weights(result_1);
+
+        int64_t result_2 = part2(result_1, 0);
+
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 07 - Part 1: " << result_1 << std::endl
