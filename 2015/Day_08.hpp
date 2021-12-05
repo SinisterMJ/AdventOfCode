@@ -103,8 +103,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
         
-        auto result_1 = 0;
-        auto result_2 = 0;
+        int64_t result_1 = 0;
+        int64_t result_2 = 0;
 
         for (auto elem : inputVec)
         {

@@ -21,9 +21,6 @@ public:
 		util::Timer myTime;
 		myTime.start();
         
-        auto result_1 = 0;
-        auto result_2 = 0;
-        
         std::map<v2, int32_t> visited_1;
         std::map<v2, int32_t> visited_2;
 
@@ -62,8 +59,8 @@ public:
             visited_2[start_2[index & 0x1]]++;
         }
 
-        result_1 = visited_1.size();
-        result_2 = visited_2.size();
+        auto result_1 = visited_1.size();
+        auto result_2 = visited_2.size();
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 03 - Part 1: " << result_1 << std::endl

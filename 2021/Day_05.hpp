@@ -37,16 +37,16 @@ private:
         }
     }
 
-    int64_t solve(bool use_diagonals)
+    int32_t solve(bool use_diagonals)
     {
         std::unordered_map<v2, int> lines;
 
         for (auto& line : allLines)
         {
-            int64_t x1 = line.x1;
-            int64_t y1 = line.y1;
-            int64_t x2 = line.x2;
-            int64_t y2 = line.y2;
+            int32_t x1 = line.x1;
+            int32_t y1 = line.y1;
+            int32_t x2 = line.x2;
+            int32_t y2 = line.y2;
 
             int slope_x = (x1 == x2) ? 0 : (x2 - x1) / std::abs(x2 - x1);
             int slope_y = (y1 == y2) ? 0 : (y2 - y1) / std::abs(y2 - y1);
@@ -54,7 +54,7 @@ private:
             if (slope_x != 0 && slope_y != 0 && !use_diagonals)
                 continue;
 
-            for (int64_t i = y1, j = x1;
+            for (int32_t i = y1, j = x1;
                 i != (y2 + slope_y) || j != (x2 + slope_x);
                 i += slope_y, j += slope_x)
             {
@@ -62,7 +62,7 @@ private:
             }
         }
 
-        int result = 0;
+        int32_t result = 0;
         for (auto& point : lines)
         {
             if (point.second >= 2)
@@ -87,8 +87,8 @@ public:
 
         buildLines();
 
-        int32_t result_1 = solve(false);
-        int32_t result_2 = solve(true);
+        auto result_1 = solve(false);
+        auto result_2 = solve(true);
 
         int64_t time = myTime.usPassed();
 

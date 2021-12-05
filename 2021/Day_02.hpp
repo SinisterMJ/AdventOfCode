@@ -48,8 +48,8 @@ public:
 
         solve();
 
-        int32_t result_1 = forward * depth_1;
-        int32_t result_2 = forward * depth_2;
+        auto result_1 = forward * depth_1;
+        auto result_2 = forward * depth_2;
 
         int64_t time = myTime.usPassed();
 
