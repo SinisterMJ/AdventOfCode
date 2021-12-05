@@ -37,7 +37,7 @@ private:
         }
     }
 
-    int64_t solve(bool use_diagonals) 
+    int64_t solve(bool use_diagonals)
     {
         std::unordered_map<v2, int> lines;
 
@@ -74,16 +74,16 @@ private:
         return result;
     }
 public:
-	Day05()
-	{
+    Day05()
+    {
         inputs = util::readFileLines("..\\inputs\\2021\\input_5.txt", '\n', false);
         input = util::readFile("..\\inputs\\2021\\input_5.txt");
-	}
+    }
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
         buildLines();
 
@@ -92,11 +92,12 @@ public:
 
         int64_t time = myTime.usPassed();
 
-        std::cout << "Day 05 - Part 1: " << result_1 << '\n'
-                  << "Day 05 - Part 2: " << result_2 << '\n';
+        std::cout 
+            << "Day 05 - Part 1: " << result_1 << '\n'
+            << "Day 05 - Part 2: " << result_2 << '\n';
 
         return time;
-	}
+    }
 };
 
 #endif  // ADVENTOFCODE2021_DAY05
