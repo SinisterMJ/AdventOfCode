@@ -22,7 +22,7 @@ private:
         {
             std::map<int8_t, int64_t> newFish;
 
-            for (auto [age, number] : fish)
+            for (auto& [age, number] : fish)
             {
                 if (age == 0)
                 {
@@ -38,7 +38,7 @@ private:
             std::swap(newFish, fish);
         }
 
-        for (auto [age, number] : fish)
+        for (auto& [age, number] : fish)
         {
             result += number;
         }
