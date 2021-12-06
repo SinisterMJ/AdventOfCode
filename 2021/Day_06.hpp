@@ -7,17 +7,42 @@ class Day06 {
 private:
 
     std::string inputString;
-    std::vector<std::string> inputVector;
 
-    int64_t part1() 
+    int64_t solve(int days)
     {
         int64_t result = 0;
-        return result;
-    }
+        auto ages = util::splitInt(inputString, ',');
 
-    int64_t part2()
-    {
-        int64_t result = 0;
+        std::map<int8_t, int64_t> fish;
+
+        for (auto age : ages)
+            fish[age] += 1;
+        
+        for (int index = 0; index < days; ++index)
+        {
+            std::map<int8_t, int64_t> newFish;
+
+            for (auto [age, number] : fish)
+            {
+                if (age == 0)
+                {
+                    newFish[8] += number;
+                    newFish[6] += number;
+                }
+                else
+                {
+                    newFish[age - 1] += number;
+                }
+            }
+
+            std::swap(newFish, fish);
+        }
+
+        for (auto [age, number] : fish)
+        {
+            result += number;
+        }
+
         return result;
     }
 
@@ -25,7 +50,6 @@ public:
     Day06()
     {
         inputString = util::readFile("..\\inputs\\2021\\input_6.txt");
-        inputVector = util::readFileLines("..\\inputs\\2021\\input_6.txt");
     }
 
     int64_t run()
@@ -33,8 +57,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result_1 = solve(80);
+        auto result_2 = solve(256);
 
         int64_t time = myTime.usPassed();
 
