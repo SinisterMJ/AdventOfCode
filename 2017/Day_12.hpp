@@ -2,64 +2,77 @@
 #define ADVENTOFCODE2017_DAY12
 
 #include "../includes/aoc.h"
-#include <regex>
-#include "../includes/nlohmann/json.hpp"
-
-using json = nlohmann::json;
 
 class Day12 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
 
-    int64_t part1()
+    struct Program {
+        int32_t id;
+        std::vector<int32_t> connected;
+        int32_t groups = 0;
+        bool checked{ false };
+    };
+
+    std::map<int32_t, Program> all_progs;
+
+    void mark_zero(int index, int group_val)
     {
-        std::regex wsaq_re("-?[0-9]+");
-        std::regex_token_iterator<std::string::iterator> it(inputString.begin(), inputString.end(), wsaq_re);
-        std::regex_token_iterator<std::string::iterator> rend;
+        auto& el = all_progs[index];
+        el.groups = group_val;
 
-        int64_t result = 0;
+        if (el.checked)
+            return;
 
-        while (it != rend)
+        el.checked = true;
+
+        for (auto& ch : el.connected)
         {
-            int64_t query = std::stoi(*it);
-            result += query;
-            it++;
+            mark_zero(ch, group_val);
         }
-
-        return result;
     }
 
-    static bool has_red_value(const json& _json)
+    std::pair<int32_t, int32_t> solve()
     {
-        return std::any_of(_json.cbegin(), _json.cend(), [](const json& value) { return value.is_string() && value.get<std::string>() == "red"; });
-    }
-
-    static int64_t calc(const json&  input)
-    {
-        if (input.is_number())
-            return input.get<int>();
-
-        if (input.is_string())
-            return 0;
-
-        if (input.is_array() || input.is_object())
+        for (auto& line : inputVec)
         {
-            if (input.is_object() && has_red_value(input))
+            Program temp;
+            auto pos = line.find(" <-> ");
+            auto first = line.substr(0, pos);
+
+            temp.id = std::stoi(first);
+
+            auto second = line.substr(pos + 5);
+            second.erase(std::remove(second.begin(), second.end(), ' '), second.end());
+            auto list_children = util::split(second, ',');
+            
+            for (auto& el : list_children)
             {
-                return 0;
+                temp.connected.push_back(std::stoi(el));
             }
 
-            return std::accumulate(input.cbegin(), input.cend(), static_cast<int64_t>(0), [](int64_t sum, const json& element) { return sum + calc(element); } );
+            temp.checked = false;
+            temp.groups = (temp.id == 0);
+            all_progs[temp.id] = temp;
         }
 
-        return 0;
-    }
+        for (auto& [index, prog] : all_progs)
+        {
+            if (!prog.checked)
+                mark_zero(index, index);
+        }
 
-    int64_t part2()
-    {
-        auto data = json::parse(inputString);
-        return calc(data);
+        int sum = 0;
+        std::set<int32_t> allGroups;
+
+        for (auto& [index, prog] : all_progs)
+        {
+            sum += (prog.groups == 0);
+            allGroups.insert(prog.groups);
+        }
+
+        return std::make_pair(sum, static_cast<int>(allGroups.size()));
     }
 
 public:
@@ -74,15 +87,17 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result = solve();
+        auto result_1 = result.first;
+        auto result_2 = result.second;
 
         int64_t time = myTime.usPassed();
-        std::cout << "Day 12 - Part 1: " << result_1 << '\n'
-                  << "Day 12 - Part 2: " << result_2 << '\n';
+        std::cout
+            << "Day 12 - Part 1: " << result_1 << '\n'
+            << "Day 12 - Part 2: " << result_2 << '\n';
 
         return time;
     }
 };
 
-#endif  // ADVENTOFCODE2017_DAY12
+#endif  // ADVENTOFCODE2017_DAY10
