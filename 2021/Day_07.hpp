@@ -9,34 +9,24 @@ private:
     std::string inputString;
     std::vector<int32_t> positions;
 
-    int solve(bool incremental)
+    int get_distance(int32_t target, bool incremental)
     {
         int fuel = 0;
-        int last_fuel = std::numeric_limits<int>::max();
-        for (int i = 0;; ++i)
-        { 
-            fuel = 0;
 
-            for (auto& pos : positions)
+        for (auto& pos : positions)
+        {
+            if (incremental)
             {
-                if (incremental)
-                {
-                    auto this_fuel = std::abs(pos - i);
-                    fuel += (this_fuel * (this_fuel + 1)) / 2;
-                }
-                else
-                {
-                    fuel += std::abs(pos - i);
-                }                
+                auto this_fuel = std::abs(pos - target);
+                fuel += (this_fuel * (this_fuel + 1)) / 2;
             }
-
-            if (last_fuel < fuel)
-                return last_fuel;
-
-            last_fuel = fuel;
+            else
+            {
+                fuel += std::abs(pos - target);
+            }
         }
 
-        return 0;
+        return fuel;
     }
 
 public:
@@ -53,8 +43,16 @@ public:
         auto s_pos = util::split(inputString, ',');
         positions = util::ConvertToInt(s_pos);
 
-        int32_t result_1 = solve(false);
-        int32_t result_2 = solve(true);
+        std::sort(positions.begin(), positions.end());
+
+        int32_t sum = 0;
+        for (auto pos : positions)
+        {
+            sum += pos;
+        }
+
+        int32_t result_1 = get_distance(positions[positions.size() / 2], false);
+        int32_t result_2 = std::min(get_distance(sum / static_cast<int>(positions.size()), true), get_distance(sum / static_cast<int>(positions.size()) + 1, true));
 
         int64_t time = myTime.usPassed();
 
