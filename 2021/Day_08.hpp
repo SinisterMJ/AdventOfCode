@@ -22,8 +22,7 @@ private:
 
             for (auto elem : second)
             {
-                if (elem.size() == 2 || elem.size() == 3 || elem.size() == 7 || elem.size() == 4)
-                    count++;
+                count += (elem.size() == 2 || elem.size() == 3 || elem.size() == 7 || elem.size() == 4);
             }
         }
         return count;
@@ -49,8 +48,8 @@ private:
 
         return result;
     }
-    
-    std::map<std::string, std::string> findMapping(std::vector<std::string> numbers)
+
+    std::map<char, std::string> findMapping(std::vector<std::string> numbers)
     {
         std::map<std::string, std::string> entry;
 
@@ -82,49 +81,80 @@ private:
         entry["e"] = findExtraCharacters(entry["a"], findExtraCharacters(numbers[index_8], numbers[index_4]));
         entry["g"] = entry["e"];
 
-        for (int ind_b = 0; ind_b < 2; ++ind_b)
+        for (auto& word : numbers)
         {
-            for (int ind_c = 0; ind_c < 2; ++ind_c)
+            if (word.size() == 6 &&
+                ((word.find(entry["c"][0]) == std::string::npos) != (word.find(entry["c"][1]) == std::string::npos))
+                )
             {
-                for (int ind_e = 0; ind_e < 2; ++ind_e)
+                // Number 6
+                auto cf = entry["c"];
+                if (word.find(cf[0]) != std::string::npos)
                 {
-                    std::map<std::string, std::string> temp_map;
-                    temp_map["a"] = entry["a"];
-                    temp_map["b"] = entry["b"][ind_b];
-                    temp_map["d"] = entry["b"][1 - ind_b];
-                    temp_map["c"] = entry["c"][ind_c];
-                    temp_map["f"] = entry["c"][1 - ind_c];
-                    temp_map["e"] = entry["e"][ind_e];
-                    temp_map["g"] = entry["g"][1 - ind_e];
-
-                    bool all_in = true;
-
-                    for (int index = 0; index < 10 && all_in; ++index)
-                    {
-                        std::string result = "";
-
-                        for (auto ch : numbers[index])
-                        {
-                            for (auto [cipher, orig] : temp_map)
-                            {
-                                if (ch == orig[0])
-                                    result += cipher;
-                            }
-                        }
-
-                        std::sort(result.begin(), result.end());
-
-                        if (display_values.count(result) == 0)
-                            all_in = false;
-                    }
-
-                    if (all_in)
-                        return temp_map;
+                    entry["c"] = cf[1];
+                    entry["f"] = cf[0];
                 }
+                else
+                {
+                    entry["c"] = cf[0];
+                    entry["f"] = cf[1];
+                }
+                break;
             }
         }
 
-        return entry;
+        for (auto& word : numbers)
+        {
+            if (word.size() == 6 &&
+                ((word.find(entry["b"][0]) == std::string::npos) != (word.find(entry["b"][1]) == std::string::npos))
+                )
+            {
+                // Number 0
+                auto bd = entry["b"];
+                if (word.find(bd[0]) != std::string::npos)
+                {
+                    entry["b"] = bd[0];
+                    entry["d"] = bd[1];
+                }
+                else
+                {
+                    entry["b"] = bd[1];
+                    entry["d"] = bd[0];
+                }
+                break;
+            }
+        }
+
+        for (auto& word : numbers)
+        {
+            if (word.size() == 6 &&
+                ((word.find(entry["e"][0]) == std::string::npos) != (word.find(entry["e"][1]) == std::string::npos))
+                )
+            {
+                // Number 9
+                auto eg = entry["e"];
+                if (word.find(eg[0]) != std::string::npos)
+                {
+                    entry["e"] = eg[1];
+                    entry["g"] = eg[0];
+                }
+                else
+                {
+                    entry["e"] = eg[0];
+                    entry["g"] = eg[1];
+                }
+                break;
+            }
+        }
+
+        std::map<char, std::string> result;
+
+        for (auto [key, value] : entry)
+        {
+            result[value[0]] = key;
+        }
+
+        return result;
     }
     
     int64_t part2()
@@ -165,11 +195,7 @@ private:
                 
                 for (auto ch : el)
                 {
-                    for (auto [cipher, orig] : entry)
-                    {
-                        if (ch == orig[0])
-                            result += cipher;
-                    }
+                    result += entry[ch];
                 }
 
                 std::sort(result.begin(), result.end());
