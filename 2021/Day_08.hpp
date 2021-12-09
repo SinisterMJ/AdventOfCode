@@ -26,7 +26,7 @@ private:
         return count;
     }
 
-    std::map<std::string, int32_t> findMapping_smart(std::vector<std::string> numbers)
+    std::map<std::string, int32_t> findMapping(std::vector<std::string> numbers)
     {
         std::map<std::string, int32_t> entry;
         std::array<int32_t, 7> occurrences;
@@ -81,7 +81,7 @@ private:
             for (auto& elem : first)
                 std::sort(elem.begin(), elem.end());
 
-            auto entry = findMapping_smart(first);
+            auto entry = findMapping(first);
 
             int number = 0;
             for (auto& el : second)
