@@ -50,11 +50,10 @@ private:
     {
         std::vector<std::vector<int32_t>> lines;
         lines.resize(max_y + 1);
-        for (auto& ln : lines)
-        {
-            ln.resize(max_x + 1);
-        }
 
+        for (auto& ln : lines)
+            ln.resize(max_x + 1);
+        
         for (auto& line : allLines)
         {
             int32_t x1 = line.x1;
@@ -68,26 +67,18 @@ private:
             if (slope_x != 0 && slope_y != 0 && !use_diagonals)
                 continue;
 
-            for (int32_t i = y1, j = x1;
-                i != (y2 + slope_y) || j != (x2 + slope_x);
-                i += slope_y, j += slope_x)
+            for (int32_t i = y1, j = x1; i != (y2 + slope_y) || j != (x2 + slope_x); i += slope_y, j += slope_x)
             {
-                lines[i][j] = lines[i][j] + 1;
+                lines[i][j]++;
             }
         }
 
         int32_t result = 0;
         for (auto& ln : lines)
-        {
             for (auto& point : ln)
-            {
                 if (point >= 2)
-                {
                     result++;
-                }
-            }
-        }
-
+        
         return result;
     }
 public:
