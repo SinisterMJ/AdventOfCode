@@ -98,6 +98,9 @@ namespace util
         std::stringstream ss(s);
         std::string number;
         while (std::getline(ss, number, delim)) {
+            if (number == "")
+                continue;
+
             elems.emplace_back(number);
         }
         return elems;
