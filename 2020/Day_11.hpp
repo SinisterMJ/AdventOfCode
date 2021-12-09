@@ -13,7 +13,7 @@ private:
     {
         std::vector<std::string> ferry_s = inputVec;
         std::vector<std::string> ferry_s_temp;
-        std::vector<v2> neighbours = Map2DBase<int8_t>::getNeighboursVec(true);
+        std::vector<v2> neighbours = MapHelper::getNeighboursVec(true);
 
         do 
         {

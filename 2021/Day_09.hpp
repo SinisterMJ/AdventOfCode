@@ -10,7 +10,7 @@ private:
     std::string inputString;
     std::vector<std::string> inputVector;
     std::map<v2, int> depth;
-    std::vector<v2> neighbours = Map2DBase<int>::getNeighboursVec(false);
+    std::vector<v2> neighbours = MapHelper::getNeighboursVec(false);
     std::map<v2, int> basin;
     int id = 0;
 
@@ -30,8 +30,6 @@ private:
             }
             curr_pos.y++;
         }
-
-        auto neighbours = Map2DBase<int>::getNeighboursVec(false);
 
         int result = 0;
 
@@ -57,7 +55,7 @@ private:
         return result;
     }
 
-    void mark_basin(v2 start, int id)
+    void mark_basin(v2 start, int ind)
     {
         if (depth[start] == 9)
             return;
@@ -65,12 +63,12 @@ private:
         if (basin.find(start) != basin.end())
             return;
 
-        basin[start] = id;
+        basin[start] = ind;
         for (auto n : neighbours)
         {
             if (depth.find(start + n) != depth.end())
             {
-                mark_basin(start + n, id);
+                mark_basin(start + n, ind);
             }
         }
     }
@@ -105,8 +103,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int32_t result_1 = part1();
-        int32_t result_2 = part2();
+        auto result_1 = part1();
+        auto result_2 = part2();
 
         int64_t time = myTime.usPassed();
 

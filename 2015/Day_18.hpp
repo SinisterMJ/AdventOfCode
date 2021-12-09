@@ -9,7 +9,7 @@
 
 class Day18 {
 private:
-	std::vector<v2> neighbourTiles = Map2DBase<uint8_t>::getNeighboursVec(true);
+	std::vector<v2> neighbourTiles = MapHelper::getNeighboursVec(true);
 	std::map<uint8_t, v2> keyMap;
 
 	std::string inputString;

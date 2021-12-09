@@ -16,7 +16,7 @@ private:
         std::map<int8_t, int64_t> fish;
 
         for (auto age : ages)
-            fish[age] += 1;
+            fish[age & 0xFF] += 1;
         
         for (int index = 0; index < days; ++index)
         {

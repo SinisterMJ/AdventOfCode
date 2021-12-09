@@ -22,7 +22,7 @@ private:
 
 		for (int i = 2; i <= number; ++i)
 		{
-			auto new_dir = Map2DBase<int32_t>::turnLeft(dir);
+			auto new_dir = MapHelper::turnLeft(dir);
 			if (memory.find(position + new_dir) == memory.end())
 			{
 				dir = new_dir;
@@ -41,11 +41,11 @@ private:
 		v2 dir(0, -1);
 		v2 position(0, 0);
 		memory[position] = 1;
-		auto allNeighbours = Map2DBase<int32_t>::getNeighboursVec(true);
+		auto allNeighbours = MapHelper::getNeighboursVec(true);
 		
 		for (;;)
 		{
-			auto new_dir = Map2DBase<int32_t>::turnLeft(dir);
+			auto new_dir = MapHelper::turnLeft(dir);
 			if (memory.find(position + new_dir) == memory.end())
 			{
 				dir = new_dir;

@@ -7,6 +7,37 @@
 #define NOMINMAX
 #include <Windows.h>
 
+namespace MapHelper {
+	std::vector<v2> getNeighboursVec(bool include_diagonal)
+	{
+		std::vector<v2> neighbours;
+		neighbours.push_back(v2(0, -1));
+		neighbours.push_back(v2(0, 1));
+		neighbours.push_back(v2(-1, 0));
+		neighbours.push_back(v2(1, 0));
+
+		if (include_diagonal)
+		{
+			neighbours.push_back(v2(1, -1));
+			neighbours.push_back(v2(-1, -1));
+			neighbours.push_back(v2(1, 1));
+			neighbours.push_back(v2(-1, 1));
+		}
+
+		return neighbours;
+	}
+
+	v2 turnLeft(v2 input)
+	{
+		return v2(-input.y, input.x);
+	}
+
+	v2 turnRight(v2 input)
+	{
+		return v2(input.y, -input.x);
+	}
+};
+
 template<class T>
 class Map2DBase {
 public:
@@ -70,35 +101,6 @@ public:
 
         return count;
     }
-
-    static std::vector<v2> getNeighboursVec(bool include_diagonal)
-    {
-        std::vector<v2> neighbours;
-        neighbours.push_back(v2(0, -1));
-        neighbours.push_back(v2(0, 1));
-        neighbours.push_back(v2(-1, 0));
-        neighbours.push_back(v2(1, 0));
-
-        if (include_diagonal)
-        {
-            neighbours.push_back(v2(1, -1));
-            neighbours.push_back(v2(-1, -1));
-            neighbours.push_back(v2(1, 1));
-            neighbours.push_back(v2(-1, 1));
-        }
-
-        return neighbours;
-    }
-
-	static v2 turnLeft(v2 input)
-	{
-		return v2(-input.y, input.x);
-	}
-
-	static v2 turnRight(v2 input)
-	{
-		return v2(input.y, -input.x);
-	}
 
 	T read(int32_t x, int32_t y)
 	{
