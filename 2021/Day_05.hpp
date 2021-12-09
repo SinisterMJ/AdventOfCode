@@ -17,10 +17,16 @@ private:
         int y2;
     };
 
+    int32_t max_x;
+    int32_t max_y;
+
     std::vector<line> allLines;
 
     void buildLines()
     {
+        max_x = std::numeric_limits<int32_t>::min();
+        max_y = max_y;
+
         std::regex line_regex("([0-9]+),([0-9]+) -> ([0-9]+),([0-9]+)");
         std::smatch line_match;
 
@@ -33,13 +39,21 @@ private:
             entry.x2 = std::stoi(line_match[3]);
             entry.y2 = std::stoi(line_match[4]);
 
+            max_x = std::max(max_x, std::max(entry.x1, entry.x2));
+            max_y = std::max(max_y, std::max(entry.y1, entry.y2));
+
             allLines.emplace_back(entry);
         }
     }
 
     int32_t solve(bool use_diagonals)
     {
-        std::unordered_map<v2, int> lines;
+        std::vector<std::vector<int32_t>> lines;
+        lines.resize(max_y + 1);
+        for (auto& ln : lines)
+        {
+            ln.resize(max_x + 1);
+        }
 
         for (auto& line : allLines)
         {
@@ -58,16 +72,19 @@ private:
                 i != (y2 + slope_y) || j != (x2 + slope_x);
                 i += slope_y, j += slope_x)
             {
-                lines[v2(j, i)] = lines[v2(j, i)] + 1;
+                lines[i][j] = lines[i][j] + 1;
             }
         }
 
         int32_t result = 0;
-        for (auto& point : lines)
+        for (auto& ln : lines)
         {
-            if (point.second >= 2)
+            for (auto& point : ln)
             {
-                result++;
+                if (point >= 2)
+                {
+                    result++;
+                }
             }
         }
 
