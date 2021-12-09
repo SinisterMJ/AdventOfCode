@@ -221,8 +221,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int32_t result_1 = part1();
-        int32_t result_2 = part2();
+        auto result_1 = part1();
+        auto result_2 = part2();
 
         int64_t time = myTime.usPassed();
 
