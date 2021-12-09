@@ -30,7 +30,7 @@ private:
                 std::copy_n(row.begin(), 5, board[offset].begin());
             }
 
-            bingoBoards.push_back(board);
+            bingoBoards.emplace_back(board);
         }
     }
 

@@ -73,7 +73,7 @@ namespace util
 			for(std::string line; std::getline(input, line, delim); )
 			{
 				if(!skipEmpty || !line.empty())
-					lines.push_back(line);
+					lines.emplace_back(line);
 			}
 		}
 
@@ -84,11 +84,11 @@ namespace util
         std::vector<std::string> elems;
 
         while (s.find(delim) != std::string::npos) {
-            elems.push_back(s.substr(0, s.find(delim)));
+            elems.emplace_back(s.substr(0, s.find(delim)));
             s = s.substr(s.find(delim) + delim.size());
         }
 
-        elems.push_back(s);
+        elems.emplace_back(s);
 
         return elems;
     }
@@ -98,7 +98,7 @@ namespace util
         std::stringstream ss(s);
         std::string number;
         while (std::getline(ss, number, delim)) {
-            elems.push_back(number);
+            elems.emplace_back(number);
         }
         return elems;
     }
@@ -110,7 +110,7 @@ namespace util
 		while (std::getline(ss, number, delim)) {
             if (number == "")
                 continue;
-			elems.push_back(std::stoi(number));
+			elems.emplace_back(std::stoi(number));
 		}
 		return elems;
 	}
@@ -120,7 +120,7 @@ namespace util
 		std::stringstream ss(s);
 		std::string number;
 		while (std::getline(ss, number, delim)) {
-			elems.push_back(std::stoll(number));
+			elems.emplace_back(std::stoll(number));
 		}
 		return elems;
 	}
@@ -129,7 +129,7 @@ namespace util
 		std::vector<int64_t> elems;
 		for (auto elem : s)
 		{
-			elems.push_back(std::stoll(elem));
+			elems.emplace_back(std::stoll(elem));
 		}
 		return elems;
 	}
@@ -138,7 +138,7 @@ namespace util
 		std::vector<int32_t> elems;
 		for (auto elem : s)
 		{
-			elems.push_back(std::stoi(elem));
+			elems.emplace_back(std::stoi(elem));
 		}
 		return elems;
 	}

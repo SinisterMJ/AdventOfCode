@@ -11,17 +11,17 @@ namespace MapHelper {
 	std::vector<v2> getNeighboursVec(bool include_diagonal)
 	{
 		std::vector<v2> neighbours;
-		neighbours.push_back(v2(0, -1));
-		neighbours.push_back(v2(0, 1));
-		neighbours.push_back(v2(-1, 0));
-		neighbours.push_back(v2(1, 0));
+		neighbours.emplace_back(0, -1);
+		neighbours.emplace_back(0, 1);
+		neighbours.emplace_back(-1, 0);
+		neighbours.emplace_back(1, 0);
 
 		if (include_diagonal)
 		{
-			neighbours.push_back(v2(1, -1));
-			neighbours.push_back(v2(-1, -1));
-			neighbours.push_back(v2(1, 1));
-			neighbours.push_back(v2(-1, 1));
+			neighbours.emplace_back(1, -1);
+			neighbours.emplace_back(-1, -1);
+			neighbours.emplace_back(1, 1);
+			neighbours.emplace_back(-1, 1);
 		}
 
 		return neighbours;
@@ -84,7 +84,7 @@ public:
 		for (auto elem : dataMap)
 		{
 			if (elem.second == val)
-				allPositions.push_back(elem.first);
+				allPositions.emplace_back(elem.first);
 		}
 
 		return allPositions;

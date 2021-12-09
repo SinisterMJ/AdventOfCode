@@ -51,7 +51,7 @@ public:
                         
             temp.value = std::stoll(second);
 
-            commands.push_back(temp);
+            commands.emplace_back(temp);
         }
 
         return *this;

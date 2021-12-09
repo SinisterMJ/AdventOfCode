@@ -33,7 +33,7 @@ private:
             entry.x2 = std::stoi(line_match[3]);
             entry.y2 = std::stoi(line_match[4]);
 
-            allLines.push_back(entry);
+            allLines.emplace_back(entry);
         }
     }
 

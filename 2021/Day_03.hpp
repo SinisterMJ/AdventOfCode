@@ -50,13 +50,13 @@ private:
             {
                 for (auto& line : tempList)
                     if (line[i] == '1')
-                        oxygens.push_back(line);
+                        oxygens.emplace_back(line);
             }
             else
             {
                 for (auto& line : tempList)
                     if (line[i] == '0')
-                        oxygens.push_back(line);
+                        oxygens.emplace_back(line);
             }
 
             tempList = oxygens;
@@ -78,13 +78,13 @@ private:
             {
                 for (auto& line : tempList)
                     if (line[i] == '0')
-                        co2.push_back(line);
+                        co2.emplace_back(line);
             }
             else
             {
                 for (auto& line : tempList)
                     if (line[i] == '1')
-                        co2.push_back(line);
+                        co2.emplace_back(line);
             }
 
             tempList = co2;
