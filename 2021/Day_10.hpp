@@ -9,13 +9,15 @@ private:
     std::string inputString;
     std::vector<std::string> inputVec;
 
-    int64_t part1()
+    std::pair<int64_t, int64_t> solve()
     {
         int sum_error = 0;
+        std::vector<int64_t> scores;
 
         for (auto ln : inputVec)
         {
             std::stack<char> q;
+            bool invalid = false;
             for (auto ch : ln)
             {
                 if (ch == '{' || ch == '(' || ch == '[' || ch == '<')
@@ -27,6 +29,7 @@ private:
                         if (q.top() != '{')
                         {
                             sum_error += 1197;
+                            invalid = true;
                             break;
                         }
                     }
@@ -36,6 +39,7 @@ private:
                         if (q.top() != '(')
                         {
                             sum_error += 3;
+                            invalid = true;
                             break;
                         }
                     }
@@ -45,6 +49,7 @@ private:
                         if (q.top() != '<')
                         {
                             sum_error += 25137;
+                            invalid = true;
                             break;
                         }
                     }
@@ -54,68 +59,10 @@ private:
                         if (q.top() != '[')
                         {
                             sum_error += 57;
-                            break;
-                        }
-                    }
-                    q.pop();
-                }
-            }
-        }
-
-        return sum_error;
-    }
-
-    int64_t part2()
-    {
-        std::vector<int64_t> scores;
-
-        for (auto ln : inputVec)
-        {
-            std::stack<char> q;
-            bool invalid = false;
-
-            for (auto ch : ln)
-            {
-                if (ch == '{' || ch == '(' || ch == '[' || ch == '<')
-                    q.push(ch);
-                else
-                {
-                    if (ch == '}')
-                    {
-                        if (q.top() != '{')
-                        {
                             invalid = true;
                             break;
                         }
                     }
-
-                    if (ch == ')')
-                    {
-                        if (q.top() != '(')
-                        {
-                            invalid = true;
-                            break;
-                        }
-                    }
-
-                    if (ch == '>')
-                    {
-                        if (q.top() != '<')
-                        {
-                            invalid = true;
-                            break;
-                        }
-                    }
-
-                    if (ch == ']')
-                    {
-                        if (q.top() != '[')
-                        {
-                            invalid = true;
-                            break;
-                        }
-                    }
-
                     q.pop();
                 }
             }
@@ -142,9 +89,7 @@ private:
             }
         }
 
-        std::sort(scores.begin(), scores.end());
-
-        return scores[scores.size() / 2];
+        return std::make_pair(sum_error, scores[scores.size() / 2]);
     }
 
 public:
@@ -159,8 +104,9 @@ public:
         util::Timer myTime;
         myTime.start();
         
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto res = solve();
+        auto result_1 = res.first;
+        auto result_2 = res.second;
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 10 - Part 1: " << result_1 << '\n'
