@@ -30,9 +30,7 @@ private:
     {
         std::map<std::string, int32_t> entry;
         std::array<int32_t, 7> occurrences;
-
-        for (int i = 0; i < 7; ++i)
-            occurrences[i] = 0;
+        occurrences.fill(0);
 
         for (auto& num : numbers)
             for (auto& ch : num)
