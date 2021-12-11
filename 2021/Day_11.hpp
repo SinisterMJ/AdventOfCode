@@ -7,7 +7,6 @@ class Day11 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
-    std::vector<v2> neighbours = MapHelper::getNeighboursVec(true);
 
     std::pair<int32_t, int32_t> solve()
     {
@@ -29,19 +28,19 @@ private:
 
         int result = 0;
         int result_inner = 0;
+        std::vector<v2> neighbours = MapHelper::getNeighboursVec(true);
 
         for (int i = 1;; ++i)
         {
             if (i == 101)
                 result = result_inner;
 
-            for (auto [pos, charge] : octos)
-            {
-                octos[pos] = charge + 1;
-            }
+            for (auto& [pos, charge] : octos)
+                charge++;
+            
+            bool find_max = false;
 
-            bool find_max = true;
-            while (find_max)
+            do            
             {
                 find_max = false;
                 for (auto [pos, charge] : octos)
@@ -53,15 +52,13 @@ private:
                         find_max = true;
 
                         for (auto n : neighbours)
-                        {
                             if (octos.find(n + pos) != octos.end() && octos[n + pos] != 0)
-                            {
-                                octos[n + pos] = octos[n + pos] + 1;
-                            }
-                        }
+                                octos[n + pos]++;
                     }
                 }                
             }
+
+            while (find_max);
                         
             int sum = 0;
 
