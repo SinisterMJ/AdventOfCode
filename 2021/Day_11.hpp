@@ -57,7 +57,6 @@ private:
                     }
                 }                
             }
-
             while (find_max);
                         
             int sum = 0;
