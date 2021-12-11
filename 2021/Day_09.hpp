@@ -3,15 +3,16 @@
 
 #include "../includes/aoc.h"
 #include "../includes/Map2DBase.h"
+#include <unordered_map>
 
 class Day09 {
 private:
 
     std::string inputString;
     std::vector<std::string> inputVector;
-    std::map<v2, int> depth;
+    std::unordered_map<v2, int> depth;
     std::vector<v2> neighbours = MapHelper::getNeighboursVec(false);
-    std::map<v2, int> basin;
+    std::unordered_map<v2, int> basin;
     int id = 0;
 
     int64_t part1()

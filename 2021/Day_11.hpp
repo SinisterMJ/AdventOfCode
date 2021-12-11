@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2021_DAY11
 
 #include "../includes/aoc.h"
+#include <unordered_map>
 
 class Day11 {
 private:
@@ -10,7 +11,7 @@ private:
 
     std::pair<int32_t, int32_t> solve()
     {
-        std::map<v2, int> octos;
+        std::unordered_map<v2, int> octos;
         v2 curr_pos(0, 0);
 
         for (auto line : inputVec)
@@ -67,8 +68,6 @@ private:
             if (sum == 0)
                 return std::make_pair(result, i);
         }
-
-        return std::make_pair(0, 0);
     }
 
 public:
