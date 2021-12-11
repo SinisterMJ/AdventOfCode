@@ -32,8 +32,6 @@ private:
 
         for (int i = 1;; ++i)
         {
-            std::map<v2, int> octo_new;
-
             if (i == 101)
                 result = result_inner;
 
@@ -42,15 +40,15 @@ private:
                 octos[pos] = charge + 1;
             }
 
-            while (octos.size() != octo_new.size())
+            bool find_max = true;
+            while (find_max)
             {
-                bool find_max = false;
+                find_max = false;
                 for (auto [pos, charge] : octos)
                 {
                     if (charge >= 10)
                     {
                         result_inner++;
-                        octo_new[pos] = 0;
                         octos[pos] = 0;
                         find_max = true;
 
@@ -62,20 +60,9 @@ private:
                             }
                         }
                     }
-                }
-
-                if (!find_max)
-                {
-                    for (auto [pos, charge] : octos)
-                    {
-                        if (octo_new.find(pos) == octo_new.end())
-                            octo_new[pos] = charge;
-                    }
-                }
+                }                
             }
-
-            std::swap(octos, octo_new);
-
+                        
             int sum = 0;
 
             for (auto [pos, charge] : octos)
