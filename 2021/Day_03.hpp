@@ -20,8 +20,7 @@ private:
             int count_1 = 0;
 
             for (auto& line : inputs)
-                if (line[i] == '1')
-                    count_1++;
+                count_1 += (line[i] == '1');
 
             if (count_1 > inputs.size() / 2)
                 gamma = gamma + 1;
@@ -43,8 +42,7 @@ private:
             int count_1 = 0;
 
             for (auto& line : tempList)
-                if (line[i] == '1')
-                    count_1++;
+                count_1 += (line[i] == '1');
 
             if (count_1 * 2 >= tempList.size())
             {
@@ -71,8 +69,7 @@ private:
             int count_1 = 0;
 
             for (auto& line : tempList)
-                if (line[i] == '1')
-                    count_1++;
+                count_1 += (line[i] == '1');
 
             if (count_1 * 2 >= tempList.size())
             {
