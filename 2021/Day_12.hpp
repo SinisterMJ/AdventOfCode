@@ -10,39 +10,32 @@ private:
 
     struct Cave {
         std::string name;
-        std::vector<std::string> connected;
+        std::vector<std::pair<std::string, int32_t>> connected;
         bool big_cave;
     };
 
     std::map<std::string, Cave> all_caves;
-    std::set<std::string> paths;
 
-    void build_paths(std::string current_node, std::string curr_path, bool visited_twice)
+    int32_t build_paths(std::string current_node, std::string curr_path, bool visited_twice)
     {
+        int sum = 0;
         auto node = all_caves[current_node];
 
-        if (current_node == "start" || current_node == "end")
-        {
-            if (curr_path.find(node.name) != std::string::npos)
-                return;
-        }
+        if (curr_path.find(node.name) != std::string::npos && visited_twice)
+            return 0;
 
-        if (!node.big_cave)
-        {
-            if (curr_path.find(node.name) != std::string::npos && visited_twice)
-                return;
-
-            if (curr_path.find(node.name) != std::string::npos)
-                visited_twice = true;
-        }
-
+        if (curr_path.find(node.name) != std::string::npos)
+            visited_twice = true;
+        
         if (node.name == "end")
-            paths.insert(curr_path + node.name);
-
+            return 1;
+        
         for (auto ch : node.connected)
         {
-            build_paths(ch, curr_path + node.name, visited_twice);
+            sum += ch.second * build_paths(ch.first, curr_path + node.name, visited_twice);
         }
+
+        return sum;
     }
 
     void build_caves()
@@ -65,32 +58,101 @@ private:
             }
 
             temp.name = line[0];
-            temp_back.name = line[1];
-            temp.connected.push_back(line[1]);
-            temp_back.connected.push_back(line[0]);
-
+            temp.connected.push_back(std::make_pair(line[1], 1));
             temp.big_cave = std::isupper(line[0][0]);
+
+            temp_back.name = line[1];
+            temp_back.connected.push_back(std::make_pair(line[0], 1));
             temp_back.big_cave = std::isupper(line[1][0]);
 
             all_caves[line[0]] = temp;
             all_caves[line[1]] = temp_back;
         }
 
+        std::map<std::string, Cave> all_caves_no_big_caves;
+
+        for (auto& [key, cave] : all_caves)
+        {
+            int index = 0;
+            for (auto target : cave.connected)
+            {
+                if (target.first == "start")
+                {
+                    cave.connected.erase(cave.connected.begin() + index);
+                    break;
+                }
+
+                ++index;
+            }
+        }
+
         all_caves["end"].connected.clear();
+
+        for (auto& [key, cave] : all_caves)
+        {
+            if (!cave.big_cave)
+            {
+                auto& entry = all_caves_no_big_caves[key];
+                entry.name = key;
+                entry.big_cave = false;
+
+                for (auto [target, weight] : cave.connected)
+                {
+                    if (all_caves[target].big_cave)
+                    {
+                        auto& temp_entry = all_caves[target];
+                        for (auto& [name, inner_weight] : temp_entry.connected)
+                        {
+                            bool found = false;
+
+                            for (auto& [cave_small, inner_weight_small] : entry.connected)
+                            {
+                                if (cave_small == target)
+                                {
+                                    found = true;
+                                    ++inner_weight_small;
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                entry.connected.push_back(std::make_pair(name, 1));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        bool found = false;
+
+                        for (auto& [name, inner_weight] : entry.connected)
+                        {
+                            if (name == target)
+                            {
+                                found = true;
+                                ++inner_weight;
+                            }
+                        }
+                        
+                        if (!found)
+                        {
+                            entry.connected.push_back(std::make_pair(target, 1));
+                        }
+                    }
+                }
+            }
+        }
+
+        std::swap(all_caves, all_caves_no_big_caves);
     }
 
-    int64_t part1()
-    {
-        paths.clear();
-        build_paths("start", "", true);
-        return paths.size();
+    int32_t part1()
+    {   
+        return build_paths("start", "", true);
     }
 
-    int64_t part2()
+    int32_t part2()
     {
-        paths.clear();
-        build_paths("start", "", false);
-        return paths.size();
+        return build_paths("start", "", false);
     }
 
 public:
