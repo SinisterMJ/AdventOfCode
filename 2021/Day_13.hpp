@@ -2,71 +2,58 @@
 #define ADVENTOFCODE2021_DAY13
 
 #include "../includes/aoc.h"
-
+#include <set>
 
 class Day13 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
-    std::map<v2, int8_t> dots;
+    std::set<v2> dots;
     std::vector<std::string> folds;
 
-    std::map<v2, int8_t> fold_map(std::map<v2, int8_t> input, std::string task)
+    std::set<v2> fold_map(std::set<v2> input, std::string task)
     {
         auto axis = task.substr(0, 1);
         auto position = std::stoi(task.substr(2));
 
-        std::map<v2, int8_t> result;
-
-        auto max_x = 0;
-        auto max_y = 0;
-
-        for (auto [pos, val] : input)
-        {
-            max_x = std::max(max_x, pos.x);
-            max_y = std::max(max_y, pos.y);
-        }
+        std::set<v2> result;
 
         if (axis == "x")
         {
-            for (auto ind = position - 1; ind >= 0; --ind)
+            for (auto element : input)
             {
-                for (auto y = 0; y <= max_y; ++y)
+                if (element.x < position)
                 {
-                    v2 pos = v2(ind, y);
-                    result[pos] = input[pos];
+                    result.insert(element);
                 }
-            }
-
-            for (auto offset = 1; offset + position <= max_x; ++offset)
-            {
-                for (auto y = 0; y <= max_y; ++y)
+                else
                 {
-                    v2 pos = v2(offset + position, y);
-                    if (input[pos] == '#')
-                        result[v2(position - offset, y)] = input[pos];
+                    if (element.x == position)
+                    {
+                        continue;
+                    }
+                    int offset = element.x - position;
+                    result.insert(v2(position - offset, element.y));
                 }
             }
         }
 
         if (axis == "y")
         {
-            for (auto ind = position - 1; ind >= 0; --ind)
+            for (auto element : input)
             {
-                for (auto x = 0; x <= max_x; ++x)
+                if (element.y < position)
                 {
-                    v2 pos = v2(x, ind);
-                    result[pos] = input[pos];
+                    result.insert(element);
                 }
-            }
-
-            for (auto offset = 1; offset + position <= max_y; ++offset)
-            {
-                for (auto x = 0; x <= max_x; ++x)
+                else
                 {
-                    v2 pos = v2(x, offset + position);
-                    if (input[pos] == '#')
-                        result[v2(x, position - offset)] = input[pos];
+                    if (element.y == position)
+                    {
+                        continue;
+                    }
+                    int offset = element.y - position;
+                    result.insert(v2(element.x, position - offset));
                 }
             }
         }
@@ -76,7 +63,6 @@ private:
 
     int64_t part1()
     {
-
         for (auto ln : inputVec)
         {
             if (ln.find("fold") != std::string::npos)
@@ -86,43 +72,20 @@ private:
             else
             {
                 auto positions = util::splitInt(ln, ',');
-                dots[v2(positions[0], positions[1])] = '#';
+                dots.insert(v2(positions[0], positions[1]));
             }
         }
 
         std::string instruction = folds[0].substr(std::string("fold along ").size());
 
         auto result = fold_map(dots, instruction);
-
-        int sum = 0;
-        for (auto [pos, val] : result)
-        {
-            if (val == '#')
-                sum++;
-        }
-
-        return sum;
+        return result.size();
     }
 
     std::string part2()
     {
-        std::vector<std::string> folds;
-
-        for (auto ln : inputVec)
-        {
-            if (ln.find("fold") != std::string::npos)
-            {
-                folds.push_back(ln);
-            }
-            else
-            {
-                auto positions = util::splitInt(ln, ',');
-                dots[v2(positions[0], positions[1])] = '#';
-            }
-        }
-
         std::string result = "";
-        std::map<v2, int8_t> input = dots;
+        std::set<v2> input = dots;
 
         for (auto ln : folds)
         {
@@ -133,7 +96,7 @@ private:
         int max_x = 0;
         int max_y = 0;
 
-        for (auto [pos, val] : input)
+        for (auto pos : input)
         {
             max_x = std::max(max_x, pos.x);
             max_y = std::max(max_y, pos.y);
@@ -145,7 +108,7 @@ private:
 
             for (int x = 0; x <= max_x; ++x)
             {
-                if (input[v2(x, y)] == 0)
+                if (input.find(v2(x, y)) == input.end())
                     result += " ";
                 else
                     result += "#";
