@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2021_DAY12
 
 #include "../includes/aoc.h"
+#include <unordered_map>
 
 class Day12 {
 private:
@@ -14,7 +15,7 @@ private:
         bool big_cave;
     };
 
-    std::map<std::string, Cave> all_caves;
+    std::unordered_map<std::string, Cave> all_caves;
 
     int32_t build_paths(std::string current_node, std::string curr_path, bool visited_twice)
     {
@@ -26,13 +27,13 @@ private:
 
         if (curr_path.find(node.name) != std::string::npos)
             visited_twice = true;
-        
+
         if (node.name == "end")
             return 1;
         
-        for (auto ch : node.connected)
+        for (auto [ch, weight] : node.connected)
         {
-            sum += ch.second * build_paths(ch.first, curr_path + node.name, visited_twice);
+            sum += weight * build_paths(ch, curr_path + node.name, visited_twice);
         }
 
         return sum;
@@ -40,109 +41,68 @@ private:
 
     void build_caves()
     {
+        std::unordered_map<std::string, Cave> all_caves_temp;
+
         for (auto ln : inputVec)
         {
             auto line = util::split(ln, '-');
 
-            Cave temp;
-            Cave temp_back;
-
-            if (all_caves.find(line[0]) != all_caves.end())
-            {
-                temp = all_caves[line[0]];
-            }
-
-            if (all_caves.find(line[1]) != all_caves.end())
-            {
-                temp_back = all_caves[line[1]];
-            }
+            Cave& temp = all_caves_temp[line[0]];
+            Cave& temp_back = all_caves_temp[line[1]];
 
             temp.name = line[0];
-            temp.connected.push_back(std::make_pair(line[1], 1));
             temp.big_cave = std::isupper(line[0][0]);
 
             temp_back.name = line[1];
-            temp_back.connected.push_back(std::make_pair(line[0], 1));
             temp_back.big_cave = std::isupper(line[1][0]);
 
-            all_caves[line[0]] = temp;
-            all_caves[line[1]] = temp_back;
+
+            if (line[1] != "start")
+                temp.connected.push_back(std::make_pair(line[1], 1));
+
+            if (line[0] != "start")
+                temp_back.connected.push_back(std::make_pair(line[0], 1));
         }
 
-        std::map<std::string, Cave> all_caves_no_big_caves;
-
-        for (auto& [key, cave] : all_caves)
-        {
-            int index = 0;
-            for (auto target : cave.connected)
-            {
-                if (target.first == "start")
-                {
-                    cave.connected.erase(cave.connected.begin() + index);
-                    break;
-                }
-
-                ++index;
-            }
-        }
-
-        all_caves["end"].connected.clear();
-
-        for (auto& [key, cave] : all_caves)
+        for (auto& [key, cave] : all_caves_temp)
         {
             if (!cave.big_cave)
             {
-                auto& entry = all_caves_no_big_caves[key];
+                auto& entry = all_caves[key];
                 entry.name = key;
                 entry.big_cave = false;
 
                 for (auto [target, weight] : cave.connected)
                 {
-                    if (all_caves[target].big_cave)
+                    if (all_caves_temp[target].big_cave)
                     {
-                        auto& temp_entry = all_caves[target];
+                        auto& temp_entry = all_caves_temp[target];
                         for (auto& [name, inner_weight] : temp_entry.connected)
                         {
-                            bool found = false;
+                            auto it = std::find_if(entry.connected.begin(), entry.connected.end(), [&name](const std::pair<std::string, int32_t>& element) {
+                                return element.first == name;
+                            });
 
-                            for (auto& [cave_small, inner_weight_small] : entry.connected)
-                            {
-                                if (cave_small == target)
-                                {
-                                    found = true;
-                                    ++inner_weight_small;
-                                }
-                            }
-
-                            if (!found)
-                            {
+                            if (it == entry.connected.end())
                                 entry.connected.push_back(std::make_pair(name, 1));
-                            }
+                            else
+                                it->second++;
                         }
                     }
                     else
                     {
-                        bool found = false;
+                        auto it = std::find_if(entry.connected.begin(), entry.connected.end(), [&target](const std::pair<std::string, int32_t>& element) {
+                            return element.first == target;
+                        });
 
-                        for (auto& [name, inner_weight] : entry.connected)
-                        {
-                            if (name == target)
-                            {
-                                found = true;
-                                ++inner_weight;
-                            }
-                        }
-                        
-                        if (!found)
-                        {
+                        if (it == entry.connected.end())
                             entry.connected.push_back(std::make_pair(target, 1));
-                        }
+                        else
+                            it->second++;
                     }
                 }
             }
         }
-
-        std::swap(all_caves, all_caves_no_big_caves);
     }
 
     int32_t part1()
