@@ -50,8 +50,7 @@ private:
                 temp_occ[first] += val;
                 temp_occ[second] += val;
             }
-
-            std::swap(temp_occ, occurrences);
+            occurrences = std::move(temp_occ);
         }
 
         std::unordered_map<int8_t, int64_t> counts;
