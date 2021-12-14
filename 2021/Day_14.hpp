@@ -58,10 +58,10 @@ private:
 
         for (auto [key, val] : occurrences)
         {
-            counts[key.substr(0, 1)[0]] += val;
+            counts[key[0]] += val;
         }
 
-        counts[start.substr(start.size() - 1)[0]]++;
+        counts[start[start.size() - 1]]++;
 
         int64_t max = 0;
         int64_t min = std::numeric_limits<int64_t>::max();
