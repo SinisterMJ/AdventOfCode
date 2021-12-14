@@ -35,9 +35,7 @@ private:
         std::unordered_map<std::string, int64_t> occurrences;
 
         for (int i = 0; i < start.size() - 1; ++i)
-        {
             occurrences[start.substr(i, 2)]++;
-        }
 
         for (int i = 0; i < rounds; ++i)
         {
@@ -56,9 +54,7 @@ private:
         std::unordered_map<int8_t, int64_t> counts;
 
         for (auto [key, val] : occurrences)
-        {
             counts[key[0]] += val;
-        }
 
         counts[start[start.size() - 1]]++;
 
