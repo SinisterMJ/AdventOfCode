@@ -2,21 +2,77 @@
 #define ADVENTOFCODE2021_DAY14
 
 #include "../includes/aoc.h"
+#include <unordered_map>
 
 class Day14 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
-    std::vector<int64_t> adapters;
 
-    int64_t part1()
+    std::unordered_map<std::string, std::string> rules;
+    std::string start = "";
+
+    void build_rules()
     {
-        return 0;
+        for (auto ln : inputVec)
+        {
+            if (ln.find("->") != std::string::npos)
+            {
+                std::string left = ln.substr(0, 2);
+                std::string right = ln.substr(ln.size() - 1);
+
+                rules[left] = right;
+            }
+            else
+            {
+                start = ln;
+            }
+        }
     }
 
-    int64_t part2()
+    int64_t solve(int rounds)
     {
-        return 0;
+        std::unordered_map<std::string, int64_t> occurrences;
+
+        for (int i = 0; i < start.size() - 1; ++i)
+        {
+            occurrences[start.substr(i, 2)]++;
+        }
+
+        for (int i = 0; i < rounds; ++i)
+        {
+            std::unordered_map<std::string, int64_t> temp_occ;
+            for (auto [el, val] : occurrences)
+            {
+                std::string first = el.substr(0, 1) + rules[el];
+                std::string second = rules[el] + el.substr(1);
+
+                temp_occ[first] += val;
+                temp_occ[second] += val;
+            }
+
+            std::swap(temp_occ, occurrences);
+        }
+
+        std::unordered_map<int8_t, int64_t> counts;
+
+        for (auto [key, val] : occurrences)
+        {
+            counts[key.substr(0, 1)[0]] += val;
+        }
+
+        counts[start.substr(start.size() - 1)[0]]++;
+
+        int64_t max = 0;
+        int64_t min = std::numeric_limits<int64_t>::max();
+
+        for (auto [key, val] : counts)
+        {
+            max = std::max(max, val);
+            min = std::min(min, val);
+        }
+
+        return max - min;
     }
 
 public:
@@ -31,10 +87,10 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        adapters = util::ConvertToInt64(inputVec);
+        build_rules();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result_1 = solve(10);
+        auto result_2 = solve(40);
 
         int64_t time = myTime.usPassed();
         std::cout 
