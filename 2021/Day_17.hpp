@@ -41,7 +41,9 @@ private:
                 v2 position = v2(0, 0);
                 v2 vector(x, y);
 
-                while (position.y >= target_y[0] && position.x <= target_x[1])
+                while (position.y >= target_y[0] &&
+                    position.x <= target_x[1] && // overshot target
+                    (position.x >= target_x[0] || vector.x > 0)) // undershot target
                 {
                     position += vector;
                     vector.x = std::max(0, vector.x - 1);
