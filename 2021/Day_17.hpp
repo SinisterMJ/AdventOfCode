@@ -27,54 +27,7 @@ private:
         target_y[0] = std::stoi(y_range.substr(0, pos_start));
         target_y[1] = std::stoi(y_range.substr(pos_start + 2));
 
-        v2 position(0, 0);
-
-        int32_t candidate = 0;
-
-        for (int x = 1; x < target_x[1]; ++x)
-        {
-            position = v2(0, 0);
-            int step = 0;
-            v2 vector(x, 0);
-
-            while (vector.x >= 0)
-            {
-                position += vector;
-                vector.x--;
-                step++;
-
-                if (target_x[0] <= position.x && position.x <= target_x[1] && vector.x == 0)
-                {
-                    candidate = x;
-                }
-            }
-        }
-
-        int max_height_total = 0;
-
-        for (int y = 0; y < -target_y[0]; ++y)
-        {
-            position = v2(0, 0);
-            v2 vector(candidate, y);
-            int max_height = 0;
-
-            while (position.y >= target_y[0])
-            {
-                position += vector;                
-                max_height = std::max(position.y, max_height);
-                vector.x = std::max(0, vector.x - 1);
-                vector.y--;
-
-                if (target_x[0] <= position.x && position.x <= target_x[1] &&
-                    target_y[0] <= position.y && position.y <= target_y[1])
-                {
-                    max_height_total = std::max(max_height, max_height_total);
-                    break;
-                }
-            }
-        }
-
-        return max_height_total;
+        return target_y[0] * (target_y[0] + 1) / 2;
     }
 
     int64_t part2()
@@ -88,7 +41,7 @@ private:
                 v2 position = v2(0, 0);
                 v2 vector(x, y);
 
-                while (position.y >= target_y[0])
+                while (position.y >= target_y[0] && position.x <= target_x[1])
                 {
                     position += vector;
                     vector.x = std::max(0, vector.x - 1);
