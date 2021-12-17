@@ -79,36 +79,29 @@ private:
             }
 
             if (type == 0)
-            {
                 for (auto val : values)
                     value += val;
-            }
-            else if (type == 1)
+
+            if (type == 1)
             {
                 value = 1;
                 for (auto val : values)
                     value *= val;
             }
-            else if (type == 2)
-            {
-                value = std::numeric_limits<int64_t>::max();
-                for (auto val : values)
-                    value = std::min(val, value);
-            }
-            else if (type == 3)
-            {
-                value = std::numeric_limits<int64_t>::min();
-                for (auto val : values)
-                    value = std::max(val, value);
-            }
             
-            else if (type == 5)
+            if (type == 2)
+                value = *std::min_element(values.begin(), values.end());
+            
+            if (type == 3)
+                value = *std::max_element(values.begin(), values.end());
+            
+            if (type == 5)
                 value = (values[0] > values[1]);
             
-            else if (type == 6)
+            if (type == 6)
                 value = (values[0] < values[1]);
 
-            else if (type == 7)
+            if (type == 7)
                 value = (values[0] == values[1]);
 
             return std::make_pair(length_used, value);
