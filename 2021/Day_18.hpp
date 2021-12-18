@@ -15,6 +15,14 @@ private:
         int32_t val_right = -1;
         Snailnumber* parent;
         bool passed_comma{ false };
+
+        ~Snailnumber()
+        {
+            if (left)
+                delete left;
+            if (right)
+                delete right;
+        }
     };
 
     Snailnumber* parse_line(std::string input)
@@ -166,12 +174,14 @@ private:
             
             if (parent->left == input)
             {
+                delete parent->left;
                 parent->left = nullptr;
                 parent->val_left = 0;
             }
 
             if (parent->right == input)
             {
+                delete parent->right;
                 parent->right = nullptr;
                 parent->val_right = 0;
             }
@@ -249,7 +259,7 @@ private:
         return result;
     }
 
-    int64_t part1()
+    int32_t part1()
     {
         Snailnumber* result = parse_line(inputVec[0]);
         for (int index = 1; index < inputVec.size(); ++index)
@@ -259,10 +269,13 @@ private:
             result = merge_numbers(result, thisNumber);
         }
 
-        return get_value(result);
+        int32_t result_int = get_value(result);
+        delete result;
+
+        return result_int;
     }
 
-    int64_t part2()
+    int32_t part2()
     {
         int32_t max = 0;
         for (int i = 0; i < inputVec.size(); ++i)
@@ -277,6 +290,9 @@ private:
 
                 auto result = merge_numbers(first, second);
                 max = std::max(max, get_value(result));
+
+                delete first;
+                delete second;
            }
         }
 
