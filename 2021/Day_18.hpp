@@ -289,8 +289,8 @@ private:
                 auto result = merge_numbers(first, second);
                 max = std::max(max, get_value(result));
 
-                delete first;
-           }
+                delete result;
+            }
         }
 
         return max;
