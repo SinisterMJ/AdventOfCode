@@ -9,33 +9,35 @@ private:
     std::vector<std::string> inputVec;
 
     struct Snailnumber {
-        Snailnumber* left { nullptr };
-        Snailnumber* right { nullptr };
+        std::shared_ptr<Snailnumber> left { nullptr };
+        std::shared_ptr<Snailnumber> right { nullptr };
         int32_t val_left = -1;
         int32_t val_right = -1;
-        Snailnumber* parent;
+        std::shared_ptr<Snailnumber> parent;
         bool passed_comma{ false };
 
         ~Snailnumber()
         {
             if (left)
-                delete left;
+                left.reset();
             if (right)
-                delete right;
+                right.reset();
+            if (parent)
+                parent = nullptr;
         }
     };
 
-    Snailnumber* parse_line(std::string input)
+    std::shared_ptr<Snailnumber> parse_line(std::string input)
     {
-        Snailnumber* result = new Snailnumber();
-        Snailnumber* current = result;
+        std::shared_ptr<Snailnumber> result(new Snailnumber());
+        std::shared_ptr<Snailnumber> current = result;
 
         for (int index = 1; index < input.size() - 1; ++index)
         {
             auto ch = input[index];
             if (ch == '[')
             {
-                Snailnumber* temp = new Snailnumber();
+                std::shared_ptr<Snailnumber> temp(new Snailnumber());
 
                 if (current->passed_comma)
                     current->right = temp;
@@ -66,7 +68,7 @@ private:
         return result;
     }
 
-    bool split(Snailnumber* input)
+    bool split(std::shared_ptr<Snailnumber> input)
     {
         bool res = false;
 
@@ -78,7 +80,7 @@ private:
 
         if (input->val_left >= 10)
         {
-            Snailnumber* newNode = new Snailnumber();
+            std::shared_ptr<Snailnumber> newNode(new Snailnumber());
             newNode->parent = input;
             input->left = newNode;
             newNode->val_left = input->val_left / 2;
@@ -90,7 +92,7 @@ private:
 
         if (input->val_right >= 10)
         {
-            Snailnumber* newNode = new Snailnumber();
+            std::shared_ptr<Snailnumber> newNode(new Snailnumber());
             newNode->parent = input;
             input->right = newNode;
             newNode->val_left = input->val_right / 2;
@@ -106,7 +108,7 @@ private:
         return res;
     }
 
-    void add_to_right(int32_t val, Snailnumber* input, Snailnumber* current)
+    void add_to_right(int32_t val, std::shared_ptr<Snailnumber> input, std::shared_ptr<Snailnumber> current)
     {
         while (current->right == input && current->parent != nullptr)
         {
@@ -130,7 +132,7 @@ private:
         }
     }
      
-    void add_to_left(int32_t val, Snailnumber* input, Snailnumber* current)
+    void add_to_left(int32_t val, std::shared_ptr<Snailnumber> input, std::shared_ptr<Snailnumber> current)
     {
         while (current->left == input && current->parent != nullptr)
         {
@@ -153,7 +155,7 @@ private:
         }
     }
 
-    bool explode(Snailnumber* input, int depth)
+    bool explode(std::shared_ptr<Snailnumber> input, int depth)
     {
         if (depth < 4)
         {
@@ -174,14 +176,14 @@ private:
             
             if (parent->left == input)
             {
-                delete parent->left;
+                parent->left.reset();
                 parent->left = nullptr;
                 parent->val_left = 0;
             }
 
             if (parent->right == input)
             {
-                delete parent->right;
+                parent->right.reset();
                 parent->right = nullptr;
                 parent->val_right = 0;
             }
@@ -199,9 +201,9 @@ private:
         return returnValue;
     }
 
-    Snailnumber* merge_numbers(Snailnumber* left, Snailnumber* right)
+    std::shared_ptr<Snailnumber> merge_numbers(std::shared_ptr<Snailnumber> left, std::shared_ptr<Snailnumber> right)
     {
-        Snailnumber* result = new Snailnumber();
+        std::shared_ptr<Snailnumber> result(new Snailnumber());
         result->left = left;
         result->right = right;
         left->parent = result;
@@ -219,7 +221,7 @@ private:
         return result;
     }
 
-    int32_t get_value(Snailnumber* input)
+    int32_t get_value(std::shared_ptr<Snailnumber> input)
     {
         int32_t sum = 0;
 
@@ -236,7 +238,7 @@ private:
         return sum;
     }
 
-    std::string get_string(Snailnumber* input)
+    std::string get_string(std::shared_ptr<Snailnumber> input)
     {
         std::string result = "[";
         
@@ -259,7 +261,7 @@ private:
 
     int32_t part1()
     {
-        Snailnumber* result = parse_line(inputVec[0]);
+        std::shared_ptr<Snailnumber> result = parse_line(inputVec[0]);
         for (int index = 1; index < inputVec.size(); ++index)
         {
             auto ln = inputVec[index];
@@ -267,10 +269,7 @@ private:
             result = merge_numbers(result, thisNumber);
         }
 
-        int32_t result_int = get_value(result);
-        delete result;
-
-        return result_int;
+        return get_value(result);
     }
 
     int32_t part2()
@@ -283,13 +282,11 @@ private:
                 if (i == j)
                     continue;
 
-                Snailnumber* first = parse_line(inputVec[i]);
-                Snailnumber* second = parse_line(inputVec[j]);
+                std::shared_ptr<Snailnumber> first = parse_line(inputVec[i]);
+                std::shared_ptr<Snailnumber> second = parse_line(inputVec[j]);
 
                 auto result = merge_numbers(first, second);
                 max = std::max(max, get_value(result));
-
-                delete result;
             }
         }
 
