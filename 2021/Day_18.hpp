@@ -102,7 +102,7 @@ private:
             return true;
         }
 
-        if (input->right != nullptr && !res)
+        if (input->right != nullptr)
             res |= split(input->right);
 
         return res;
