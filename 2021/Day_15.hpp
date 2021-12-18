@@ -10,6 +10,9 @@ private:
     std::vector<std::string> inputVec;
     std::unordered_map<v2, int32_t> risk_map;
 
+    int32_t max_x{ 0 };
+    int32_t max_y{ 0 };
+
     void buildmap(bool big)
     {
         v2 curr_pos(0, 0);
@@ -27,17 +30,11 @@ private:
             curr_pos.y++;
         }
 
+        max_x = curr_pos.x;
+        max_y = curr_pos.y;
+
         if (!big)
             return;
-
-        int max_x = curr_pos.x;
-        int max_y = curr_pos.y;
-
-        for (auto [pos, val] : risk_map)
-        {
-            max_x = std::max(pos.x + 1, max_x);
-            max_y = std::max(pos.y + 1, max_y);
-        }
 
         for (int y = 0; y < 5; ++y)
         {
@@ -68,63 +65,44 @@ private:
                 }
             }
         }
+
+        max_x = curr_pos.x;
+        max_y = curr_pos.y;
     }
 
-    int64_t part1()
+    int64_t solve()
     {
         auto neighbours = MapHelper::getNeighboursVec(false);
-        v2 curr_pos = v2(0, 0);
-        
-        std::unordered_map<v2, int32_t> cummulative;
-        cummulative[curr_pos] = 0;
+        max_x--; max_y--;
 
-        std::set<v2> new_positions;
-        new_positions.insert(curr_pos);
-        while (new_positions.size() != 0)
+        std::set<v2> seen;
+        std::set<std::pair<int32_t, v2>> candidates;
+        candidates.insert(std::make_pair(0, v2(0, 0)));
+        seen.insert(v2(0, 0));
+
+        while (candidates.size() > 0)
         {
-            std::set<v2> added_positions;
-            for (auto pos : new_positions)
+            auto vec = *candidates.begin();
+            candidates.erase(vec);
+
+            for (auto& n : neighbours)
             {
-                auto val = cummulative[pos];
-                for (auto n : neighbours)
+                auto pos = n + vec.second;
+
+                if (in_range(pos.x, 0, max_x) && in_range(pos.y, 0, max_y))
                 {
-                    if (risk_map.find(n + pos) == risk_map.end())
+                    if (seen.find(pos) != seen.end())
                         continue;
 
-                    if (cummulative.find(n + pos) == cummulative.end() && risk_map.find(n + pos) != risk_map.end())
-                    {
-                        cummulative[n + pos] = val + risk_map[n + pos];
-                        added_positions.insert(n + pos);
-                    }
-                    else
-                    {
-                        if (val + risk_map[n + pos] < cummulative[n + pos])
-                        {
-                            cummulative[n + pos] = val + risk_map[n + pos];
-                            added_positions.insert(n + pos);
-                        }
-                    }
+                    seen.insert(pos);
+                    int value = vec.first + risk_map[pos];
+                    candidates.insert(std::make_pair(value, pos));
+
+                    if (pos.x == max_x && pos.y == max_y)
+                        return value;
                 }
             }
-            std::swap(added_positions, new_positions);
         }
-
-        int max_x = 0;
-        int max_y = 0;
-
-        for (auto [pos, val] : cummulative)
-        {
-            max_x = std::max(pos.x, max_x);
-            max_y = std::max(pos.y, max_y);
-        }
-
-        return cummulative[v2(max_x, max_y)];
-    }
-
-    int64_t part2()
-    {
-        int max_x = 0;
-        int max_y = 0;
 
         return 0;
     }
@@ -142,10 +120,10 @@ public:
         myTime.start();
 
         buildmap(false);
-        auto result_1 = part1();
+        auto result_1 = solve();
 
         buildmap(true);
-        auto result_2 = part1();
+        auto result_2 = solve();
 
         int64_t time = myTime.usPassed();
         std::cout
