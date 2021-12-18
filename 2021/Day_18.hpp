@@ -212,8 +212,6 @@ private:
             bool changed = explode(result, 0);
             if (!changed)
                 changed = split(result);
-
-            //std::cout << get_string(result) << std::endl;
             if (!changed)
                 break;
         }
@@ -292,7 +290,6 @@ private:
                 max = std::max(max, get_value(result));
 
                 delete first;
-                delete second;
            }
         }
 
