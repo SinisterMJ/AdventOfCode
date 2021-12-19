@@ -202,7 +202,19 @@ struct v3
 	int y;
 	int z;
 
+    double length()
+    {
+        double l2 = x * x + y * y + z * z;
+        return std::sqrt(l2);
+    }
+
+    int32_t manhattan()
+    {
+        return std::abs(x) + std::abs(y) + std::abs(z);
+    }
+
     v3& operator+= (const v3& b) { x += b.x; y += b.y; z += b.z;  return *this; }
+    v3& operator-= (const v3& b) { x -= b.x; y -= b.y; z -= b.z;  return *this; }
 
 	int& operator[](int index)
 	{
@@ -220,6 +232,11 @@ struct v3
         if (index == 1)
             return y;
         return z;
+    }
+
+    v3 operator-() const
+    {
+        return v3(-x, -y, -z);
     }
 };
 
