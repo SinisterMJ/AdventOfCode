@@ -215,6 +215,17 @@ struct v3
 
     v3& operator+= (const v3& b) { x += b.x; y += b.y; z += b.z;  return *this; }
     v3& operator-= (const v3& b) { x -= b.x; y -= b.y; z -= b.z;  return *this; }
+    v3& operator-= (const int32_t& b) { x *= b; y *= b; z *= b;  return *this; }
+    v3 cross(const v3& b) 
+    {
+        v3 result;
+
+        result.x = y * b.z - z * b.y;
+        result.y = z * b.x - x * b.z;
+        result.z = x * b.y - y * b.x;
+
+        return result;
+    }
 
 	int& operator[](int index)
 	{
@@ -251,6 +262,9 @@ bool operator >= (const v3& a, const v3& b) { return !(a < b); }
 
 v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
 v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
+v3 operator * (const v3& a, const int32_t& b) { return v3(a.x * b, a.y * b, a.z * b); }
+
+int operator * (const v3& a, const v3& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 
 struct v4
 {

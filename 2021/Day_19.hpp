@@ -8,10 +8,9 @@ class Day19 {
 private:
     std::string inputString;
     std::vector<std::string> inputVec;
-
     std::vector<std::vector<v3>> list_scanners;
 
-    std::map<std::string, std::string> find_overlap(std::vector<v3>& first, std::vector<v3>& second)
+    std::map<std::string, v3> find_overlap(std::vector<v3>& first, std::vector<v3>& second)
     {
         std::vector<v3> displacements_first;
         std::vector<v3> displacements_second;
@@ -25,7 +24,7 @@ private:
                 displacements_second.push_back(second[i] - second[j]);
 
         int count = 0;
-        std::map<std::string, std::string> mapping;
+        std::map<std::string, v3> mapping;
 
         for (int i = 0; i < displacements_first.size(); ++i)
         {
@@ -47,27 +46,27 @@ private:
                     }
                     
                     if (std::abs(vec_second.x) == x)
-                        mapping["x"] = (vec_second.x == vec_first.x) ? "x" : "-x";
+                        mapping["x"] = (vec_second.x == vec_first.x) ? v3(1, 0, 0) : v3(-1, 0, 0);
                     if (std::abs(vec_second.y) == x)
-                        mapping["x"] = (vec_second.y == vec_first.x) ? "y" : "-y";
+                        mapping["x"] = (vec_second.y == vec_first.x) ? v3(0, 1, 0) : v3(0, -1, 0);
                     if (std::abs(vec_second.z) == x)
-                        mapping["x"] = (vec_second.z == vec_first.x) ? "z" : "-z";
+                        mapping["x"] = (vec_second.z == vec_first.x) ? v3(0, 0, 1) : v3(0, 0, -1);
 
 
                     if (std::abs(vec_second.x) == y)
-                        mapping["y"] = (vec_second.x == vec_first.y) ? "x" : "-x";
+                        mapping["y"] = (vec_second.x == vec_first.y) ? v3(1, 0, 0) : v3(-1, 0, 0);
                     if (std::abs(vec_second.y) == y)
-                        mapping["y"] = (vec_second.y == vec_first.y) ? "y" : "-y";
+                        mapping["y"] = (vec_second.y == vec_first.y) ? v3(0, 1, 0) : v3(0, -1, 0);
                     if (std::abs(vec_second.z) == y)
-                        mapping["y"] = (vec_second.z == vec_first.y) ? "z" : "-z";
+                        mapping["y"] = (vec_second.z == vec_first.y) ? v3(0, 0, 1) : v3(0, 0, -1);
 
 
                     if (std::abs(vec_second.x) == z)
-                        mapping["z"] = (vec_second.x == vec_first.z) ? "x" : "-x";
+                        mapping["z"] = (vec_second.x == vec_first.z) ? v3(1, 0, 0) : v3(-1, 0, 0);
                     if (std::abs(vec_second.y) == z)
-                        mapping["z"] = (vec_second.y == vec_first.z) ? "y" : "-y";
+                        mapping["z"] = (vec_second.y == vec_first.z) ? v3(0, 1, 0) : v3(0, -1, 0);
                     if (std::abs(vec_second.z) == z)
-                        mapping["z"] = (vec_second.z == vec_first.z) ? "z" : "-z";
+                        mapping["z"] = (vec_second.z == vec_first.z) ? v3(0, 0, 1) : v3(0, 0, -1);
 
                     count++;
                     break;
@@ -76,51 +75,31 @@ private:
         }
 
         if (count < 66)
-            return std::map<std::string, std::string>();
+            return std::map<std::string, v3>();
         else
+        {
+            v3 cross = mapping["x"].cross(mapping["y"]);
+
+            if (cross != mapping["z"])
+            {
+                mapping["x"] = -mapping["x"];
+                mapping["y"] = -mapping["y"];
+                mapping["z"] = -mapping["z"];
+            }
+
             return mapping;
+        }
     }
 
-    void apply_mapping(std::vector<v3>& second, std::map<std::string, std::string> mapping)
+    void apply_mapping(std::vector<v3>& second, std::map<std::string, v3> mapping)
     {
         for (auto& vec : second)
         {
-            int x = vec.x;
-            int y = vec.y;
-            int z = vec.z;
-
-            if (mapping["x"] == "-x")
-                vec.x = -x;
-            if (mapping["x"] == "y")
-                vec.x = y;
-            if (mapping["x"] == "-y")
-                vec.x = -y;
-            if (mapping["x"] == "z")
-                vec.x = z;
-            if (mapping["x"] == "-z")
-                vec.x = -z;
-
-            if (mapping["y"] == "x")
-                vec.y = x;
-            if (mapping["y"] == "-x")
-                vec.y = -x;
-            if (mapping["y"] == "-y")
-                vec.y = -y;
-            if (mapping["y"] == "z")
-                vec.y = z;
-            if (mapping["y"] == "-z")
-                vec.y = -z;
-
-            if (mapping["z"] == "x")
-                vec.z = x; 
-            if (mapping["z"] == "-x")
-                vec.z = -x;
-            if (mapping["z"] == "y")
-                vec.z = y;
-            if (mapping["z"] == "-y")
-                vec.z = -y;
-            if (mapping["z"] == "-z")
-                vec.z = -z;
+            v3 temp = vec;
+                        
+            vec.x = mapping["x"] * temp;
+            vec.y = mapping["y"] * temp;
+            vec.z = mapping["z"] * temp;
         }
     }
 
@@ -159,14 +138,11 @@ private:
                 int index_second = -1;
 
                 if (vec_first == vec_second)
-                {
                     index_second = std::get<1>(displacements_second[j]);
-                }
+                
                 if (vec_first == -vec_second)
-                {
                     index_second = std::get<2>(displacements_second[j]);
-                }
-
+                
                 if (index_second >= 0)
                 {
                     // Check if another vector fits as well?
@@ -184,16 +160,6 @@ private:
                     offsets.push_back(offset);
                 }
             }
-        }
-
-        if (offsets[0] != offsets[1] || offsets[1] != offsets[10])
-        {
-            for (auto& vec : second)
-            {
-                vec = -vec;
-            }
-
-            return (find_offset(first, second));
         }
 
         return offset;
@@ -219,9 +185,7 @@ private:
         }
 
         list_scanners.push_back(list);
-        std::sort(list_scanners[0].begin(), list_scanners[0].end());
 
-        int sum = 0;
         std::set<int32_t> seen;
         seen.insert(0);
         std::vector<v3> offsets;
