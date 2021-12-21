@@ -20,26 +20,16 @@ private:
         int32_t points_2 = 0;
 
         int32_t die = 1;
-        int32_t dieRolls = 0;
 
-        while (points_1 < 1000 && points_2 < 1000)
+        while (true)
         {
             for (int i = 0; i < 3; ++i)
             {
                 pos_1 += die;
                 die++;
-
-                if (die > 100)
-                    die = 1;
-
-                dieRolls++;
             }
 
-            while (pos_1 > 10)
-            {
-                pos_1 -= 10;
-            }
-
+            pos_1 = (pos_1 - 1) % 10 + 1;
             points_1 += pos_1;
 
             if (points_1 >= 1000)
@@ -49,35 +39,29 @@ private:
             {
                 pos_2 += die;
                 die++;
-
-                if (die > 100)
-                    die = 1;
-
-                dieRolls++;
             }
-
-            while (pos_2 > 10)
-            {
-                pos_2 -= 10;
-            }
-
+            
+            pos_2 = (pos_2 - 1) % 10 + 1;
             points_2 += pos_2;
+
+            if (points_2 >= 1000)
+                break;
         }
 
         if (points_1 >= 1000)
-            return points_2 * dieRolls;
+            return points_2 * (die - 1);
         else
-            return points_1 * dieRolls;
+            return points_1 * (die - 1);
     }
 
     /*
-    111
-    112 211 121
-    113 131 311 122 212 221
-    123 132 321 312 213 231 222
-    133 313 331 223 232 322
-    233 323 332
-    333
+    3: 111
+    4: 112 211 121
+    5: 113 131 311 122 212 221
+    6: 123 132 321 312 213 231 222
+    7: 133 313 331 223 232 322
+    8: 233 323 332
+    9: 333
     */
 
 
@@ -92,7 +76,7 @@ private:
                 auto newPos = pos_1;
                 newPos += i;
 
-                while (newPos > 10)
+                if (newPos > 10)
                     newPos -= 10;
 
                 auto new_score_1 = points_1 + newPos;
@@ -109,7 +93,7 @@ private:
                 auto newPos = pos_2;
                 newPos += i;
 
-                while (newPos > 10)
+                if (newPos > 10)
                     newPos -= 10;
 
                 auto new_score_2 = points_2 + newPos;
@@ -123,13 +107,10 @@ private:
 
     int64_t part2()
     {
-        int32_t pos_1 = start_player1;
-        int32_t pos_2 = start_player2;
-
         int64_t wins_1 = 0;
         int64_t wins_2 = 0;
 
-        recursive(pos_1, pos_2, 0, 0, true, 1, wins_1, wins_2);
+        recursive(start_player1, start_player2, 0, 0, true, 1, wins_1, wins_2);
 
         return std::max(wins_1, wins_2);
     }
