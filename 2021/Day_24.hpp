@@ -102,6 +102,8 @@ private:
         for (auto res : results)
             i_results.push_back(std::stoll(res));
 
+        std::sort(i_results.begin(), i_results.end());
+
         return std::make_pair(i_results[i_results.size() - 1], i_results[0]);
     }
 
