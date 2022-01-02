@@ -27,17 +27,6 @@ private:
 
             std::vector<std::vector<int8_t>> after = seafloor;
 
-            // print seafloor
-            /*for (int y = 0; y < seafloor.size(); ++y)
-            {
-                for (int x = 0; x < seafloor[y].size(); ++x)
-                {
-                    std::cout << seafloor[y][x];
-                }
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;*/
-
             for (int y = 0; y < seafloor.size(); ++y)
             {
                 for (int x = 0; x < seafloor[y].size(); ++x)
@@ -54,8 +43,7 @@ private:
                 }
             }
 
-            std::swap(after, seafloor);
-            after = seafloor;
+            seafloor = after;
 
             for (int y = 0; y < seafloor.size(); ++y)
             {

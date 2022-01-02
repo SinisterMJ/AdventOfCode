@@ -49,13 +49,9 @@ private:
             {
                 v2 tempPos(x, y);
                 if (room.find(tempPos) != room.end())
-                {
                     std::cout << room[tempPos];
-                }
                 else
-                {
                     std::cout << " ";
-                }
             }
             std::cout << std::endl;
         }
@@ -204,6 +200,70 @@ private:
 
                         candidates.insert(std::make_pair(cost, room));
                         
+                        room[pos] = val;
+                        room[target] = '.';
+                        cost -= steps * costs[val];
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
+
+    int32_t runStepsDebugging(std::map<v2, int8_t>& rooms)
+    {
+        std::set<std::map<v2, int8_t>> states;
+        std::map<std::map<v2, int8_t>, int32_t> cost_states;
+        std::map<std::map<v2, int8_t>, std::map<v2, int8_t>> states_history;
+
+        std::set<std::pair<int32_t, std::map<v2, int8_t>>> candidates;
+        std::map<v2, int8_t> room(rooms);
+
+        std::map<int8_t, int32_t> costs;
+        costs['A'] = 1;
+        costs['B'] = 10;
+        costs['C'] = 100;
+        costs['D'] = 1000;
+        std::vector<v2> sideSteps;
+        sideSteps.push_back(v2(1, 0));
+        sideSteps.push_back(v2(-1, 0));
+        sideSteps.push_back(v2(0, 1));
+
+        candidates.insert(std::make_pair(0, room));
+
+        while (true)
+        {
+            auto cand = *candidates.begin();
+            room = cand.second;
+            int32_t cost = cand.first;
+            candidates.erase(candidates.begin());
+
+            if (states.find(room) == states.end())
+                states.insert(room);
+            else
+                continue;
+
+            //std::cout << cost << std::endl;  print(room);
+
+            if (checkDone(room))
+                return cost;
+
+            for (auto [pos, val] : room)
+            {
+                if (val >= 'A' && val <= 'D')
+                {
+                    auto moves = findValidMoves(room, pos);
+
+                    for (auto [steps, target] : moves)
+                    {
+                        room[target] = val;
+                        room[pos] = '.';
+                        cost += steps * costs[val];
+
+                        candidates.insert(std::make_pair(cost, room));
+
                         room[pos] = val;
                         room[target] = '.';
                         cost -= steps * costs[val];
