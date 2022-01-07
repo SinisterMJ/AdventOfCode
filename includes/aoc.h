@@ -162,6 +162,11 @@ struct v2
 	int abs() { return std::abs(x) + std::abs(y); }
 	int abs() const { return std::abs(x) + std::abs(y); }
 
+    int32_t manhattan()
+    {
+        return std::abs(x) + std::abs(y);
+    }
+
 	int x;
 	int y;
     v2 operator + (const v2& a) const { return v2(a.x + x, a.y + y); }

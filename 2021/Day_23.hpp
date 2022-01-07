@@ -57,6 +57,35 @@ private:
         }
     }
 
+    std::string print_string(std::map<v2, int8_t>& room)
+    {
+        int32_t min_y = 5;
+        int32_t max_y = 0;
+
+        std::string res = "";
+
+        for (auto [pos, val] : room)
+        {
+            min_y = std::min(pos.y, min_y);
+            max_y = std::max(pos.y, max_y);
+        }
+
+        for (int y = min_y; y <= max_y; ++y)
+        {
+            for (int x = 0; x < 14; ++x)
+            {
+                v2 tempPos(x, y);
+                if (room.find(tempPos) != room.end())
+                    res += room[tempPos];
+                else
+                    res += " ";
+            }
+            res += "\n";
+        }
+
+        return res;
+    }
+
     int32_t checkBelow(std::map<v2, int8_t>& room, int8_t val, v2 pos)
     {
         int32_t targetRow = 1;
@@ -68,18 +97,23 @@ private:
             targetRow = 7;
         if (val == 'D')
             targetRow = 9;
-        
-        if (pos.x != targetRow)
-            return -1;
+                
+        int32_t last_valid = -1;
 
-        for (int y = pos.y + 1;; y++)
+        bool end_found = false;
+        for (int y = 2; !end_found; y++)
         {
-            if (room.find(v2(targetRow, y)) == room.end() || room[v2(targetRow, y)] == val)
-                return y - pos.y - 1;
+            if (room.find(v2(targetRow, y)) == room.end())
+                break;
+
+            if (room[v2(targetRow, y)] == '.')
+                last_valid = y;
 
             if (room[v2(targetRow, y)] != val && room[v2(targetRow, y)] != '.')
                 return -1;
         }
+
+        return last_valid;
     }
 
     bool checkAbove(std::map<v2, int8_t>& room, v2 pos)
@@ -92,7 +126,7 @@ private:
 
         return true;
     }
-    
+
     std::vector<std::pair<int32_t, v2>> findValidMoves(std::map<v2, int8_t>& room, v2 start)
     {
         std::vector<std::pair<int32_t, v2>> result;
@@ -107,45 +141,57 @@ private:
         if (val == 'D')
             targetRow = 9;
 
-        v2 east(1, 0);
-        v2 west(-1, 0);
-        v2 south(0, 1);
-        v2 north(0, -1);
-        
-        if (start.y == 1) // left, right, south
+        if (start.y == 1) // Find distance to own cell or nothing
         {
-            {
-                int steps = checkBelow(room, val, start + east);
-                if (steps > 0)
-                    result.push_back(std::make_pair(steps + 1, start + east + south * steps));
-            }
-            {
-                int steps = checkBelow(room, val, start + west);
-                if (steps > 0)
-                    result.push_back(std::make_pair(steps + 1, start + west + south * steps));
-            }
-            if (start.x == 2 || start.x == 4 || start.x == 6 || start.x == 8)
-                east = v2(2, 0);
+            // Check if way is free
+            int step = (targetRow - start.x) / std::abs(targetRow - start.x);
 
-            if (start.x == 4 || start.x == 6 || start.x == 8 || start.x == 10)
-                west = v2(-2, 0);
-
-            if (room.find(start + east) != room.end() && room[start + east] == '.')
-                result.push_back(std::make_pair(std::abs(east.x), start + east));
+            for (int x = start.x + step; x != targetRow; x += step)
+                if (room[v2(x, 1)] != '.')
+                    return result;
             
-            if (room.find(start + west) != room.end() && room[start + west] == '.')
-                result.push_back(std::make_pair(std::abs(west.x), start + west));
+            // Check if space is free
+            int steps = checkBelow(room, val, v2(targetRow, 1));
+            v2 target = v2(targetRow, steps);
+
+            if (target.y == -1)
+                return result;
+            else
+                result.push_back(std::make_pair((target - start).manhattan(), target));
         }
-
-        if (start.y > 1 && checkAbove(room, start) && (checkBelow(room, val, start) != 0)) // north only with 1 west / east
+        else
         {
-            int steps = start.y - 1;
+            // Check if path is free on top:
+            if (!checkAbove(room, start))
+                return result;
 
-            if (room.find(start + north * steps + east) != room.end() && room[start + north * steps + east] == '.')
-                result.push_back(std::make_pair(steps + 1, start + north * steps + east));
+            // Go to the right:
+            for (int x = start.x;; ++x)
+            {
+                v2 pos(x, 1);
+                if (room.find(pos) == room.end())
+                    break;
+                if (x == 3 || x == 5 || x == 7 || x == 9)
+                    continue;
+                if (room[pos] != '.')
+                    break;
 
-            if (room.find(start + north * steps + west) != room.end() && room[start + north * steps + west] == '.')
-                result.push_back(std::make_pair(steps + 1, start + north * steps + west));
+                result.push_back(std::make_pair((pos - start).manhattan(), pos));
+            }
+
+            // And the left...
+            for (int x = start.x;; --x)
+            {
+                v2 pos(x, 1);
+                if (room.find(pos) == room.end())
+                    break;
+                if (x == 3 || x == 5 || x == 7 || x == 9)
+                    continue;
+                if (room[pos] != '.')
+                    break;
+
+                result.push_back(std::make_pair((pos - start).manhattan(), pos));
+            }
         }
 
         return result;
@@ -200,70 +246,6 @@ private:
 
                         candidates.insert(std::make_pair(cost, room));
                         
-                        room[pos] = val;
-                        room[target] = '.';
-                        cost -= steps * costs[val];
-                    }
-                }
-            }
-        }
-
-        return -1;
-    }
-
-
-    int32_t runStepsDebugging(std::map<v2, int8_t>& rooms)
-    {
-        std::set<std::map<v2, int8_t>> states;
-        std::map<std::map<v2, int8_t>, int32_t> cost_states;
-        std::map<std::map<v2, int8_t>, std::map<v2, int8_t>> states_history;
-
-        std::set<std::pair<int32_t, std::map<v2, int8_t>>> candidates;
-        std::map<v2, int8_t> room(rooms);
-
-        std::map<int8_t, int32_t> costs;
-        costs['A'] = 1;
-        costs['B'] = 10;
-        costs['C'] = 100;
-        costs['D'] = 1000;
-        std::vector<v2> sideSteps;
-        sideSteps.push_back(v2(1, 0));
-        sideSteps.push_back(v2(-1, 0));
-        sideSteps.push_back(v2(0, 1));
-
-        candidates.insert(std::make_pair(0, room));
-
-        while (true)
-        {
-            auto cand = *candidates.begin();
-            room = cand.second;
-            int32_t cost = cand.first;
-            candidates.erase(candidates.begin());
-
-            if (states.find(room) == states.end())
-                states.insert(room);
-            else
-                continue;
-
-            //std::cout << cost << std::endl;  print(room);
-
-            if (checkDone(room))
-                return cost;
-
-            for (auto [pos, val] : room)
-            {
-                if (val >= 'A' && val <= 'D')
-                {
-                    auto moves = findValidMoves(room, pos);
-
-                    for (auto [steps, target] : moves)
-                    {
-                        room[target] = val;
-                        room[pos] = '.';
-                        cost += steps * costs[val];
-
-                        candidates.insert(std::make_pair(cost, room));
-
                         room[pos] = val;
                         room[target] = '.';
                         cost -= steps * costs[val];
