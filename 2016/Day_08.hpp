@@ -2,95 +2,108 @@
 #define ADVENTOFCODE2016_DAY08
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include <array>
 
 class Day08 {
 private:
 	std::vector<std::string> inputVec;
+	std::array<std::array<bool, 50>, 6> field;
 
-    int32_t getCountBackslash(std::string input)
-    {
-        int count = 0;
+	struct command {
+		bool row = false;
+		bool column = false;
+		bool rect = false;
+		int num_one = 0;
+		int num_two = 0;
+	};
 
-        int64_t pos = 0;
+	std::vector<command> commands;
 
-        while ((pos = (input.find("\\\\", pos))) != std::string::npos)
-        {
-            pos += 2;
-            count++;
-        }
+	void parseCommands()
+	{
+		for (auto elem : inputVec)
+		{
+			command entry;
+			if (elem.find("rect") != std::string::npos)
+			{
+				entry.rect = true;
+				auto size = util::splitInt(elem.substr(5), 'x');
+				entry.num_one = size[0];
+				entry.num_two = size[1];
+				commands.push_back(entry);
+				continue;
+			}
 
-        return count;
-    }
+			if (elem.find("row") != std::string::npos)
+				entry.row = true;
 
-    int32_t getCountQuotes(std::string input)
-    {
-        int count = 0;
+			if (elem.find("column") != std::string::npos)
+				entry.column = true;
 
-        int64_t pos = 0;
+			auto pos_eq = elem.find('=');
+			auto pos_sp = elem.find(' ', pos_eq);
+			entry.num_one = std::stoi(elem.substr(pos_eq + 1, pos_sp - pos_eq - 1));
 
-        while ((pos = (input.find("\\\"", pos))) != std::string::npos)
-        {
-            pos += 2;
-            count++;
-        }
+			auto pos_by = elem.find("by ");
+			entry.num_two = std::stoi(elem.substr(pos_by + 3));
 
-        return count;
-    }
+			commands.push_back(entry);
+		}
+	}
 
-    int32_t getCountHex(std::string input)
-    {
-        int count = 0;
 
-        int64_t pos = 0;
+	int part1()
+	{
+		int result = 0;
+		for (int i = 0; i < 6; i++)
+			for (int j = 0; j < 50; j++)
+				field[i][j] = false;
 
-        while ((pos = (input.find("\\x", pos))) != std::string::npos)
-        {
-            pos += 4;
-            count++;
-        }
+		for (auto cmd : commands)
+		{
+			std::array<std::array<bool, 50>, 6> field_temp(field);
+			
+			if (cmd.rect)
+				for (int i = 0; i < cmd.num_two; ++i)
+					for (int j = 0; j < cmd.num_one; ++j)
+						field_temp[i][j] = true;
+			
+			if (cmd.row)
+				for (int i = 0; i < 50; ++i)
+					field_temp[cmd.num_one][(i + cmd.num_two) % 50] = field[cmd.num_one][i];
 
-        return count;
-    }
+			if (cmd.column)
+				for (int i = 0; i < 6; ++i)
+					field_temp[(i + cmd.num_two) % 6][cmd.num_one] = field[i][cmd.num_one];
 
-    int64_t getLength(std::string input)
-    {
-        int64_t count = input.length() - 2;
-        for (int index = 0; index < input.size(); ++index)
-        {
-            if (input[index] == '\\')
-            {
-                count--;
-                index++;
-                if (input[index] == 'x')
-                {
-                    count -= 2;
-                    index += 2;
-                }
-            }
-        }
+			field = field_temp;
+		}
 
-        return count;
-    }
+		for (int i = 0; i < 6; i++)
+			for (int j = 0; j < 50; j++)
+				result += field[i][j];
 
-    int64_t increaseLength(std::string input)
-    {
-        std::string result = "\"";
-        result.reserve(input.size() * 2);
-        for (int index = 0; index < input.size(); ++index)
-        {
-            if (input[index] == '\"' || input[index] == '\\')
-            {
-                result += "\\";
-            }
+		return result;
+	}
 
-            result += input[index];
-        }
+	std::string part2()
+	{
+		std::string result = "\n";
 
-        result += "\"";
+		for (int row = 0; row < 6; ++row)
+		{
+			for (int column = 0; column < 50; ++column)
+			{
+				if (field[row][column])
+					result += '#';
+				else
+					result += ' ';
+			}
+			result += "\n";
+		}
 
-        return result.size();
-    }
+		return result;
+	}
 
 public:
 	Day08()
@@ -103,14 +116,10 @@ public:
 		util::Timer myTime;
 		myTime.start();
         
-        int64_t result_1 = 0;
-        int64_t result_2 = 0;
+		parseCommands();
 
-        for (auto elem : inputVec)
-        {
-            result_1 += elem.length() - getLength(elem);
-            result_2 += increaseLength(elem) - elem.length();
-        }
+        auto result_1 = part1();
+        auto result_2 = part2();
 
 		std::cout << "Day 08 - Part 1: " << result_1 << std::endl
 				  << "Day 08 - Part 2: " << result_2 << std::endl;
