@@ -7,146 +7,110 @@
 
 class Day07 {
 private:
-    struct Wire {
-        uint16_t value;
-        std::string instruction;
-        bool written;
-    };
+    std::vector<std::string> inputVec;
 
-    std::map<std::string, Wire> allWires;
-	std::vector<std::string> inputVec;
-
-    std::regex and_regex;
-    std::regex lshift_regex;
-    std::regex rshift_regex;
-    std::regex or_regex;
-    std::regex not_regex;
-    std::regex input_regex;
-
-    int16_t ParseWires(std::string node)
+    bool checkABBA(std::string input)
     {
-        try {
-            int val = std::stoi(node);
-            return val;
-        }
-        catch (...) {
-        }
+        if (input.size() < 3)
+            return false;
 
-        Wire& instance = allWires[node];
-
-        std::smatch reg_match;
-
-        if (instance.written)
-            return instance.value;
-
-        std::regex_match(instance.instruction, reg_match, rshift_regex);
-
-        if (reg_match.size() > 1)
+        for (int index = 0; index < input.size() - 3; ++index)
         {
-            std::string subNode = reg_match[1];
-            int shift = std::stoi(reg_match[2]);
-            instance.value = ParseWires(subNode) >> shift;
-            instance.written = true;
-            return instance.value;
+            if (input[index + 0] == input[index + 3] &&
+                input[index + 1] == input[index + 2] &&
+                input[index + 0] != input[index + 1])
+                return true;
         }
 
-        std::regex_match(instance.instruction, reg_match, not_regex);
-
-        if (reg_match.size() > 1)
-        {
-            std::string subNode = reg_match[1];
-            instance.value = 0xFFFF ^ ParseWires(subNode);
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, lshift_regex);
-
-        if (reg_match.size() > 1)
-        {
-            std::string subNode = reg_match[1];
-            int shift = std::stoi(reg_match[2]);
-         
-            instance.value = ParseWires(subNode) << shift;
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, input_regex);
-
-        if (reg_match.size() > 1)
-        {
-            int val = std::stoi(reg_match[1]);
-
-            instance.value = val;
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, and_regex);
-
-        if (reg_match.size() > 1)
-        {
-            std::string subNode_1 = reg_match[1];
-            std::string subNode_2 = reg_match[2];
-
-            instance.value = ParseWires(subNode_1) & ParseWires(subNode_2);
-            instance.written = true;
-            return instance.value;
-        }
-
-        std::regex_match(instance.instruction, reg_match, or_regex);
-
-        if (reg_match.size() > 1)
-        {
-            std::string subNode_1 = reg_match[1];
-            std::string subNode_2 = reg_match[2];
-
-            instance.value = ParseWires(subNode_1) | ParseWires(subNode_2);
-            instance.written = true;
-            return instance.value;
-        }
-
-        instance.value = ParseWires(instance.instruction);
-        instance.written = true;
-
-        return instance.value;
-    }
-
-    int64_t part2(uint16_t in)
-    {
-        for (auto elem : allWires)
-        {
-            allWires[elem.first].written = false;
-            allWires[elem.first].value = 0;
-        }
-
-        allWires["b"].value = in;
-        allWires["b"].instruction = std::to_string(in);
-        allWires["b"].written = true;
-
-        return ParseWires("a");
+        return false;
     }
 
     int64_t part1()
-    {   
+    {
+        int result = 0;
+
         for (auto elem : inputVec)
         {
-            auto splitted = util::split(elem, " -> ");
-            Wire temp;
-            temp.instruction = splitted[0];
-            temp.written = false;
+            //elem = "abba[mnop]qrst";
+            std::vector<std::string> outside_brackets;
+            std::vector<std::string> inside_brackets;
 
-            allWires[splitted[1]] = temp;
+            while (elem.find('[') != std::string::npos)
+            {
+                // Find brackets. Can be multiple
+                int brack_start = elem.find('[');
+                int brack_end = elem.find(']');
+                inside_brackets.emplace_back(elem.substr(brack_start + 1, brack_end - brack_start - 1));
+                outside_brackets.emplace_back(elem.substr(0, brack_start));
+                elem = elem.substr(brack_end + 1);
+            }
+
+            outside_brackets.emplace_back(elem);
+
+            bool passable = false;
+
+            for (auto str : outside_brackets)
+                passable |= checkABBA(str);
+
+            for (auto str : inside_brackets)
+                passable &= !checkABBA(str);
+
+            result += passable;
         }
 
-        for (auto elem : allWires)
-        {
-            ParseWires(elem.first);
-        }
-
-        return ParseWires("a");
+        return result;
     }
+
+    int64_t part2()
+    {
+        int result = 0;
+
+        for (auto elem : inputVec)
+        {
+            //elem = "aba[bab]xyz";
+            std::vector<std::string> outside_brackets;
+            std::vector<std::string> inside_brackets;
+
+            while (elem.find('[') != std::string::npos)
+            {
+                // Find brackets. Can be multiple
+                int brack_start = elem.find('[');
+                int brack_end = elem.find(']');
+                inside_brackets.emplace_back(elem.substr(brack_start + 1, brack_end - brack_start - 1));
+                outside_brackets.emplace_back(elem.substr(0, brack_start));
+                elem = elem.substr(brack_end + 1);
+            }
+
+            outside_brackets.emplace_back(elem);
+
+            bool passable = false;
+
+            for (auto outer : outside_brackets)
+            {
+                for (int index = 0; index < outer.size() - 2; ++index)
+                {
+                    if (outer[index] == outer[index + 2] && outer[index] != outer[index + 1])
+                    {
+                        std::string search_string = "";
+                        search_string += outer[index + 1];
+                        search_string += outer[index + 0];
+                        search_string += outer[index + 1];
+
+                        for (auto inner : inside_brackets)
+                        {
+                            if (inner.find(search_string) != std::string::npos)
+                                passable = true;
+                        }
+                    }
+                }
+            }
+
+            result += passable;
+        }
+
+        return result;
+    }
+
 public:
 	Day07()
 	{
@@ -158,15 +122,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        and_regex = std::regex("(\\w+) AND (\\w+)");
-        lshift_regex = std::regex("(\\w+) LSHIFT ([0-9]+)");
-        rshift_regex = std::regex("(\\w+) RSHIFT ([0-9]+)");
-        or_regex = std::regex("(\\w+) OR (\\w+)");
-        not_regex = std::regex("NOT (\\w+)");
-        input_regex = std::regex("([0-9]+)");
-
         auto result_1 = part1();
-        auto result_2 = part2(static_cast<uint16_t>(result_1));
+        auto result_2 = part2();
+
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 07 - Part 1: " << result_1 << std::endl
