@@ -8,7 +8,54 @@
 
 class Day06 {
 private:
-	std::vector<std::string> inputVec;    
+	std::vector<std::string> inputVec;
+
+    std::string part1()
+    {
+        std::string result = "";
+        for (int index = 0; index < inputVec[0].size(); ++index)
+        {
+            std::map<char, int> letter_count;
+
+            for (auto elem : inputVec)
+                letter_count[elem[index]] += 1;
+
+            int max = 0;
+
+            for (auto [key, count] : letter_count)
+                max = std::max(max, count);
+
+            for (auto [key, count] : letter_count)
+                if (count == max)
+                    result += key;
+        }
+
+        return result;
+    }
+
+    std::string part2()
+    {
+        std::string result = "";
+        for (int index = 0; index < inputVec[0].size(); ++index)
+        {
+            std::map<char, int> letter_count;
+
+            for (auto elem : inputVec)
+                letter_count[elem[index]] += 1;
+
+            int min = inputVec.size();
+
+            for (auto [key, count] : letter_count)
+                min = std::min(min, count);
+
+            for (auto [key, count] : letter_count)
+                if (count == min)
+                    result += key;
+        }
+
+        return result;
+    }
+
 public:
 	Day06()
 	{
@@ -20,57 +67,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        std::unique_ptr<bool[]> lightMap(new bool[1000 * 1000]);
-        std::unique_ptr<int32_t[]> lightMap_2(new int32_t[1000 * 1000]);
-                
-        auto result_1 = 0;
-        auto result_2 = 0;
-
-        std::regex light_regex("(.*) ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)");
-        std::smatch light_match;
-
-        for (auto elem : inputVec)
-        {
-            std::regex_search(elem, light_match, light_regex);
-            
-            int x_min = std::stoi(light_match[2]);
-            int y_min = std::stoi(light_match[3]);
-            int x_max = std::stoi(light_match[4]);
-            int y_max = std::stoi(light_match[5]);
-
-            int id = -1;
-            if (light_match[1] == "turn on")
-                id = 1;
-            if (light_match[1] == "toggle")
-                id = 2;
-            
-            for (int y = y_min; y <= y_max; ++y)
-            {
-                for (int x = x_min; x <= x_max; ++x)
-                {
-                    bool& val = lightMap[y * 1000 + x];
-                    int32_t& val_2 = lightMap_2[y * 1000 + x];
-
-                    val_2 += id;
-
-                    if (val_2 < 0)
-                        val_2 = 0;
-
-                    if (id == -1)
-                        val = false;
-                    if (id == 1)
-                        val = true;
-                    if (id == 2)
-                        val ^= 1;
-                }
-            }
-        }
-
-        for (int32_t i = 0; i < 1000 * 1000; ++i)
-        {
-            result_1 += lightMap[i];
-            result_2 += lightMap_2[i];
-        }
+        auto result_1 = part1();
+        auto result_2 = part2();
 
         int64_t time = myTime.usPassed();
 
