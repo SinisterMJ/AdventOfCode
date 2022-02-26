@@ -2,16 +2,108 @@
 #define ADVENTOFCODE2016_DAY04
 
 #include "../includes/aoc.h"
-#include "../includes/MD5.h"
+#include <map>
 
 class Day04 {
 private:
-	std::string inputString;
+	std::vector<std::string> inputVec;
+	std::vector<std::string> validCodes;
+
+	int part1()
+	{
+		int result = 0;
+
+		for (auto elem : inputVec)
+		{
+			std::map<char, int> letters;
+
+			for (auto ch : elem)
+			{
+				if (in_range<char>(ch, 'a', 'z'))
+				{
+					letters[ch] += 1;
+				}
+
+				if (in_range<char>(ch, '0', '9'))
+					break;
+			}
+
+			auto pos_lastdash = elem.rfind('-');
+			auto pos_checksum = elem.find('[');
+			int id = std::stoi(elem.substr(pos_lastdash + 1, pos_checksum - pos_lastdash - 1));
+			std::string checksum = elem.substr(pos_checksum + 1, 5);
+
+			std::string truth = "";
+
+			for (int i = 0; i < 5; i++)
+			{
+				if (truth.size() == 5)
+					break;
+
+				int max = 0;
+				for (auto [key, count] : letters)
+					max = std::max(max, count);
+
+				for (auto& [key, count] : letters)
+				{
+					if (truth.size() == 5)
+						break;
+
+					if (count == max)
+					{
+						truth += key;
+						count = 0;
+					}
+				}
+			}
+
+			if (truth == checksum)
+			{
+				result += id;
+				validCodes.emplace_back(elem);
+			}
+		}
+
+		return result;
+	}
+
+	int part2()
+	{
+		int result = 0;
+
+		for (auto elem : inputVec)
+		{
+			auto pos_lastdash = elem.rfind('-');
+			auto pos_checksum = elem.find('[');
+			int id = std::stoi(elem.substr(pos_lastdash + 1, pos_checksum - pos_lastdash - 1));
+			int orig_id = id;
+			id = id % 26;
+
+			for (auto& ch : elem)
+			{
+				if (in_range<char>(ch + id, 'a', 'z'))
+				{
+					ch += id;
+				}
+				else
+				{
+					ch += id - 26;
+				}
+			}
+
+			if (elem.find("north") != std::string::npos)
+			{
+				return orig_id;
+			}
+		}
+
+		return result;
+	}
+
 public:
 	Day04()
 	{
-		inputString = util::readFile("..\\inputs\\2016\\input_4.txt");
-        inputString = inputString.substr(0, inputString.find('\n'));
+		inputVec = util::readFileLines("..\\inputs\\2016\\input_4.txt");
 	}
 
 	int64_t run()
@@ -19,33 +111,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
 
-        int result_1 = 0;
-        int result_2 = 0;
-
-        for (int index = 0;; ++index)
-        {
-            std::string password = inputString + std::to_string(index);
-            std::string hashed = md5(password);
-
-            bool valid = true;
-            for (int i = 0; i < 5; ++i)
-            {
-                if (hashed[i] != '0')
-                    valid = false;
-            }
-
-            if (valid)
-            {
-                if (result_1 == 0)
-                    result_1 = index;
-                
-                if (hashed[5] == '0')
-                {
-                    result_2 = index;
-                    break;
-                }
-            }
-        }
+        auto result_1 = part1();
+        auto result_2 = part2();
 
 		std::cout << "Day 04 - Part 1: " << result_1 << std::endl
 				  << "Day 04 - Part 2: " << result_2 << std::endl;
