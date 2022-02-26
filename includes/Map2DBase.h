@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include <map>
+#include <iostream>
+
 #include "aoc.h"
 
 #define NOMINMAX
@@ -11,10 +13,10 @@ namespace MapHelper {
 	std::vector<v2> getNeighboursVec(bool include_diagonal)
 	{
 		std::vector<v2> neighbours;
-		neighbours.emplace_back(0, -1);
+		neighbours.emplace_back(1, 0);
 		neighbours.emplace_back(0, 1);
 		neighbours.emplace_back(-1, 0);
-		neighbours.emplace_back(1, 0);
+		neighbours.emplace_back(0, -1);
 
 		if (include_diagonal)
 		{
