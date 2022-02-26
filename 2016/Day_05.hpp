@@ -2,77 +2,46 @@
 #define ADVENTOFCODE2016_DAY05
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
+#include "../includes/MD5.h"
 
 class Day05 {
 private:
-	std::vector<std::string> inputVec;
+	std::string input;
 
-    bool CheckRule1(std::string input)
+    std::pair<std::string, std::string> part1()
     {
-        int64_t total = std::count(input.begin(), input.end(), 'a');
-        total += std::count(input.begin(), input.end(), 'e');
-        total += std::count(input.begin(), input.end(), 'i');
-        total += std::count(input.begin(), input.end(), 'o');
-        total += std::count(input.begin(), input.end(), 'u');
-
-        return total > 2;
-    }
-
-    bool CheckRule2(std::string input)
-    {
-        for (int index = 1; index < input.size(); ++index)
+        std::string result_1 = "";
+        std::string result_2 = "tttttttt";
+                
+        for (int index = 0;; index++)
         {
-            if (input[index - 1] == input[index])
-                return true;
+
+            std::string password = input + std::to_string(index);
+            std::string hashed = md5(password);
+
+            if (hashed[0] == '0' && hashed[1] == '0' && hashed[2] == '0' && hashed[3] == '0' && hashed[4] == '0')
+            {
+                if (result_1.size() < 8)
+                    result_1 += hashed[5];
+
+                int pos = hashed[5] - '0';
+                
+                if (in_range<int>(pos, 0, 7))
+                    if (result_2[pos] == 't')
+                        result_2[pos] = hashed[6];
+            }
+
+            if (result_1.size() == 8 && result_2.find('t') == std::string::npos)
+            {
+                return std::make_pair(result_1, result_2);
+            }
         }
-
-        return false;
     }
 
-    bool CheckRule3(std::string input)
-    {
-        if (input.find("ab") != std::string::npos)
-            return false;
-
-        if (input.find("cd") != std::string::npos)
-            return false;
-
-        if (input.find("pq") != std::string::npos)
-            return false;
-
-        if (input.find("xy") != std::string::npos)
-            return false;
-
-        return true;
-    }
-
-    bool CheckRule4(std::string input)
-    {
-        for (int32_t index = 2; index < input.size(); ++index)
-        {
-            std::string test = input.substr(index - 2, 2);
-            if (input.find(test, index) != std::string::npos)
-                return true;
-        }
-
-        return false;
-    }
-
-    bool CheckRule5(std::string input)
-    {
-        for (int32_t index = 2; index < input.size(); ++index)
-        {
-            if (input[index - 2] == input[index])
-                return true;
-        }
-
-        return false;
-    }
 public:
 	Day05()
 	{
-		inputVec = util::readFileLines("..\\inputs\\2016\\input_5.txt");
+		input = util::readFile("..\\inputs\\2016\\input_5.txt");
 	}
 
 	int64_t run()
@@ -80,14 +49,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = 0;
-        auto result_2 = 0;
-
-        for (auto elem : inputVec)
-        {
-            result_1 += CheckRule1(elem) & CheckRule2(elem) & CheckRule3(elem);
-            result_2 += CheckRule4(elem) & CheckRule5(elem);
-        }
+        auto res = part1();
+        auto result_1 = res.first;
+        auto result_2 = res.second;
 
         int64_t time = myTime.usPassed();
 
