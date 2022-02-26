@@ -9,11 +9,54 @@
 
 class Day03 {
 private:
-	std::string input;
+	std::vector<std::string> inputVec;
+	
+
+	int part1()
+	{
+		int result = 0;
+
+		for (auto elem : inputVec)
+		{
+			std::vector<int> sides = util::splitInt(elem, ' ');
+			
+			std::sort(sides.begin(), sides.end());
+			result += ((sides[0] + sides[1]) > sides[2]);
+		}
+
+		return result;
+	}
+
+	int part2()
+	{
+		std::vector<std::vector<int>> sides;
+		int result = 0;
+
+		for (auto elem : inputVec)
+			sides.emplace_back(util::splitInt(elem, ' '));
+
+		for (int i = 0; i < sides.size(); i += 3)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				std::vector<int> triangle;
+				triangle.emplace_back(sides[i + 0][j]);
+				triangle.emplace_back(sides[i + 1][j]);
+				triangle.emplace_back(sides[i + 2][j]);
+
+				std::sort(triangle.begin(), triangle.end());
+				result += ((triangle[0] + triangle[1]) > triangle[2]);
+
+			}
+		}
+
+		return result;
+	}
+
 public:
 	Day03()
 	{
-		input = util::readFile("..\\inputs\\2016\\input_3.txt");
+		inputVec = util::readFileLines("..\\inputs\\2016\\input_3.txt");
 	}
 
 	int64_t run()
@@ -21,46 +64,8 @@ public:
 		util::Timer myTime;
 		myTime.start();
         
-        std::map<v2, int32_t> visited_1;
-        std::map<v2, int32_t> visited_2;
-
-        v2 start_1;
-        v2 start_2[2];
-        visited_1[start_1] = 1;
-        visited_2[start_2[0]] = 1;
-
-        for (int32_t index = 0; index < input.size(); ++index)
-        {
-            if (input[index] == '<')
-            {
-                start_1.x--;
-                start_2[index & 0x1].x--;
-            }
-
-            if (input[index] == '>')
-            {
-                start_1.x++;
-                start_2[index & 0x1].x++;
-            }
-
-            if (input[index] == '^')
-            {
-                start_1.y--;
-                start_2[index & 0x1].y--;
-            }
-
-            if (input[index] == 'v')
-            {
-                start_1.y++;
-                start_2[index & 0x1].y++;
-            }
-
-            visited_1[start_1]++;
-            visited_2[start_2[index & 0x1]]++;
-        }
-
-        auto result_1 = visited_1.size();
-        auto result_2 = visited_2.size();
+        auto result_1 = part1();
+        auto result_2 = part2();
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 03 - Part 1: " << result_1 << std::endl
