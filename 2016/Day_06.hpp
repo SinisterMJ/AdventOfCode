@@ -43,7 +43,7 @@ private:
             for (auto elem : inputVec)
                 letter_count[elem[index]] += 1;
 
-            int min = inputVec.size();
+            int min = static_cast<int>(inputVec.size());
 
             for (auto [key, count] : letter_count)
                 min = std::min(min, count);

@@ -38,8 +38,8 @@ private:
             while (elem.find('[') != std::string::npos)
             {
                 // Find brackets. Can be multiple
-                int brack_start = elem.find('[');
-                int brack_end = elem.find(']');
+                int64_t brack_start = elem.find('[');
+                int64_t brack_end = elem.find(']');
                 inside_brackets.emplace_back(elem.substr(brack_start + 1, brack_end - brack_start - 1));
                 outside_brackets.emplace_back(elem.substr(0, brack_start));
                 elem = elem.substr(brack_end + 1);
@@ -74,8 +74,8 @@ private:
             while (elem.find('[') != std::string::npos)
             {
                 // Find brackets. Can be multiple
-                int brack_start = elem.find('[');
-                int brack_end = elem.find(']');
+                int64_t brack_start = elem.find('[');
+                int64_t brack_end = elem.find(']');
                 inside_brackets.emplace_back(elem.substr(brack_start + 1, brack_end - brack_start - 1));
                 outside_brackets.emplace_back(elem.substr(0, brack_start));
                 elem = elem.substr(brack_end + 1);
