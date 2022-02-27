@@ -7,93 +7,77 @@
 
 class Day09 {
 private:
-    std::vector<std::string> inputVec;
-        
-    std::map<std::pair<std::string, std::string>, int64_t> connections;
-    std::set<std::string> cities;
-    std::vector<std::string> vecCities;
-    
-    void buildConnections()
-    {
-        for (auto line : inputVec)
-        {
-            auto first_idx = line.find(" to ");
-            auto second_idx = line.find(" = ");
-            auto from = line.substr(0, first_idx);
-            auto to = line.substr(first_idx + 4, second_idx - first_idx - 4);
-            auto distance = line.substr(second_idx + 3);
-            int64_t i_distance = std::stoi(distance);
+    std::string input;
 
-            std::pair<std::string, std::string> key;
-
-            key = from.compare(to) < 0 ? std::make_pair(from, to) : std::make_pair(to, from);
-            connections[key] = i_distance;
-
-            cities.insert(from);
-            cities.insert(to);
-        }
-
-        for (auto city : cities)
-            vecCities.push_back(city);
-    }
-    
     int64_t part1()
     {
-        std::sort(vecCities.begin(), vecCities.end());
-        int64_t minDistance = std::numeric_limits<int64_t>::max();
+        std::string decompressed{""};
+        std::string remainder = input;
+        //remainder = "X(8x2)(3x3)ABCY";
 
-        do
+        while (true)
         {
-            int64_t currentDistance = 0;
+            auto pos_open = remainder.find('(');
+            auto pos_close = remainder.find(')');
 
-            for (int index = 1; index < vecCities.size(); ++index)
+            if (pos_open == std::string::npos)
             {
-                auto from = vecCities[index - 1];
-                auto to = vecCities[index];
-
-                std::pair<std::string, std::string> key;
-                key = from.compare(to) < 0 ? std::make_pair(from, to) : std::make_pair(to, from);
-
-                currentDistance += connections[key];
+                decompressed += remainder;
+                break;
             }
 
-            minDistance = std::min(currentDistance, minDistance);
-        }
-        while (std::next_permutation(vecCities.begin(), vecCities.end()));
+            std::string pre_string = remainder.substr(0, pos_open);
 
-        return minDistance;
+            std::string sNumbers = remainder.substr(pos_open + 1, pos_close - pos_open - 1);
+            auto nums = util::splitInt(sNumbers, 'x');
+
+            std::string pos_string = remainder.substr(pos_close + 1, nums[0]);
+
+            decompressed += pre_string;
+
+            for (int i = 0; i < nums[1]; ++i)
+                decompressed += pos_string;
+
+            remainder = remainder.substr(pos_close + 1 + nums[0]);
+        }
+
+        return decompressed.size();
+    }
+
+    int64_t getSubstringLength(std::string input)
+    {
+        int64_t result = 0;
+        
+        {
+            auto pos_open = input.find('(');
+            auto pos_close = input.find(')');
+
+            if (pos_open == std::string::npos)
+                return input.size();
+
+            result += pos_open;
+
+            std::string sNumbers = input.substr(pos_open + 1, pos_close - pos_open - 1);
+            auto nums = util::splitInt(sNumbers, 'x');
+
+            std::string pos_string = input.substr(pos_close + 1, nums[0]);
+
+            result += getSubstringLength(pos_string) * nums[1];
+            result += getSubstringLength(input.substr(pos_close + 1 + nums[0]));
+        }
+
+        return result;
     }
 
     int64_t part2()
     {
-        std::sort(vecCities.begin(), vecCities.end());
-        int64_t maxDistance = 0;
-
-        do
-        {
-            int64_t currentDistance = 0;
-
-            for (int index = 1; index < vecCities.size(); ++index)
-            {
-                auto from = vecCities[index - 1];
-                auto to = vecCities[index];
-
-                std::pair<std::string, std::string> key;
-                key = from.compare(to) < 0 ? std::make_pair(from, to) : std::make_pair(to, from);
-
-                currentDistance += connections[key];
-            }
-
-            maxDistance = std::max(currentDistance, maxDistance);
-        } while (std::next_permutation(vecCities.begin(), vecCities.end()));
-
-        return maxDistance;
+        return getSubstringLength(input);        
     }
 
 public:
 	Day09()
 	{
-        inputVec = util::readFileLines("..\\inputs\\2016\\input_9.txt");
+        input = util::readFile("..\\inputs\\2016\\input_9.txt");
 	}
 
     int64_t run()
@@ -101,7 +85,6 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        buildConnections();
         auto result_1 = part1();
         auto result_2 = part2();
 
