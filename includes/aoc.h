@@ -2,6 +2,7 @@
 #define ADVENTOFCODE_AOC
 
 #include <fstream>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <sstream>

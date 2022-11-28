@@ -10,7 +10,7 @@ private:
     std::string inputString;
 
 public:
-    Day03()
+    Day09()
     {
         inputVector = util::readFileLines("..\\inputs\\2022\\input_9.txt");
         inputString = util::readFile("..\\inputs\\2022\\input_9.txt");

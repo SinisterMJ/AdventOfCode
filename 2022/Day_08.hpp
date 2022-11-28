@@ -3,7 +3,7 @@
 
 #include "../includes/aoc.h"
 
-class Day03 {
+class Day08 {
 private:
 
     std::vector<std::string> inputVector;
