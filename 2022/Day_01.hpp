@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2022_DAY01
 
 #include "../includes/aoc.h"
+#include <algorithm>
 
 class Day01 {
 private:
@@ -25,7 +26,7 @@ private:
             }
         }
 
-        std::sort(sums.rbegin(), sums.rend());
+        std::nth_element(sums.begin(), sums.begin() + 3, sums.end(), std::greater{});
 
         return std::make_pair(sums[0], sums[0] + sums[1] + sums[2]);
     }
