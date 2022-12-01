@@ -9,11 +9,31 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
+    std::pair<int64_t, int64_t> solve()
+    {
+        int64_t cur_sum = 0;
+        std::vector<int64_t> sums;
+
+        for (auto line : inputVector)
+        {
+            if (line != "")
+                cur_sum += std::stoi(line);
+            else
+            {
+                sums.push_back(cur_sum);
+                cur_sum = 0;
+            }
+        }
+
+        std::sort(sums.rbegin(), sums.rend());
+
+        return std::make_pair(sums[0], sums[0] + sums[1] + sums[2]);
+    }
+
 public:
     Day01()
     {
-        inputVector = util::readFileLines("..\\inputs\\2022\\input_1.txt");
-        inputString = util::readFile("..\\inputs\\2022\\input_1.txt");
+        inputVector = util::readFileLines("..\\inputs\\2022\\input_1.txt", '\n', false);
     }
 
     int64_t run()
@@ -21,8 +41,9 @@ public:
         util::Timer myTime;
         myTime.start();
         
-        auto result_1 = 0;
-        auto result_2 = 0;
+        auto result = solve();
+        auto result_1 = result.first;
+        auto result_2 = result.second;
 
         int64_t time = myTime.usPassed();
 
