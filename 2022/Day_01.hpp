@@ -33,7 +33,7 @@ private:
 public:
     Day01()
     {
-        inputVector = util::readFileLines("..\\inputs\\2022\\input_1.txt", '\n', false);
+        inputVector = util::readFileLines("..\\inputs\\2022\\input_1.txt");
     }
 
     int64_t run()
