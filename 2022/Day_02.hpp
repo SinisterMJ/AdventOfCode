@@ -45,9 +45,18 @@ private:
     int64_t part2()
     {
         int local_sum = 0;
-        std::array<int8_t, 3> offset = { 2, 0, 1 };
+
+        // a + 0 = draw
+        // a + 1 = win
+        // a + 2 = loss
+        // b == 0 = loss
+        // b == 1 = draw
+        // b == 2 = win
+
+        // (play.a + (play.b + 2) % 3) % 3 signifies what b should play to get the wanted outcome
+
         for (auto play : total)
-            local_sum += (play.a + offset[play.b]) % 3 + 1 + 3 * play.b;
+            local_sum += (play.a + (play.b + 2) % 3) % 3 + 1 + 3 * play.b;
 
         return local_sum;
     }
