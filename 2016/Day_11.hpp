@@ -4,118 +4,89 @@
 #include <map>
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
-#include "../includes/Map2DBase.h"
+#include <regex>
+#include <set>
 
 class Day11 {
 private:
-	std::string inputString;
+	std::vector<std::string> inputVec;
 
-    std::string increment(std::string input)
+    struct Element {
+        std::string identifier;
+        bool generator = false;
+    };
+
+    int elevator_level = 1;
+
+    std::map<int, std::vector<Element>> floor_state;
+
+    // The first floor contains a strontium generator, a strontium-compatible microchip, a plutonium generator, and a plutonium-compatible microchip.
+    void read_floors()
     {
-        std::string result = input;
-
-        // Shortcut for i o l
-        for (int8_t index = 0; index < 8; ++index)
-        {
-            if (result[index] == 'i' || result[index] == 'o' || result[index] == 'l')
-            {
-                result[index]++;
-                for (int8_t subIdx = index + 1; subIdx < 8; ++subIdx)
-                {
-                    result[subIdx] = 'a';
-                }
-
-                return result;
-            }
-        }
+        int floor = 0;
+        std::regex generator("([a-z]+) generator");
+        std::regex microchip("([a-z]+)-compatible microchip");
         
-        for (int8_t index = 7; index >= 0; --index)
+        for (auto ln : inputVec)
         {
-            if (result[index] == 'z')
+            floor++;
+            std::regex_token_iterator<std::string::iterator> it_gen(ln.begin(), ln.end(), generator, 1);
+            std::regex_token_iterator<std::string::iterator> rend;
+
+            while (it_gen != rend)
             {
-                result[index] = 'a';
+                Element entry;
+                entry.identifier = (*it_gen);
+                entry.generator = true;
+
+                floor_state[floor].push_back(entry);
+                it_gen++;
             }
-            else
+
+            std::regex_token_iterator<std::string::iterator> it_mc(ln.begin(), ln.end(), microchip, 1);
+
+            while (it_mc != rend)
             {
-                result[index]++;
-                break;
-            }
-        }
+                Element entry;
+                entry.identifier = (*it_mc);
 
-        return result;
-    }
-
-    bool checkValid(std::string password)
-    {
-        // Rule 1
-        bool foundTriple = false;
-        for (int8_t index = 0; index < 6 && !foundTriple; ++index)
-        {
-            auto a = password[index + 0];
-            auto b = password[index + 1];
-            auto c = password[index + 2];
-
-            if ((a + 1 == b) && (b + 1 == c))
-                foundTriple = true;
-        }
-
-        if (!foundTriple)
-            return false;
-
-        // Rule 2
-        if (password.find('i') != std::string::npos ||
-            password.find('o') != std::string::npos ||
-            password.find('l') != std::string::npos)
-            return false;
-
-        // Rule 3
-        bool foundFirstDouble = false;
-        int8_t firstDouble = '0';
-        for (int8_t index = 0; index < 7; ++index)
-        {
-            if (password[index] == password[index + 1] && password[index] != firstDouble)
-            {
-                if (foundFirstDouble)
-                    return true;
-
-                foundFirstDouble = true;
-                firstDouble = password[index];
-                index++;
+                floor_state[floor].push_back(entry);
+                it_mc++;
             }
         }
-
-        return false;
     }
 
-    std::string part1()
+    std::vector<int, std::map<int, std::vector<Element>>> valid_moves(int elevator, std::map<int, std::vector<Element>> floors)
     {
-        std::string current = increment(inputString);
 
-        while (!checkValid(current))
-        {
-            current = increment(current);
-        }
-
-        return current;
     }
 
-    std::string part2(std::string start)
+    int part1()
     {
-        std::string current = increment(start);
+        read_floors();
+        int steps{ 0 };
 
-        while (!checkValid(current))
+        std::set<std::pair<int, std::map<int, std::vector<Element>>>> seen;
+
+        seen.insert(std::make_pair(elevator_level, floor_state));
+
+        while (true)
         {
-            current = increment(current);
-        }
 
-        return current;
+        }
+        return steps;
+    }
+
+    int part2()
+    {
+        int steps{ 0 };
+        return steps;
     }
 
 public:
 	Day11()
 	{
-		inputString = util::readFile("..\\inputs\\2016\\input_11.txt");
+		inputVec = util::readFileLines("..\\inputs\\2016\\input_11.txt");
 	}
 
     int64_t run()
@@ -124,7 +95,7 @@ public:
         myTime.start();
 
         auto result_1 = part1();
-        auto result_2 = part2(result_1);
+        auto result_2 = part2();
         
         int64_t time = myTime.usPassed();
 
