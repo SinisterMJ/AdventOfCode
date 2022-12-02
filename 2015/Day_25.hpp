@@ -2,125 +2,47 @@
 #define ADVENTOFCODE2015_DAY25
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
-#include "../includes/Map2DBase.h"
-#include <algorithm>
-#include <numeric>
-#include <map>
-#include <deque>
-#include <set>
-#include <unordered_set>
 
 class Day25 {
 private:
-	std::string inputString;
-	std::vector<std::string> inventory;
-
-	std::vector<int64_t> stringToInput(std::string input)
+	int64_t run_code_sequence(int row, int column)
 	{
-		std::vector<int64_t> result = { };
-		for (auto elem : input)
+		int64_t val = 20151125;
+		int64_t mul = 252533;
+		int64_t mod = 33554393;
+
+		int32_t curr_row = 1;
+		int32_t curr_col = 1;
+
+		while (curr_row != row || curr_col != column)
 		{
-			result.push_back(elem);
-		}
+			curr_row -= 1;
+			curr_col += 1;
 
-		return result;
-	}
-
-	std::string outputToString(std::vector<int64_t> input)
-	{
-		std::string temp = "";
-		for (auto elem : input)
-		{
-			temp += static_cast<uint8_t>(elem);
-			
-		}
-		return temp;
-	}
-
-	std::string runDiscovery(std::vector<int64_t>& commands)
-	{
-		std::string result = "";
-
-		IntcodeVM vm;
-		vm.initializeCommands(commands);
-
-		vm.addInput(stringToInput("east\n"));
-		vm.addInput(stringToInput("take weather machine\n"));
-		vm.addInput(stringToInput("west\n"));
-		vm.addInput(stringToInput("west\n"));
-		vm.addInput(stringToInput("west\n"));
-		vm.addInput(stringToInput("take bowl of rice\n"));
-		vm.addInput(stringToInput("east\n"));
-		vm.addInput(stringToInput("north\n"));
-		vm.addInput(stringToInput("take polygon\n"));
-		vm.addInput(stringToInput("east\n"));
-		vm.addInput(stringToInput("take hypercube\n"));
-		vm.addInput(stringToInput("south\n"));
-		vm.addInput(stringToInput("take dark matter\n"));
-		vm.addInput(stringToInput("north\n"));
-		vm.addInput(stringToInput("west\n"));
-		vm.addInput(stringToInput("north\n"));
-		vm.addInput(stringToInput("take candy cane\n"));
-		vm.addInput(stringToInput("west\n"));
-		vm.addInput(stringToInput("north\n"));
-		vm.addInput(stringToInput("take manifold\n"));
-		vm.addInput(stringToInput("south\n"));
-		vm.addInput(stringToInput("west\n"));
-		vm.addInput(stringToInput("north\n"));
-		vm.addInput(stringToInput("take dehydrated water\n"));
-		vm.addInput(stringToInput("west\n"));
-
-		
-		v2 start;
-		int32_t pathValue = 0;
-		uint8_t currentSet = 0;
-		while (!vm.hasTerminated())
-		{
-			auto output = outputToString(vm.runCommands());
-			result = output;
-
-			for (int i = 0; i < 8; ++i)
+			if (curr_row == 0)
 			{
-				vm.addInput(stringToInput("drop " + inventory[i] + "\n"));
+				curr_row = curr_col;
+				curr_col = 1;
 			}
 
-			for (int i = 0; i < 8; ++i)
-			{
-				if ((currentSet >> i) & 0x1)
-					vm.addInput(stringToInput("take " + inventory[i] + "\n"));
-			}
-
-			currentSet++;
-			vm.addInput(stringToInput("south\n"));
+			val = (val * mul) % mod;
 		}
 
-		return result;
+		return val;
 	}
 
 public:
 	Day25()
 	{
-		inputString = util::readFile("..\\inputs\\2015\\input_25.txt");
+		
 	}
 
 	int64_t run()
 	{
 		util::Timer myTime;
 		myTime.start();
-
-		inventory.push_back("manifold");
-		inventory.push_back("dehydrated water");
-		inventory.push_back("polygon");
-		inventory.push_back("weather machine");
-		inventory.push_back("bowl of rice");
-		inventory.push_back("hypercube");
-		inventory.push_back("candy cane");
-		inventory.push_back("dark matter");
-
-		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
-
-		std::string result1 = runDiscovery(commands);
+		
+		int64_t result1 = run_code_sequence(2947, 3029);
 
 		std::cout << "Day 25 - Part 1: " << result1 << std::endl;
 

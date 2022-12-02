@@ -42,12 +42,8 @@ private:
 					int32_t countOn = 0;
 
 					for (int neighbourIdx = 0; neighbourIdx < neighbourTiles.size(); ++neighbourIdx)
-					{
 						if (start.validIndex(pos + neighbourTiles[neighbourIdx]))
-						{
 							countOn += (start.read(pos + neighbourTiles[neighbourIdx]) == '#');
-						}
-					}
 
 					if (turnedOn)
 					{

@@ -98,17 +98,17 @@ int main()
 	Day21 mDay21; runTimes.push_back(mDay21.run());
 	std::cout << std::endl;
 
-	/*Day22 mDay22; runTimes.push_back(mDay22.run());
+	Day22 mDay22; runTimes.push_back(mDay22.run());
 	std::cout << std::endl;
 
-	/*Day23 mDay23; runTimes.push_back(mDay23.run());
+	Day23 mDay23; runTimes.push_back(mDay23.run());
 	std::cout << std::endl;
 
-	/*Day24 mDay24; runTimes.push_back(mDay24.run());
+	Day24 mDay24; runTimes.push_back(mDay24.run());
 	std::cout << std::endl;
 
-	/*Day25 mDay25; runTimes.push_back(mDay25.run());
-	std::cout << std::endl;*/
+	Day25 mDay25; runTimes.push_back(mDay25.run());
+	std::cout << std::endl;
 
 	total_us = std::accumulate(runTimes.begin(), runTimes.end(), static_cast<int64_t>(0));
 

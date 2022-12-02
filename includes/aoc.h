@@ -2,6 +2,7 @@
 #define ADVENTOFCODE_AOC
 
 #include <fstream>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -65,16 +66,23 @@ namespace util
 		return input;
 	}
 
-	static inline std::vector<std::string> readFileLines(const std::string& path, char delim = '\n', bool skipEmpty = true)
+	static inline std::vector<std::string> readFileLines(const std::string& path, char delim = '\n', bool skipEmpty = false)
 	{
 		std::vector<std::string> lines;
 		{
 			auto input = std::ifstream(path, std::ios::in);
 			for(std::string line; std::getline(input, line, delim); )
 			{
-				if(!skipEmpty || !line.empty())
-					lines.emplace_back(line);
+                if (line.empty() && skipEmpty)
+                    continue;
+
+			    lines.emplace_back(line);
 			}
+
+            if (lines.size() > 0 && lines.at(lines.size() - 1) == "")
+            {
+                lines.erase(lines.begin() + lines.size() - 1);
+            }
 		}
 
 		return lines;

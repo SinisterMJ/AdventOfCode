@@ -5,99 +5,146 @@
 #include "../includes/IntcodeVM.h"
 #include "../includes/Map2DBase.h"
 
+#include "../includes/aoc.h"
+#include "../includes/IntcodeVM.h"
+#include "../includes/Map2DBase.h"
+
+#include <map>
+#include <algorithm>
+
+
 class Day23 {
 private:
-	std::string inputString;
+    std::vector<std::string> input;
 
-	IntcodeVM vm[50];
-	int64_t natValue[2];
-	int64_t lastNatValue;
+    struct command
+    {
+        std::string cmd;
+        std::string reg;
+        int offset;
+    };
 
-	int64_t result1;
-	int64_t result2;
+    std::vector<command> cmds;
 
-	std::vector<int64_t> inout;
+    void parse_commands()
+    {
+        for (auto line : input)
+        {
+            auto first = util::split(line, ", ");
+            auto order = util::split(first[0], ' ');
+            command temp;
+            temp.cmd = order[0];
+            temp.reg = "";
+            temp.offset = 0;
+            if (temp.cmd == "jmp")
+            {
+                temp.offset = std::stoi(order[1]);
+            }
+            else
+            {
+                temp.reg = order[1];
+            }
 
-	void runNetwork(std::vector<int64_t>& commands)
-	{
-		// Initialize VMs
-		for (int index = 0; index < 50; ++index)
-		{
-			vm[index].initializeCommands(commands);
-			std::vector<int64_t> input = { index, -1 };
-			vm[index].addInput(input);			
-		}
+            if (first.size() > 1)
+                temp.offset = std::stoi(first[1]);
 
-		while (true)
-		{
-			for (int index = 0; index < 50; ++index)
-			{
-				auto output = vm[index].runCommands();
-				if (output.size() != 0)
-				{
-					inout.insert(inout.end(), output.begin(), output.end());
-				}
-			}
+            cmds.push_back(temp);
+        }
+    }
 
-			// Send latest value to NAT
-			if (inout.size() == 0)
-			{
-				if (lastNatValue == natValue[1])
-				{
-					result2 = natValue[1];
-					break;
-				}
-				std::vector<int64_t> input = { natValue[0], natValue[1] };
-				vm[0].addInput(input);
+    int64_t part1()
+    {
+        int64_t a_reg = 0;
+        int64_t b_reg = 0;
 
-				lastNatValue = natValue[1];
-			}
+        int current_instruction = 0;
+        
+        while (true)
+        {
+            if (current_instruction >= cmds.size())
+                break;
 
-			for (int i = 0; i < inout.size(); )
-			{
-				std::vector<int64_t> input = { };
+            command curr = cmds[current_instruction];
+            int64_t* reg = nullptr;
+            if (curr.reg != "")
+                reg = (curr.reg == "a") ? &a_reg : &b_reg;
 
-				int64_t index = inout[0];
-				
-				if (index == 255)
-				{
-					natValue[0] = inout[1];
-					natValue[1] = inout[2];
-					inout.erase(inout.begin(), inout.begin() + 3);
+            if (curr.cmd == "hlf")
+                *reg = *reg / 2;
+            if (curr.cmd == "tpl")
+                *reg = *reg * 3;
+            if (curr.cmd == "inc")
+                *reg = *reg + 1;
+            if (curr.cmd == "jmp")
+                current_instruction += curr.offset - 1;
+            if (curr.cmd == "jie" && (*reg % 2 == 0))
+                current_instruction += curr.offset - 1;
+            if (curr.cmd == "jio" && (*reg == 1))
+                current_instruction += curr.offset - 1;
 
-					if (result1 == -1)
-						result1 = natValue[1];
+            current_instruction++;
+        }
 
-					continue;
-				}
+        return b_reg;
+    }
 
-				input.push_back(inout[1]);
-				input.push_back(inout[2]);
-				inout.erase(inout.begin(), inout.begin() + 3);
-				vm[index].addInput(input);
-			}
-		}
-	}
+    int64_t part2()
+    {
+        int64_t a_reg = 1;
+        int64_t b_reg = 0;
 
+        int current_instruction = 0;
+
+        while (true)
+        {
+            if (current_instruction >= cmds.size())
+                break;
+
+            command curr = cmds[current_instruction];
+            int64_t* reg = nullptr;
+            if (curr.reg != "")
+                reg = (curr.reg == "a") ? &a_reg : &b_reg;
+
+            if (curr.cmd == "hlf")
+                *reg = *reg / 2;
+            if (curr.cmd == "tpl")
+                *reg = *reg * 3;
+            if (curr.cmd == "inc")
+                *reg = *reg + 1;
+            if (curr.cmd == "jmp")
+                current_instruction += curr.offset - 1;
+            if (curr.cmd == "jie" && (*reg % 2 == 0))
+                current_instruction += curr.offset - 1;
+            if (curr.cmd == "jio" && (*reg == 1))
+                current_instruction += curr.offset - 1;
+
+            current_instruction++;
+        }
+
+        return b_reg;
+    }
 public:
-	Day23() : result1(-1), result2(-1), lastNatValue(-1)
-	{
-		inputString = util::readFile("..\\inputs\\2015\\input_23.txt");
-	}
+    Day23()
+    {
+        input = util::readFileLines("..\\inputs\\2015\\input_23.txt");
+    }
 
-	int64_t run()
-	{
-		util::Timer myTime;
-		myTime.start();
+    int64_t run()
+    {
+        util::Timer myTime;
+        myTime.start();
 
-		std::vector<int64_t> commands = util::splitInt64(inputString, ',');
-		runNetwork(commands);
-		
-		std::cout << "Day 23 - Part 1: " << result1 << std::endl;
-		std::cout << "Day 23 - Part 2: " << result2 << std::endl;
+        parse_commands();
 
-		return myTime.usPassed();
-	}
+        auto result_1 = part1();
+        auto result_2 = part2();
+
+        int64_t time = myTime.usPassed();
+        std::cout << "Day 23 - Part 1: " << result_1 << '\n'
+            << "Day 23 - Part 2: " << result_2 << '\n';
+
+        return time;
+    }
 };
 
 #endif  // ADVENTOFCODE2015_DAY23

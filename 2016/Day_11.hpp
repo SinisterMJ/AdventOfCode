@@ -1,8 +1,6 @@
 #ifndef ADVENTOFCODE2016_DAY11
 #define ADVENTOFCODE2016_DAY11
 
-#include <map>
-
 #include "../includes/aoc.h"
 #include <regex>
 #include <set>
@@ -88,7 +86,7 @@ public:
 	{
 		inputVec = util::readFileLines("..\\inputs\\2016\\input_11.txt");
 	}
-
+    
     int64_t run()
     {
         util::Timer myTime;
@@ -100,7 +98,7 @@ public:
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 11 - Part 1: " << result_1 << '\n'
-                  << "Day 11 - Part 2: " << result_2 << '\n';
+            << "Day 11 - Part 2: " << result_2 << '\n';
 
         return time;
     }
