@@ -56,7 +56,7 @@ private:
         // (play.a + (play.b + 2) % 3) % 3 signifies what b should play to get the wanted outcome
 
         for (auto play : total)
-            local_sum += (play.a + (play.b + 2) % 3) % 3 + 1 + 3 * play.b;
+            local_sum += (play.a + (play.b + 2)) % 3 + 1 + 3 * play.b;
 
         return local_sum;
     }
