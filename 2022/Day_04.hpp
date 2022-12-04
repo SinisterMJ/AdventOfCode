@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2022_DAY04
 
 #include "../includes/aoc.h"
+#include <utility>
 
 class Day04 {
 private:
@@ -9,48 +10,27 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::vector<std::array<std::array<int32_t, 2>, 2>> ids;
-
-    int64_t part1()
+    std::pair<int64_t, int64_t> solve()
     {
+        int64_t count_1 = 0;
+        int64_t count_2 = 0;
+     
         for (auto line : inputVector)
         {
             auto splitted = util::split(line, ',');
             auto first = util::split(splitted[0], '-');
             auto second = util::split(splitted[1], '-');
 
-            std::array<std::array<int32_t, 2>, 2> temp;
-            temp[0] = std::array<int32_t, 2>();
-            temp[0][0] = std::stoi(first[0]);
-            temp[0][1] = std::stoi(first[1]);
-            temp[1][0] = std::stoi(second[0]);
-            temp[1][1] = std::stoi(second[1]);
-            ids.push_back(temp);
-        }
+            if (in_range(std::stoi(second[0]), std::stoi(first[0]), std::stoi(first[1])) && in_range(std::stoi(second[1]), std::stoi(first[0]), std::stoi(first[1])) ||
+                in_range(std::stoi(first[0]), std::stoi(second[0]), std::stoi(second[1])) && in_range(std::stoi(first[1]), std::stoi(second[0]), std::stoi(second[1])))
+                count_1++;
 
-        int count = 0;
-        for (auto id : ids)
-        {
-            if (in_range(id[1][0], id[0][0], id[0][1]) && in_range(id[1][1], id[0][0], id[0][1]) ||
-                in_range(id[0][0], id[1][0], id[1][1]) && in_range(id[0][1], id[1][0], id[1][1]))
-                count++;
+            if (in_range(std::stoi(first[0]), std::stoi(second[0]), std::stoi(second[1])) ||
+                in_range(std::stoi(second[0]), std::stoi(first[0]), std::stoi(first[1])))
+                count_2++;
         }
         
-        return count;
-    }
-
-    int64_t part2()
-    {
-        int count = 0;
-        
-        for (auto id : ids)
-        {
-            if (in_range(id[0][0], id[1][0], id[1][1]) ||
-                in_range(id[1][0], id[0][0], id[0][1]))
-                count++;
-        }
-
-        return count;
+        return std::make_pair(count_1, count_2);
     }
 
 public:
@@ -65,8 +45,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result = solve();
+        auto result_1 = result.first;;
+        auto result_2 = result.second;
 
         int64_t time = myTime.usPassed();
 
