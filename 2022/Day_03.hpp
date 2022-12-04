@@ -71,13 +71,13 @@ private:
 
             for (auto val : superset)
             {
-                if (val > 96)
+                if (val >= 'A')
                 {
-                    val -= 96;
+                    val -= 'A' - 1;
                 }
                 else
                 {
-                    val = val - 64 + 26;
+                    val = 'a' - 1;
                 }
 
                 sum += val;
