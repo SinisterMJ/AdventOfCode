@@ -9,25 +9,33 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
+    std::vector<std::array<std::array<int32_t, 2>, 2>> ids;
 
     int64_t part1()
     {
-        int count = 0;
-        int total = 0;
         for (auto line : inputVector)
         {
-            total++;
             auto splitted = util::split(line, ',');
             auto first = util::split(splitted[0], '-');
             auto second = util::split(splitted[1], '-');
 
-            if (std::stoi(first[0]) <= std::stoi(second[0]) && std::stoi(first[1]) >= std::stoi(second[1]))
-                count++;
-            else
-                if (std::stoi(second[0]) <= std::stoi(first[0]) && std::stoi(second[1]) >= std::stoi(first[1]))
-                    count++;
+            std::array<std::array<int32_t, 2>, 2> temp;
+            temp[0] = std::array<int32_t, 2>();
+            temp[0][0] = std::stoi(first[0]);
+            temp[0][1] = std::stoi(first[1]);
+            temp[1][0] = std::stoi(second[0]);
+            temp[1][1] = std::stoi(second[1]);
+            ids.push_back(temp);
         }
 
+        int count = 0;
+        for (auto id : ids)
+        {
+            if (in_range(id[1][0], id[0][0], id[0][1]) && in_range(id[1][1], id[0][0], id[0][1]) ||
+                in_range(id[0][0], id[1][0], id[1][1]) && in_range(id[0][1], id[1][0], id[1][1]))
+                count++;
+        }
+        
         return count;
     }
 
@@ -35,24 +43,11 @@ private:
     {
         int count = 0;
         
-        for (auto line : inputVector)
+        for (auto id : ids)
         {
-            auto splitted = util::split(line, ',');
-            auto first = util::split(splitted[0], '-');
-            auto second = util::split(splitted[1], '-');
-
-            std::set<int32_t> local;
-
-            for (int start = std::stoi(first[0]); start <= std::stoi(first[1]); ++start)
-                local.insert(start);
-            for (int start = std::stoi(second[0]); start <= std::stoi(second[1]); ++start)
-            {
-                if (local.contains(start))
-                {
-                    count++;
-                    break;
-                }
-            }
+            if (in_range(id[0][0], id[1][0], id[1][1]) ||
+                in_range(id[1][0], id[0][0], id[0][1]))
+                count++;
         }
 
         return count;
