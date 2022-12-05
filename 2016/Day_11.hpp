@@ -54,9 +54,9 @@ private:
         }
     }
 
-    std::vector<int, std::map<int, std::vector<Element>>> valid_moves(int elevator, std::map<int, std::vector<Element>> floors)
+    std::pair<int, std::map<int, std::vector<Element>>> valid_moves(int elevator, std::map<int, std::vector<Element>> floors)
     {
-
+        return std::pair<int, std::map<int, std::vector<Element>>>();
     }
 
     int part1()
@@ -66,7 +66,7 @@ private:
 
         std::set<std::pair<int, std::map<int, std::vector<Element>>>> seen;
 
-        seen.insert(std::make_pair(elevator_level, floor_state));
+        // seen.insert(std::make_pair(elevator_level, floor_state));
 
         while (true)
         {
@@ -98,7 +98,7 @@ public:
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 11 - Part 1: " << result_1 << '\n'
-            << "Day 11 - Part 2: " << result_2 << '\n';
+                  << "Day 11 - Part 2: " << result_2 << '\n';
 
         return time;
     }

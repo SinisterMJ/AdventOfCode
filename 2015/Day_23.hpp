@@ -2,15 +2,6 @@
 #define ADVENTOFCODE2015_DAY23
 
 #include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
-#include "../includes/Map2DBase.h"
-
-#include "../includes/aoc.h"
-#include "../includes/IntcodeVM.h"
-#include "../includes/Map2DBase.h"
-
-#include <map>
-#include <algorithm>
 
 
 class Day23 {
@@ -52,9 +43,9 @@ private:
         }
     }
 
-    int64_t part1()
+    int64_t solve(int64_t start)
     {
-        int64_t a_reg = 0;
+        int64_t a_reg = start;
         int64_t b_reg = 0;
 
         int current_instruction = 0;
@@ -79,7 +70,7 @@ private:
                 current_instruction += curr.offset - 1;
             if (curr.cmd == "jie" && (*reg % 2 == 0))
                 current_instruction += curr.offset - 1;
-            if (curr.cmd == "jio" && (*reg == 1))
+            if (curr.cmd == "jio" && ((*reg) == 1))
                 current_instruction += curr.offset - 1;
 
             current_instruction++;
@@ -88,41 +79,6 @@ private:
         return b_reg;
     }
 
-    int64_t part2()
-    {
-        int64_t a_reg = 1;
-        int64_t b_reg = 0;
-
-        int current_instruction = 0;
-
-        while (true)
-        {
-            if (current_instruction >= cmds.size())
-                break;
-
-            command curr = cmds[current_instruction];
-            int64_t* reg = nullptr;
-            if (curr.reg != "")
-                reg = (curr.reg == "a") ? &a_reg : &b_reg;
-
-            if (curr.cmd == "hlf")
-                *reg = *reg / 2;
-            if (curr.cmd == "tpl")
-                *reg = *reg * 3;
-            if (curr.cmd == "inc")
-                *reg = *reg + 1;
-            if (curr.cmd == "jmp")
-                current_instruction += curr.offset - 1;
-            if (curr.cmd == "jie" && (*reg % 2 == 0))
-                current_instruction += curr.offset - 1;
-            if (curr.cmd == "jio" && (*reg == 1))
-                current_instruction += curr.offset - 1;
-
-            current_instruction++;
-        }
-
-        return b_reg;
-    }
 public:
     Day23()
     {
@@ -136,8 +92,8 @@ public:
 
         parse_commands();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result_1 = solve(0);
+        auto result_2 = solve(1);
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 23 - Part 1: " << result_1 << '\n'

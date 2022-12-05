@@ -31,8 +31,8 @@ private:
     };
 
     struct Fighter {
-        int64_t hitpoints;
-        int64_t damage;
+        int32_t hitpoints;
+        int32_t damage;
         Fighter() : hitpoints(0), damage(0) { }
     };
 
@@ -53,7 +53,7 @@ private:
     Fighter boss;
     Magician mag = Magician(50, 500);
 
-    int64_t fight(bool hardmode)
+    int32_t fight(bool hardmode)
     {
         std::deque<State> active_fights;
         State initial(50, 500);
@@ -61,7 +61,7 @@ private:
         initial.spell = magic_state();
         active_fights.push_back(initial);
 
-        int64_t min_mana = std::numeric_limits<int64_t>::max();
+        int32_t min_mana = std::numeric_limits<int32_t>::max();
 
         while (active_fights.size() > 0)
         {
@@ -187,8 +187,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        int64_t result1 = fight(false);
-        int64_t result2 = fight(true);
+        int32_t result1 = fight(false);
+        int32_t result2 = fight(true);
 
         std::cout << "Day 22 - Part 1: " << result1 << std::endl;
         std::cout << "Day 22 - Part 2: " << result2 << std::endl;

@@ -19,30 +19,29 @@ private:
         {
             std::string first = line.substr(0, line.size() / 2);
             std::string second = line.substr(line.size() / 2);
-
-            std::set<int8_t> first_set, second_set;
-            for (auto ch : first)
-                first_set.insert(ch);
-
-            for (auto ch : second)
-                second_set.insert(ch);
-
-            std::set<int8_t> intersection;
-            std::set_intersection(first_set.begin(), first_set.end(), second_set.begin(), second_set.end(), std::inserter(intersection, intersection.begin()));
-
-            for (auto val : intersection)
+            int8_t val = 0;
+            for (int i = 0; i < first.size() && val == 0; ++i)
             {
-                if (val > 96)
+                for (int j = 0; j < second.size(); ++j)
                 {
-                    val -= 96;
+                    if (first[i] == second[j])
+                    {
+                        val = first[i];
+                        break;
+                    }
                 }
-                else
-                {
-                    val = val - 64 + 26;
-                }
-
-                sum += val;
             }
+            
+            if (val > 96)
+            {
+                val -= 96;
+            }
+            else
+            {
+                val = val - 64 + 26;
+            }
+
+            sum += val;
         }
 
         return sum;
@@ -71,13 +70,13 @@ private:
 
             for (auto val : superset)
             {
-                if (val >= 'A')
+                if (val > 96)
                 {
-                    val -= 'A' - 1;
+                    val -= 96;
                 }
                 else
                 {
-                    val = 'a' - 1;
+                    val = val - 64 + 26;
                 }
 
                 sum += val;

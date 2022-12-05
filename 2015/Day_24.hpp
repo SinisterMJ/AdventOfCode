@@ -14,7 +14,7 @@ private:
 	{
 		int32_t sum = 0;
 		int64_t min_quantum = std::numeric_limits<int64_t>::max();
-		int32_t min_elements = input_weights.size();
+		int32_t min_elements = static_cast<int32_t>(input_weights.size());
 
 		for (auto weight : input_weights)
 			sum += weight;
@@ -44,7 +44,7 @@ private:
 
 				if (bitList.count() < min_elements)
 				{
-					min_elements = bitList.count();
+					min_elements = static_cast<int32_t>(bitList.count());
 					min_quantum = quantum;
 				}
 

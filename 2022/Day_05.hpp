@@ -3,6 +3,7 @@
 
 #include "../includes/aoc.h"
 #include <stack>
+#include <deque>
 
 class Day05 {
 private:
@@ -10,7 +11,7 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::vector<std::stack<int8_t>> crates;
+    std::vector<std::deque<int8_t>> crates;
 
     struct moves {
         int from;
@@ -23,52 +24,36 @@ private:
     std::string part1()
     {
         bool readCrates = true;
-        std::vector<std::stack<int8_t>> crates_in;
 
         for (auto line : inputVector)
         {
             if (line == "")
+            {
                 readCrates = false;
-
+                continue;
+            }
             if (readCrates)
             {
                 for (int index = 1; index < line.size(); index += 4)
                 {
-                    if (line[index] == '1')
-                        break;
-
                     if (line[index] != ' ')
                     {
-                        if (((index - 1) / 4) + 1 > crates_in.size())
-                            crates_in.resize(((index - 1) / 4) + 1);
+                        if (((index - 1) / 4) + 1 > crates.size())
+                            crates.resize(((index - 1) / 4) + 1);
 
-                        crates_in[((index - 1) /4)].push(line[index]);
+                        crates[((index - 1) /4)].push_front(line[index]);
                     }
                 }
             }
             else
             {
-                if (line.find("move") != std::string::npos)
-                {
-                    moves temp;
-                    auto split = util::split(line, ' ');
-                    temp.count = std::stoi(split[1]);
-                    temp.from = std::stoi(split[3]) - 1;
-                    temp.to = std::stoi(split[5]) - 1;
+                moves temp;
+                auto split = util::split(line, ' ');
+                temp.count = std::stoi(split[1]);
+                temp.from = std::stoi(split[3]) - 1;
+                temp.to = std::stoi(split[5]) - 1;
 
-                    move_cmds.push_back(temp);
-                }
-            }
-        }
-
-        crates.resize(crates_in.size());
-
-        for (int index = 0; index < crates_in.size(); ++index)
-        {
-            while (!crates_in[index].empty())
-            {
-                crates[index].push(crates_in[index].top());
-                crates_in[index].pop();
+                move_cmds.push_back(temp);
             }
         }
 
@@ -78,16 +63,16 @@ private:
         {
             for (int count = 0; count < cmd.count; ++count)
             {
-                auto val = crates_local[cmd.from].top();
-                crates_local[cmd.from].pop();
-                crates_local[cmd.to].push(val);
+                auto val = crates_local[cmd.from].back();
+                crates_local[cmd.from].pop_back();
+                crates_local[cmd.to].push_back(val);
             }
         }
 
         std::string result = "";
         for (auto crate : crates_local)
         {
-            result += std::string(1, crate.top());
+            result += std::string(1, crate.back());
         }
 
         return result;
@@ -102,15 +87,15 @@ private:
             std::stack<int8_t> local;
             for (int count = 0; count < cmd.count; ++count)
             {
-                auto val = crates_local[cmd.from].top();
+                auto val = crates_local[cmd.from].back();
                 local.push(val);
-                crates_local[cmd.from].pop();
+                crates_local[cmd.from].pop_back();
             }
 
             for (int count = 0; count < cmd.count; ++count)
             {
                 auto val = local.top();
-                crates_local[cmd.to].push(val);
+                crates_local[cmd.to].push_back(val);
                 local.pop();
             }            
         }
@@ -118,7 +103,7 @@ private:
         std::string result = "";
         for (auto crate : crates_local)
         {
-            result += std::string(1, crate.top());
+            result += std::string(1, crate.back());
         }
 
         return result;

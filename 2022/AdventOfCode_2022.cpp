@@ -36,7 +36,7 @@ int main()
 
 	std::vector<int64_t> runTimes = { };
     
-    /*{
+    {
         Day01 mDay01; runTimes.emplace_back(mDay01.run());
         std::cout << std::endl;
     }
@@ -54,7 +54,7 @@ int main()
     {
         Day04 mDay04; runTimes.emplace_back(mDay04.run());
         std::cout << std::endl;
-    }*/
+    }
 
     {
         Day05 mDay05; runTimes.emplace_back(mDay05.run());
