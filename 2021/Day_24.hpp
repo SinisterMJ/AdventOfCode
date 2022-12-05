@@ -92,7 +92,7 @@ private:
                 num_26 += div_z[i] == 26;
             }
 
-            max_z_step[index] = std::pow(26, num_26);
+            max_z_step[index] = static_cast<int64_t>(std::pow(26, num_26));
         }
 
         auto results = runSearch(0, 0);

@@ -42,7 +42,7 @@ private:
         Magician character;
         magic_state spell;
         Fighter boss_char;
-        int64_t spent_mana;
+        int32_t spent_mana;
         State(int32_t _hp, int32_t _mana)
             : character(_hp, _mana)
             , spent_mana(0)
@@ -98,7 +98,7 @@ private:
 
             if (current_state.boss_char.hitpoints <= 0)
             {
-                min_mana = std::min<int64_t>(min_mana, current_state.spent_mana);
+                min_mana = std::min<int32_t>(min_mana, current_state.spent_mana);
                 continue;
             }
 

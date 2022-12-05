@@ -22,7 +22,7 @@ private:
         for (auto line : inputVec)
         {
             scanner temp;
-            auto scan = util::split(line, ': ');
+            auto scan = util::split(line, ": ");
             temp.depth = std::stoi(scan[0]);
             temp.range = std::stoi(scan[1]);
             scanners.push_back(temp);

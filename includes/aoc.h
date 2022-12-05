@@ -61,6 +61,8 @@ namespace util
 			input = std::string(s);
 			while(input.back() == '\n' || input.back() == '\r')
 				input.pop_back();
+
+            delete[] s;
 		}
 
 		return input;
