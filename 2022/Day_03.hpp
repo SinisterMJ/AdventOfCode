@@ -32,13 +32,14 @@ private:
                 }
             }
             
-            if (val > 96)
+            if (val >= 'a')
             {
-                val -= 96;
+                val -= 'a' - 1;
             }
             else
             {
-                val = val - 64 + 26;
+                val -= 'A' - 1;
+                val += 26;
             }
 
             sum += val;
@@ -70,13 +71,14 @@ private:
 
             for (auto val : superset)
             {
-                if (val > 96)
+                if (val >= 'a')
                 {
-                    val -= 96;
+                    val -= 'a' - 1;
                 }
                 else
                 {
-                    val = val - 64 + 26;
+                    val -= 'A' - 1;
+                    val += 26;
                 }
 
                 sum += val;
