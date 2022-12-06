@@ -6,13 +6,36 @@
 class Day06 {
 private:
 
-    std::vector<std::string> inputVector;
     std::string inputString;
+
+    int32_t solve(int32_t count)
+    {
+        for (int index = 0; index < inputString.size() - count; index++)
+        {
+            bool found_candidate = true;
+            for (int i = index; i < index + count && found_candidate; ++i)
+            {
+                for (int j = i + 1; j < index + count; ++j)
+                {
+                    found_candidate &= inputString[i] != inputString[j];
+                    if (inputString[i] == inputString[j])
+                    {
+                        // Skip ahead by offset i
+                        index += i - index;
+                        break;
+                    }
+                }
+            }
+
+            if (found_candidate)
+                return index + count;
+        }
+        return 0;
+    }
 
 public:
     Day06()
     {
-        inputVector = util::readFileLines("..\\inputs\\2022\\input_6.txt");
         inputString = util::readFile("..\\inputs\\2022\\input_6.txt");
     }
 
@@ -21,8 +44,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = 0;
-        auto result_2 = 0;
+        auto result_1 = solve(4);
+        auto result_2 = solve(14);
 
         int64_t time = myTime.usPassed();
 
