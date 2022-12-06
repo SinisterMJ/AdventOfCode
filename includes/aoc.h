@@ -54,7 +54,12 @@ namespace util
 			fseek(f, 0, SEEK_SET);  //same as rewind(f);
 
 			char* s = new char[fsize + 1];
+
+#pragma warning( push )
+#pragma warning( disable : 6386 )
 			fread(s, fsize, 1, f);
+#pragma warning( pop )
+
 			fclose(f);
 			s[fsize] = 0;
 
