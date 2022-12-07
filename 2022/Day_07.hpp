@@ -88,9 +88,6 @@ private:
 
     int64_t closest(std::shared_ptr<Folder> curr, int64_t current, int64_t deletable)
     {
-        if (curr->total_size < deletable)
-            return current;
-
         if (curr->total_size > deletable && current > curr->total_size)
             current = curr->total_size;
 
