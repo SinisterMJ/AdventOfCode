@@ -12,7 +12,6 @@ private:
         std::shared_ptr<Folder> parent;
         std::string name;
         std::vector<std::shared_ptr<Folder>> dirs;
-        std::vector<std::pair<int, std::string>> files;
         int32_t total_size = 0;
     };
 
@@ -28,7 +27,7 @@ private:
         auto curr_folder = root;
         for (auto line : inputVector)
         {
-            if (line.find("$ ls") != std::string::npos)
+            if (line == "$ ls")
                 continue;
 
             if (line.find("$") == std::string::npos)
@@ -44,64 +43,36 @@ private:
                 if (line.find("dir ") == std::string::npos)
                 {                    
                     auto split = util::split(line, ' ');
-                    curr_folder->files.push_back(std::make_pair(std::stoi(split[0]), split[1]));
-                    curr_folder->total_size += std::stoi(split[0]);
+                    auto tempPtr = curr_folder;
+                    while (tempPtr != nullptr)
+                    {
+                        tempPtr->total_size += std::stoi(split[0]);
+                        tempPtr = tempPtr->parent;
+                    }
                 }
                 continue;
             }
 
-            if (line.find("cd ..") != std::string::npos)
+            if (line.find("$ cd ..") != std::string::npos)
             {
-                auto size = curr_folder->total_size;
                 curr_folder = curr_folder->parent;
-                curr_folder->total_size += size;                
             }
             else
             {
                 std::string target = line.substr(5);
                 for (auto& child : curr_folder->dirs)
-                {
                     if (child->name == target)
-                    {
                         curr_folder = child;
-                        break;
-                    }
-                }
             }
         }
-
-        while (curr_folder->parent != nullptr)
-        {
-            auto size = curr_folder->total_size;
-            curr_folder = curr_folder->parent;
-            curr_folder->total_size += size;
-        }
-
-        int32_t sum = 0;
-        for (auto child : root->dirs)
-        {
-            sum += child->total_size;
-        }
-        for (auto file : root->files)
-        {
-            sum += file.first;
-        }
-
-        root->total_size = sum;
     }
 
     int64_t total_size(std::shared_ptr<Folder> curr)
     {
-        if (curr->dirs.size() == 0)
-        {
-            return curr->total_size <= 100000 ? curr->total_size : 0;
-        }
-
         int64_t sum = 0;
+
         for (auto child : curr->dirs)
-        {
             sum += total_size(child);
-        }
 
         if (curr->total_size <= 100000)
             return sum + curr->total_size;
@@ -118,24 +89,16 @@ private:
     int64_t closest(std::shared_ptr<Folder> curr, int64_t current, int64_t deletable)
     {
         if (curr->total_size < deletable)
-        {
             return current;
-        }
 
         if (curr->total_size > deletable && current > curr->total_size)
-        {
             current = curr->total_size;
-        }
 
         if (curr->dirs.size() == 0)
-        {
             return current;
-        }
 
         for (auto child : curr->dirs)
-        {
             current = closest(child, current, deletable);
-        }
 
         return current;
     }
