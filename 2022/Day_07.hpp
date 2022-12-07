@@ -99,7 +99,7 @@ private:
 
     int64_t part2()
     {
-        int64_t deletable = root->total_size - 70000000 + 30000000;
+        int64_t deletable = root->total_size - 70'000'000 + 30'000'000;
         return closest(root, root->total_size, deletable);
     }
 
