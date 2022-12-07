@@ -94,9 +94,6 @@ private:
         if (curr->total_size > deletable && current > curr->total_size)
             current = curr->total_size;
 
-        if (curr->dirs.size() == 0)
-            return current;
-
         for (auto child : curr->dirs)
             current = closest(child, current, deletable);
 
