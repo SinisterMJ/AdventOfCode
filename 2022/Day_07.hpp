@@ -2,16 +2,16 @@
 #define ADVENTOFCODE2022_DAY07
 
 #include "../includes/aoc.h"
-#include <stack>
+#include <memory>
 
 class Day07 {
 private:
 
-    struct folder
+    struct Folder
     {
-        folder* parent;
+        std::shared_ptr<Folder> parent;
         std::string name;
-        std::vector<folder*> dirs;
+        std::vector<std::shared_ptr<Folder>> dirs;
         std::vector<std::pair<int, std::string>> files;
         int32_t total_size = 0;
     };
@@ -19,14 +19,13 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::vector<folder*> root;
+    std::shared_ptr<Folder> root;
 
     void parse()
     {
-        root.resize(1);
-        root[0] = new folder();
-        root[0]->name = "/";
-        auto curr_folder = root[0];
+        root = std::make_shared<Folder>();
+        root->name = "/";
+        auto curr_folder = root;
         for (auto line : inputVector)
         {
             if (line.find("$ ls") != std::string::npos)
@@ -36,17 +35,15 @@ private:
             {
                 if (line.find("dir ") != std::string::npos)
                 {
-                    folder* temp = new folder();
+                    std::shared_ptr<Folder> temp = std::make_shared<Folder>();
                     temp->name = line.substr(4);
                     temp->parent = curr_folder;
                     curr_folder->dirs.push_back(temp);
                 }
 
                 if (line.find("dir ") == std::string::npos)
-                {
-                    folder* temp = new folder();
+                {                    
                     auto split = util::split(line, ' ');
-                    temp->parent = curr_folder;
                     curr_folder->files.push_back(std::make_pair(std::stoi(split[0]), split[1]));
                     curr_folder->total_size += std::stoi(split[0]);
                 }
@@ -81,19 +78,19 @@ private:
         }
 
         int32_t sum = 0;
-        for (auto child : root[0]->dirs)
+        for (auto child : root->dirs)
         {
             sum += child->total_size;
         }
-        for (auto file : root[0]->files)
+        for (auto file : root->files)
         {
             sum += file.first;
         }
 
-        root[0]->total_size = sum;
+        root->total_size = sum;
     }
 
-    int64_t total_size(folder* curr)
+    int64_t total_size(std::shared_ptr<Folder> curr)
     {
         if (curr->dirs.size() == 0)
         {
@@ -115,10 +112,10 @@ private:
     int64_t part1()
     {
         parse();
-        return total_size(root[0]);
+        return total_size(root);
     }
 
-    int64_t closest(folder* curr, int64_t current, int64_t deletable)
+    int64_t closest(std::shared_ptr<Folder> curr, int64_t current, int64_t deletable)
     {
         if (curr->total_size < deletable)
         {
@@ -145,8 +142,8 @@ private:
 
     int64_t part2()
     {
-        int64_t deletable = root[0]->total_size - 70000000 + 30000000;
-        return closest(root[0], root[0]->total_size, deletable);
+        int64_t deletable = root->total_size - 70000000 + 30000000;
+        return closest(root, root->total_size, deletable);
     }
 
 public:
