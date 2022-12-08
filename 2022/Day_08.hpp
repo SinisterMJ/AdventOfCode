@@ -21,7 +21,7 @@ private:
             for (int x = 0; x < inputVector[y].size(); ++x)
             {
                 v2 pos(x, y);
-                trees[pos] = inputVector[y][x] - '0';
+                trees[pos] = inputVector[y][x];
                 not_seen[pos] = true;
             }
         }
@@ -96,7 +96,7 @@ private:
             for (auto& direction : neighbours)
             {
                 v2 currPos = start;
-                while (trees.count(currPos + direction))
+                while (trees.contains(currPos + direction))
                 {
                     currPos = currPos + direction;
                     if (trees[currPos] >= height)
