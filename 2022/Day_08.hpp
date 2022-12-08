@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2022_DAY08
 
 #include "../includes/aoc.h"
+#include <unordered_map>
 
 class Day08 {
 private:
@@ -9,8 +10,8 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::map<v2, int8_t> trees;
-    std::map<v2, bool> not_seen;
+    std::unordered_map<v2, int8_t> trees;
+    std::unordered_map<v2, bool> not_seen;
 
     int part1()
     {
@@ -24,7 +25,7 @@ private:
             }
         }
 
-        int64_t sum = 0;
+        int32_t sum = 0;
 
         for (int y = 0; y < inputVector.size(); ++y)
         {
@@ -41,7 +42,7 @@ private:
             }
 
             lastHeight = 0;
-            for (int x = inputVector[y].size() - 1 ; x >= 0; --x)
+            for (int x = static_cast<int32_t>(inputVector[y].size()) - 1 ; x >= 0; --x)
             {
                 v2 pos(x, y);
                 if (trees[pos] > lastHeight)
@@ -67,7 +68,7 @@ private:
                 }
             }
             lastHeight = 0;
-            for (int y = inputVector.size() - 1; y >= 0; --y)
+            for (int y = static_cast<int32_t>(inputVector.size()) - 1; y >= 0; --y)
             {
                 v2 pos(x, y);
                 if (trees[pos] > lastHeight)
@@ -84,7 +85,7 @@ private:
     
     int part2()
     {
-        int64_t best = 0;
+        int32_t best = 0;
 
         for (int y = 0; y < inputVector.size(); ++y)
         {
@@ -94,64 +95,39 @@ private:
                 v2 currPos(x, y);
                 int8_t curr_height = trees[v2(x, y)];
 
-                if (currPos == v2(2, 3))
-                    int breakHere = 0;
-
-                for (view_up = 0; y - view_up >= 0; ++view_up)
+                for (view_up = 1; y - view_up >= 0; ++view_up)
                 {
                     v2 pos(x, y - view_up);
-                    if (currPos == pos)
-                        continue;
                     if (trees[pos] >= curr_height)
-                    {
-                        view_up++;
                         break;
-                    }
                 }
+                view_up -= (y - view_up == -1) ? 1 : 0;
 
-                view_up--;
-
-                for (view_down = 0; y + view_down < inputVector.size(); ++view_down)
+                for (view_down = 1; y + view_down < inputVector.size(); ++view_down)
                 {
                     v2 pos(x, y + view_down);
-                    if (currPos == pos)
-                        continue;
                     if (trees[pos] >= curr_height)
-                    {
-                        view_down++;
                         break;
-                    }
                 }
-                view_down--;
+                view_down -= (y + view_down == inputVector.size()) ? 1 : 0;
 
-                for (view_left = 0; x - view_left >= 0; ++view_left)
+                for (view_left = 1; x - view_left >= 0; ++view_left)
                 {
                     v2 pos(x - view_left, y);
-                    if (currPos == pos)
-                        continue;
                     if (trees[pos] >= curr_height)
-                    {
-                        view_left++;
                         break;
-                    }
                 }
+                view_left -= (x - view_left == -1) ? 1 : 0;
 
-                view_left--;
-
-                for (view_right = 0; x + view_right < inputVector[0].size(); ++view_right)
+                for (view_right = 1; x + view_right < inputVector[0].size(); ++view_right)
                 {
                     v2 pos(x + view_right, y);
-                    if (currPos == pos)
-                        continue;
                     if (trees[pos] >= curr_height)
-                    {
-                        view_right++;
                         break;
-                    }
                 }
-                view_right--;
+                view_right -= (x + view_right == inputVector[0].size()) ? 1 : 0;
 
-                best = std::max<int64_t>(best, view_down * view_up * view_left * view_right);
+                best = std::max(best, view_down * view_up * view_left * view_right);
             }
         }
         return best;
