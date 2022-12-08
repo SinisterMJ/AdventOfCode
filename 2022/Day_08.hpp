@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2022_DAY08
 
 #include "../includes/aoc.h"
+#include "../includes/Map2DBase.h"
 #include <unordered_map>
 
 class Day08 {
@@ -82,56 +83,34 @@ private:
 
         return sum;
     }
-    
+
     int part2()
     {
         int32_t best = 0;
+        auto neighbours = MapHelper::getNeighboursVec(false);
 
-        for (int y = 0; y < inputVector.size(); ++y)
+        for (auto& [start, height] : trees)
         {
-            for (int x = 0; x < inputVector[y].size(); ++x)
+            std::vector<int32_t> distances;
+
+            for (auto& direction : neighbours)
             {
-                int32_t view_up = 0, view_down = 0, view_left = 0, view_right = 0;
-                v2 currPos(x, y);
-                int8_t curr_height = trees[v2(x, y)];
-
-                for (view_up = 1; y - view_up >= 0; ++view_up)
+                v2 currPos = start;
+                while (trees.count(currPos + direction))
                 {
-                    v2 pos(x, y - view_up);
-                    if (trees[pos] >= curr_height)
+                    currPos = currPos + direction;
+                    if (trees[currPos] >= height)
                         break;
                 }
-                view_up -= (y - view_up == -1) ? 1 : 0;
-
-                for (view_down = 1; y + view_down < inputVector.size(); ++view_down)
-                {
-                    v2 pos(x, y + view_down);
-                    if (trees[pos] >= curr_height)
-                        break;
-                }
-                view_down -= (y + view_down == inputVector.size()) ? 1 : 0;
-
-                for (view_left = 1; x - view_left >= 0; ++view_left)
-                {
-                    v2 pos(x - view_left, y);
-                    if (trees[pos] >= curr_height)
-                        break;
-                }
-                view_left -= (x - view_left == -1) ? 1 : 0;
-
-                for (view_right = 1; x + view_right < inputVector[0].size(); ++view_right)
-                {
-                    v2 pos(x + view_right, y);
-                    if (trees[pos] >= curr_height)
-                        break;
-                }
-                view_right -= (x + view_right == inputVector[0].size()) ? 1 : 0;
-
-                best = std::max(best, view_down * view_up * view_left * view_right);
+                distances.push_back((currPos - start).manhattan());                
             }
+
+            best = std::max(best, distances[0] * distances[1] * distances[2] * distances[3]);
         }
+
         return best;
     }
+
 public:
     Day08()
     {
