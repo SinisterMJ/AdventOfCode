@@ -9,14 +9,69 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    int part1()
+    int64_t part1()
     {
-        return 0;
+        int cycle = 1;
+        int64_t sum = 0;
+        int64_t x = 1;
+        for (auto line : inputVector)
+        {
+            if (line == "noop")
+            {
+                cycle++;
+                if ((cycle + 20) % 40 == 0 && cycle < 230)
+                    sum += cycle * x;
+                continue;
+            }
+
+            auto cmd = util::split(line, ' ');
+            cycle++;
+
+            if ((cycle + 20) % 40 == 0 && cycle < 230)
+                sum += cycle * x;
+            
+            cycle++;
+            x += std::stoi(cmd[1]);
+            
+            if ((cycle + 20) % 40 == 0 && cycle < 230)
+                sum += cycle * x;
+        }
+        return sum;
     }
 
-    int part2()
+    std::string draw_function(int cycle, int x)
     {
-        return 0;
+        std::string result = "";
+        if (in_range(x, ((cycle - 1) % 40) - 1, ((cycle - 1) % 40) + 1))
+            result += "#";
+        else
+            result += ".";
+
+        if (cycle % 40 == 0)
+            result += "\n";
+
+        return result;
+    }
+
+    std::string part2()
+    {
+        int cycle = 1;
+        int x = 1;
+        std::string result = "\n";
+        for (auto line : inputVector)
+        {
+            if (line == "noop")
+            {
+                result += draw_function(cycle++, x);
+                continue;
+            }
+
+            auto cmd = util::split(line, ' ');
+            result += draw_function(cycle++, x);
+            result += draw_function(cycle++, x);
+            x += std::stoi(cmd[1]);
+        }
+        return result;
     }
 
 public:
