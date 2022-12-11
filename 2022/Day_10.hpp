@@ -45,7 +45,7 @@ private:
         if (in_range(x, ((cycle - 1) % 40) - 1, ((cycle - 1) % 40) + 1))
             result += "#";
         else
-            result += ".";
+            result += " ";
 
         if (cycle % 40 == 0)
             result += "\n";
