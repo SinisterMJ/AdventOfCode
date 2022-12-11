@@ -395,4 +395,16 @@ int64_t chineseRemainder(std::vector<int64_t> n, std::vector<int64_t> a) {
     return sm % prod;
 }
 
+int64_t gcd(int64_t a, int64_t b)
+{
+    if (a == 0)
+        return b;
+    return gcd(b % a, a);
+}
+
+int64_t lcm(int64_t a, int64_t b)
+{
+    return (a * b) / gcd(a, b);
+}
+
 #endif  // ADVENTOFCODE_AOC
