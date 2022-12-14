@@ -177,6 +177,19 @@ struct v2
 	int abs() { return std::abs(x) + std::abs(y); }
 	int abs() const { return std::abs(x) + std::abs(y); }
 
+    v2 getDirection()
+    {
+        if (x > 0)
+            return v2(1, 0);
+        if (x < 0)
+            return v2(-1, 0);
+        if (y > 0)
+            return v2(0, 1);
+        if (y < 0)
+            return v2(0, -1);
+        return v2(0, 0);
+    }
+
     int32_t manhattan()
     {
         return std::abs(x) + std::abs(y);
