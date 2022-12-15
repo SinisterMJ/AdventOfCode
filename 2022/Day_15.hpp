@@ -58,27 +58,57 @@ private:
 
     int part1()
     {
-        int32_t min_x = std::numeric_limits<int32_t>::max();
-        int32_t max_x = std::numeric_limits<int32_t>::min();
+        std::vector<std::pair<int, int>> ranges;
 
         for (auto [sensor, dist] : sensors)
         {
-            auto d = dist - (sensor.y - 2'000'000);
+            auto d = dist - std::abs((sensor.y - 2'000'000));
             if (d >= 0)
             {
-                min_x = std::min(min_x, sensor.x - d);
-                max_x = std::max(max_x, sensor.x + d);
+                int left = sensor.x - d;
+                int right = sensor.x + d;
+
+                ranges.push_back(std::make_pair(left, right));
             }
         }
 
-        int sum = 0;
-        v2 position(0, 2'000'000);
-        for (int x = min_x; x <= max_x; ++x)
+        std::sort(ranges.begin(), ranges.end());
+        bool merged = true;
+
+        while (merged)
         {
-            position.x = x;
-            if (inSensor(position))
-                sum++;
+            merged = false;
+            std::vector<std::pair<int, int>> tempRanges;
+
+            for (int i = 0; i < ranges.size(); i++)
+            {
+                if (i == ranges.size() - 1)
+                {
+                    tempRanges.push_back(ranges[i]);;
+                    continue;
+                }
+
+                if (in_range(ranges[i].second, ranges[i + 1].first, ranges[i + 1].second) || 
+                    in_range(ranges[i + 1].second, ranges[i].first, ranges[i].second))
+                {
+                    tempRanges.push_back(std::make_pair(ranges[i].first, std::max(ranges[i].second, ranges[i + 1].second)));
+                    merged = true;
+                    i++;
+                }
+                else
+                {
+                    tempRanges.push_back(ranges[i]);
+                }
+            }
+
+            if (tempRanges.size() > 0)
+                ranges = tempRanges;
         }
+
+        int sum = 0;
+
+        for (auto [left, right] : ranges)
+            sum += right - left + 1;
 
         for (auto [sensor, dist] : sensors)
             if (sensor.y == 2'000'000)
