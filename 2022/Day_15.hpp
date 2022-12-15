@@ -88,10 +88,9 @@ private:
                     continue;
                 }
 
-                if (in_range(ranges[i].second, ranges[i + 1].first, ranges[i + 1].second) || 
-                    in_range(ranges[i + 1].second, ranges[i].first, ranges[i].second))
+                if (overlap(ranges[i], ranges[i + 1]))
                 {
-                    tempRanges.push_back(std::make_pair(ranges[i].first, std::max(ranges[i].second, ranges[i + 1].second)));
+                    tempRanges.push_back(merge_overlap(ranges[i], ranges[i + 1]));
                     merged = true;
                     i++;
                 }
@@ -110,10 +109,12 @@ private:
         for (auto [left, right] : ranges)
             sum += right - left + 1;
 
+        // Sensors aren't emtpy space
         for (auto [sensor, dist] : sensors)
             if (sensor.y == 2'000'000)
                 sum--;
 
+        // Beacons are neither
         for (auto beacon : beacons)
             if (beacon.y == 2'000'000)
                 sum--;

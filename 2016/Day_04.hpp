@@ -20,10 +20,8 @@ private:
 			for (auto ch : elem)
 			{
 				if (in_range<char>(ch, 'a', 'z'))
-				{
 					letters[ch] += 1;
-				}
-
+				
 				if (in_range<char>(ch, '0', '9'))
 					break;
 			}
@@ -82,19 +80,13 @@ private:
 			for (auto& ch : elem)
 			{
 				if (in_range<char>(ch + id, 'a', 'z'))
-				{
 					ch += id;
-				}
 				else
-				{
 					ch += id - 26;
-				}
 			}
 
 			if (elem.find("north") != std::string::npos)
-			{
 				return orig_id;
-			}
 		}
 
 		return result;

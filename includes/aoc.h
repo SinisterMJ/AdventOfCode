@@ -26,6 +26,18 @@ inline bool in_range(T input, T low, T high)
     return low <= input && input <= high;
 }
 
+template <class T>
+bool overlap(std::pair<T, T> left, std::pair<T, T> right)
+{
+    return (in_range(left.first, right.first, right.second) || in_range(right.first, left.first, left.second));
+}
+
+template <class T>
+std::pair<T, T> merge_overlap(std::pair<T, T> left, std::pair<T, T> right)
+{
+    return std::make_pair(std::min<T>(left.first, right.first), std::max<T>(left.second, right.second));
+}
+
 namespace util
 {
     class Timer {
