@@ -61,11 +61,15 @@ private:
                     spawn += v2(0, 1);
                     continue;
                 }
+
+                // Then check left
                 if (!sand.contains(spawn + v2(-1, 1)) && !rocks.contains(spawn + v2(-1, 1)))
                 {
                     spawn += v2(-1, 1);
                     continue;
                 }
+
+                // Then check right
                 if (!sand.contains(spawn + v2(1, 1)) && !rocks.contains(spawn + v2(1, 1)))
                 {
                     spawn += v2(1, 1);
