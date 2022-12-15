@@ -10,7 +10,24 @@ private:
 
     std::vector<std::string> inputVector;
     std::string inputString;
+    
+    struct SensorPair
+    {
+        v2 sensor;
+        int distance = 0;
+    };
+
+    std::vector<SensorPair> sensors;
     std::set<v2> beacons;
+    
+    bool inSensor(v2 position)
+    {
+        for (auto [sensor, dist] : sensors)
+            if ((position - sensor).manhattan() <= dist)
+                return true;
+
+        return false;
+    }
 
     void readData()
     {
@@ -41,9 +58,22 @@ private:
 
     int part1()
     {
+        int32_t min_x = std::numeric_limits<int32_t>::max();
+        int32_t max_x = std::numeric_limits<int32_t>::min();
+
+        for (auto [sensor, dist] : sensors)
+        {
+            auto d = dist - (sensor.y - 2'000'000);
+            if (d >= 0)
+            {
+                min_x = std::min(min_x, sensor.x - d);
+                max_x = std::max(max_x, sensor.x + d);
+            }
+        }
+
         int sum = 0;
         v2 position(0, 2'000'000);
-        for (int x = -10'000'000; x <= 10'000'000; ++x)
+        for (int x = min_x; x <= max_x; ++x)
         {
             position.x = x;
             if (inSensor(position))
@@ -59,23 +89,6 @@ private:
                 sum--;
 
         return sum;
-    }
-
-    struct SensorPair
-    {
-        v2 sensor;
-        int distance = 0;
-    };
-
-    std::vector<SensorPair> sensors;
-
-    bool inSensor(v2 position)
-    {
-        for (auto [sensor, dist] : sensors)
-            if ((position - sensor).manhattan() <= dist)
-                return true;
-
-        return false;
     }
 
     int64_t part2()

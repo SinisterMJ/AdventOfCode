@@ -2,6 +2,7 @@
 #define ADVENTOFCODE2022_DAY14
 
 #include "../includes/aoc.h"
+#include <unordered_set>
 
 class Day14 {
 private:
@@ -9,10 +10,9 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::set<v2> rocks;
-
     int64_t solve(bool addFloor)
     {
+        std::unordered_set<v2> occupied;
         int max_y = 0;
         for (auto line : inputVector)
         {
@@ -23,14 +23,14 @@ private:
             {
                 auto coords = util::split(point, ',');
                 start = v2(std::stoi(coords[0]), std::stoi(coords[1]));
-                rocks.insert(start);
+                occupied.insert(start);
                 if (last.x != -1 && last.y != -1)
                 {
                     auto dir = (start - last).getDirection();
                     auto tempPos = last;
                     while (!(tempPos.x == start.x && tempPos.y == start.y))
                     {
-                        rocks.insert(tempPos);
+                        occupied.insert(tempPos);
                         max_y = std::max(max_y, tempPos.y);
                         tempPos += dir;
                     }
@@ -43,10 +43,9 @@ private:
 
         if (addFloor)
             for (int x = 500 - max_y - 2; x < 500 + max_y + 2; ++x)
-                rocks.insert(v2(x, max_y));
+                occupied.insert(v2(x, max_y));
         
-        std::set<v2> sand;
-
+        int sum = 0;
         bool settlement = true;
         while (settlement)
         {
@@ -56,36 +55,37 @@ private:
             while (spawn.y < max_y)
             {
                 // First down
-                if (!sand.contains(spawn + v2(0, 1)) && !rocks.contains(spawn + v2(0, 1)))
+                if (!occupied.contains(spawn + v2(0, 1)))
                 {
                     spawn += v2(0, 1);
                     continue;
                 }
 
                 // Then check left
-                if (!sand.contains(spawn + v2(-1, 1)) && !rocks.contains(spawn + v2(-1, 1)))
+                if (!occupied.contains(spawn + v2(-1, 1)))
                 {
                     spawn += v2(-1, 1);
                     continue;
                 }
 
                 // Then check right
-                if (!sand.contains(spawn + v2(1, 1)) && !rocks.contains(spawn + v2(1, 1)))
+                if (!occupied.contains(spawn + v2(1, 1)))
                 {
                     spawn += v2(1, 1);
                     continue;
                 }
 
-                if (sand.contains(spawn))
+                if (occupied.contains(spawn))
                     break;
 
-                sand.insert(spawn);
-                settlement = true;                
+                occupied.insert(spawn);
+                settlement = true;      
+                sum++;
                 break;
             }
         }
 
-        return sand.size();
+        return sum;
     }
 
 public:

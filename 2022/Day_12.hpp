@@ -4,6 +4,7 @@
 #include "../includes/aoc.h"
 #include "../includes/Map2DBase.h"
 #include <queue>
+#include <unordered_set>
 
 class Day12 {
 private:
@@ -13,10 +14,10 @@ private:
 
     int solve(bool part_2)
     {
-        std::map<v2, int8_t> jungle;
+        std::unordered_map<v2, int8_t> jungle;
         v2 start(0, 0);
 
-        std::set<v2> seen;
+        std::unordered_set<v2> seen;
 
         std::queue<v2> currentPositions;
 
@@ -24,8 +25,6 @@ private:
         {
             for (auto ch : line)
             {
-                jungle[start] = ch;
-
                 if (part_2)
                 {
                     if (ch == 'a')
@@ -38,10 +37,13 @@ private:
                 {
                     if (ch == 'S')
                     {
+                        ch = 'a';
                         currentPositions.push(start);
                         seen.insert(start);
                     }
                 }
+
+                jungle[start] = ch;
                 start.x++;
             }
             start.x = 0;
@@ -70,9 +72,8 @@ private:
                         continue;
 
                     if (jungle.contains(pos + dir) &&
-                        seen.count(pos + dir) == 0 &&
-                        ((jungle[pos + dir] - jungle[pos] <= 1)
-                            || jungle[pos] == 'S'))
+                        !seen.contains(pos + dir) &&
+                        (jungle[pos + dir] - jungle[pos] <= 1))
                     {
                         nextPositions.push(pos + dir);
                         seen.insert(pos + dir);
