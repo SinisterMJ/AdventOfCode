@@ -9,6 +9,7 @@ class Day16 {
 private:
 
     std::vector<std::string> inputVector;
+    std::map<std::tuple<std::string, int, std::set<std::string>>, int> seen_costs;
 
     struct Valve {
         int32_t pressure;
@@ -83,6 +84,83 @@ private:
                 }
             }
         }
+    }
+
+    int flow_redone(std::string position, int time, std::set<std::string> remaining_nodes)
+    {
+        if (time == 0)
+            return 0;
+
+        if (remaining_nodes.empty())
+            return 0;
+
+        auto config = std::make_tuple(position, time, remaining_nodes);
+        if (seen_costs.contains(config))
+            return seen_costs[config];
+
+        int best = 0;
+
+        for (auto target : system_orig[position].tunnels)
+            best = std::max(best, flow_redone(target, time - 1, remaining_nodes));
+        
+        if (remaining_nodes.contains(position))
+        {
+            remaining_nodes.erase(position);
+            best = std::max(best, (time - 1) * system_orig[position].pressure + flow_redone(position, time - 1, remaining_nodes));
+        }
+
+        seen_costs[config] = best;
+
+        return best;
+    }
+
+    int part1_redone()
+    {
+        std::set<std::string> nodes;
+        for (auto [key, valve] : system_orig)
+        {
+            if (valve.pressure == 0)
+                continue;
+            nodes.insert(key);
+        }
+
+        return flow_redone("AA", 30, nodes);
+    }
+
+    int part2_redone()
+    {
+        int i = 0;
+        int counter = 0;
+        for (auto [key, valve] : system_orig)
+        {
+            if (valve.pressure == 0)
+                continue;
+
+            i *= 2;
+            i++;
+        }
+
+        std::vector<int> results;
+        results.resize(i + 1);
+
+        for (int index = 0; index <= i; ++index)
+        {
+            std::set<std::string> nodes;            
+            auto mask = std::bitset<16>(index);
+
+            for (auto [key, val] : nodeMap)
+                if (!mask[key])
+                    nodes.insert(val);
+
+            results[index] = flow_redone("AA", 26, nodes);
+        }
+
+        int best = 0;
+
+        for (int index = 0; index < i; ++index)
+            best = std::max(best, results[index] + results[i - index]);
+
+        return best;
     }
 
     int flow(int time, std::bitset<16> mask)
@@ -165,7 +243,7 @@ private:
 
     int64_t part1()
     {
-        uint16_t mask = std::numeric_limits<uint16_t>::max();
+        constexpr uint16_t mask = std::numeric_limits<uint16_t>::max();
         return flow(30, std::bitset<16>(mask));
     }
 
@@ -212,8 +290,8 @@ public:
 
         readData();
         uint16_t mask = -1;
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result_1 = part1_redone();
+        auto result_2 = part2_redone();
 
         int64_t time = myTime.usPassed();
 
