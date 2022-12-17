@@ -11,7 +11,7 @@ private:
     std::vector<std::string> inputVector;
 
     struct Valve {
-        int64_t pressure;
+        int32_t pressure;
         std::vector<std::string> tunnels;
     };
 
