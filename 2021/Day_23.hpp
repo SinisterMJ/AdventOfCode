@@ -86,7 +86,7 @@ private:
         return res;
     }
 
-    int32_t checkBelow(std::map<v2, int8_t>& room, int8_t val, v2 pos)
+    int32_t checkBelow(std::map<v2, int8_t>& room, int8_t val)
     {
         int32_t targetRow = 1;
         if (val == 'A')
@@ -151,7 +151,7 @@ private:
                     return result;
             
             // Check if space is free
-            int steps = checkBelow(room, val, v2(targetRow, 1));
+            int steps = checkBelow(room, val);
             v2 target = v2(targetRow, steps);
 
             if (target.y == -1)
