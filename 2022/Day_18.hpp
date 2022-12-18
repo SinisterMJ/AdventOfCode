@@ -53,7 +53,6 @@ private:
 
     bool outside(v3 position, std::set<v3>& checked)
     {
-        bool is_outside = false;
         for (auto dir : neighbours)
         {
             if (cubes.contains(position + dir))
@@ -69,12 +68,11 @@ private:
                 return true;
 
             checked.insert(dir + position);
-            is_outside |= outside(position + dir, checked);
-            if (is_outside)
+            if (outside(position + dir, checked))
                 return true;
         }
 
-        return is_outside;
+        return false;
     }
 
     int64_t part2()
