@@ -109,14 +109,14 @@ int main()
     {
         Day15 mDay15; runTimes.emplace_back(mDay15.run());
         std::cout << std::endl;
-    }
+    }*/
 
     {
         Day16 mDay16; runTimes.emplace_back(mDay16.run());
         std::cout << std::endl;
     }
 
-    {
+    /*{
         Day17 mDay17; runTimes.emplace_back(mDay17.run());
         std::cout << std::endl;
     }
