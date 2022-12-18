@@ -38,6 +38,46 @@ namespace MapHelper {
 	{
 		return v2(input.y, -input.x);
 	}
+
+	std::vector<v3> getNeighboursVec3d(bool include_diagonal)
+	{
+		std::vector<v3> neighbours;
+		neighbours.emplace_back(1, 0, 0);
+		neighbours.emplace_back(0, 1, 0);
+		neighbours.emplace_back(0, 0, 1);
+		neighbours.emplace_back(-1, 0, 0);
+		neighbours.emplace_back(0, -1, 0);
+		neighbours.emplace_back(0, 0, -1);
+
+		if (include_diagonal)
+		{
+			neighbours.emplace_back(1, 1, 0);
+			neighbours.emplace_back(1, 0, 1);
+			neighbours.emplace_back(1, 1, 1);
+			neighbours.emplace_back(1, -1, 0);
+			neighbours.emplace_back(1, 0, -1);
+			neighbours.emplace_back(1, -1, -1);
+			neighbours.emplace_back(1, 1, -1);
+			neighbours.emplace_back(1, -1, 1);
+
+			neighbours.emplace_back(0, 1, 1);
+			neighbours.emplace_back(0, 1, -1);
+			neighbours.emplace_back(0, -1, 1);
+			neighbours.emplace_back(0, -1, -1);
+
+			neighbours.emplace_back(-1, 1, 0);
+			neighbours.emplace_back(-1, 0, 1);
+			neighbours.emplace_back(-1, 1, 1);
+			neighbours.emplace_back(-1, -1, 0);
+			neighbours.emplace_back(-1, 0, -1);
+			neighbours.emplace_back(-1, -1, -1);
+			neighbours.emplace_back(-1, 1, -1);
+			neighbours.emplace_back(-1, -1, 1);
+
+		}
+
+		return neighbours;
+	}
 };
 
 template<class T>
