@@ -10,6 +10,8 @@ private:
 
     std::vector<std::string> inputVector;
     std::map<std::tuple<std::string, int, std::set<std::string>>, int> seen_costs;
+    int64_t cache_misses = 0;
+    int64_t cache_hits = 0;
 
     struct Valve {
         int32_t pressure;
@@ -17,42 +19,6 @@ private:
     };
 
     std::map<std::string, Valve> system_orig;
-
-    struct State {
-        int timePassed = 0;
-        int32_t max_pressure = 0;
-        int32_t current_pressure = 0;
-        std::set<std::string> openValves;
-        std::string currentValve = "";
-
-        bool operator < (const State& b) const
-        {
-            if (max_pressure != b.max_pressure)
-                return max_pressure < b.max_pressure;
-            if (timePassed != b.timePassed)
-                return timePassed < b.timePassed;
-            if (current_pressure != b.current_pressure)
-                return current_pressure < b.current_pressure;
-            if (currentValve != b.currentValve)
-                return currentValve < b.currentValve;
-            return openValves.size() < b.openValves.size();
-        }
-    };
-
-    struct ValveState {
-        std::set<std::string> openValves;
-        std::string currentValve = "";
-        std::string currentValveEl = "";
-
-        bool operator < (const ValveState& b) const
-        {
-            if (currentValve != b.currentValve)
-                return currentValve < b.currentValve;
-            if (currentValveEl != b.currentValveEl)
-                return currentValveEl < b.currentValveEl;
-            return openValves.size() < b.openValves.size();
-        }
-    };
 
     std::map<int, std::string> nodeMap;
 
@@ -86,7 +52,7 @@ private:
         }
     }
 
-    int flow_redone(std::string position, int time, std::set<std::string> remaining_nodes)
+    int flow(std::string position, int time, std::set<std::string> remaining_nodes)
     {
         if (time == 0)
             return 0;
@@ -96,17 +62,22 @@ private:
 
         auto config = std::make_tuple(position, time, remaining_nodes);
         if (seen_costs.contains(config))
+        {
+            cache_hits++;
             return seen_costs[config];
+        }
+
+        cache_misses++;
 
         int best = 0;
 
         for (auto target : system_orig[position].tunnels)
-            best = std::max(best, flow_redone(target, time - 1, remaining_nodes));
+            best = std::max(best, flow(target, time - 1, remaining_nodes));
         
         if (remaining_nodes.contains(position))
         {
             remaining_nodes.erase(position);
-            best = std::max(best, (time - 1) * system_orig[position].pressure + flow_redone(position, time - 1, remaining_nodes));
+            best = std::max(best, (time - 1) * system_orig[position].pressure + flow(position, time - 1, remaining_nodes));
         }
 
         seen_costs[config] = best;
@@ -114,7 +85,7 @@ private:
         return best;
     }
 
-    int part1_redone()
+    int part1()
     {
         std::set<std::string> nodes;
         for (auto [key, valve] : system_orig)
@@ -124,10 +95,10 @@ private:
             nodes.insert(key);
         }
 
-        return flow_redone("AA", 30, nodes);
+        return flow("AA", 30, nodes);
     }
 
-    int part2_redone()
+    int part2()
     {
         int i = 0;
         int counter = 0;
@@ -152,127 +123,13 @@ private:
                 if (!mask[key])
                     nodes.insert(val);
 
-            results[index] = flow_redone("AA", 26, nodes);
+            results[index] = flow("AA", 26, nodes);
         }
 
         int best = 0;
 
         for (int index = 0; index < i; ++index)
             best = std::max(best, results[index] + results[i - index]);
-
-        return best;
-    }
-
-    int flow(int time, std::bitset<16> mask)
-    {
-        std::set<State> seen;
-        auto system = system_orig;
-
-        for (auto [key, val] : nodeMap)
-        {
-            if (!mask[key])
-                system[val].pressure = 0;
-        }
-
-        int max_press_possible = 0;
-        for (auto [key, val] : system)
-            max_press_possible += val.pressure;
-
-        State start;
-        start.max_pressure = max_press_possible * time;
-        start.currentValve = "AA";
-        start.current_pressure = 0;
-        start.timePassed = 0;
-
-        std::priority_queue<State> workerQueue;
-
-        seen.insert(start);
-        workerQueue.push(start);
-
-        int maxVal = 0;
-
-        while (!workerQueue.empty())
-        {
-            auto curr = workerQueue.top();
-            workerQueue.pop();
-
-            curr.max_pressure -= max_press_possible - curr.current_pressure;
-            curr.timePassed++;
-
-            if (curr.current_pressure == max_press_possible)
-            {
-                maxVal = std::max(maxVal, curr.max_pressure);
-                continue;
-            }
-
-            if (curr.timePassed == time)
-            {
-                maxVal = std::max(maxVal, curr.max_pressure);
-                continue;
-            }
-
-            if (maxVal > curr.max_pressure)
-                continue;
-
-            if (system[curr.currentValve].pressure > 0 && !curr.openValves.contains(curr.currentValve))
-            {
-                State tempTarget = curr;
-                tempTarget.current_pressure += system[tempTarget.currentValve].pressure;
-                tempTarget.openValves.insert(tempTarget.currentValve);
-                if (!seen.contains(tempTarget))
-                {
-                    workerQueue.push(tempTarget);
-                    seen.insert(tempTarget);
-                }
-            }
-
-            for (auto target : system[curr.currentValve].tunnels)
-            {
-                State newTarget = curr;
-                newTarget.currentValve = target;
-                if (!seen.contains(newTarget))
-                {
-                    workerQueue.push(newTarget);
-                    seen.insert(newTarget);
-                }
-            }
-        }
-
-        return maxVal;
-    }
-
-    int64_t part1()
-    {
-        constexpr uint16_t mask = std::numeric_limits<uint16_t>::max();
-        return flow(30, std::bitset<16>(mask));
-    }
-
-    int part2()
-    {
-        int i = 0;
-        int counter = 0;
-        for (auto [key, valve] : system_orig)
-        {
-            if (valve.pressure == 0)
-                continue;
-
-            i *= 2;
-            i++;            
-        }
-
-        std::map<int, int> results;
-
-        for (int index = 0; index <= i; ++index)
-        {
-            results[index] = flow(26, std::bitset<16>(index));
-        }
-
-        int best = 0;
-
-        for (int index = 0; index < i; ++index)
-        {
-            best = std::max(best, results[index] + results[i - index]);
-        }
 
         return best;
     }
@@ -290,13 +147,16 @@ public:
 
         readData();
         uint16_t mask = -1;
-        auto result_1 = part1_redone();
-        auto result_2 = part2_redone();
+        auto result_1 = part1();
+        auto result_2 = part2();
 
         int64_t time = myTime.usPassed();
 
         std::cout << "Day 16 - Part 1: " << result_1 << '\n'
                   << "Day 16 - Part 2: " << result_2 << '\n';
+
+        std::cout << "Cache hits: " << cache_hits << std::endl;
+        std::cout << "Cache misses: " << cache_misses << std::endl;
 
         return time;
     }

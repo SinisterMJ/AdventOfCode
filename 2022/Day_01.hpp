@@ -25,6 +25,7 @@ private:
                 cur_sum = 0;
             }
         }
+        sums.push_back(cur_sum);
 
         std::nth_element(sums.begin(), sums.begin() + 3, sums.end(), std::greater{});
 
