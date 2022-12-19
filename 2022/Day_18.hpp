@@ -92,6 +92,44 @@ private:
         return exposed_outside;
     }
 
+    std::set<v3> outside_cubes()
+    {
+        std::set<v3> result;
+        result.insert(v3(min_x - 1, min_y - 1, min_z - 1));
+        for (int x = min_x - 1; x <= max_x + 1; ++x)
+        {
+            for (int y = min_y - 1; y <= max_y + 1; ++y)
+            { 
+                for (int z = min_z - 1; z <= max_z + 1; ++z)
+                {
+                    v3 pos(x, y, z);
+                    for (auto dir : neighbours)
+                    {
+                        if (result.contains(pos + dir) && !cubes.contains(pos + dir))
+                            result.insert(pos);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    int64_t part2_redone()
+    {
+        int exposed_outside = 0;
+        auto outside = outside_cubes();
+
+        for (auto cube : cubes)
+        {
+            for (auto neigh : neighbours)
+                if (outside.contains(neigh + cube))
+                    exposed_outside++;
+        }
+
+        return exposed_outside;
+    }
+
 public:
     Day18()
     {

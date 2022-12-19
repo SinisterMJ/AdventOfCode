@@ -97,7 +97,7 @@ private:
 
     int flow(std::string position, int time, std::set<std::string> remaining_nodes)
     {
-        if (time <= 0)
+        if (time <= 1)
             return 0;
 
         if (remaining_nodes.empty())
@@ -117,6 +117,40 @@ private:
             if (target == position)
                 continue;
             best = std::max(best, flow(target, time - valve_matrix[std::make_pair(position, target)], remaining_nodes));
+        }
+
+        if (remaining_nodes.contains(position))
+        {
+            remaining_nodes.erase(position);
+            best = std::max(best, (time - 1) * system_orig[position].pressure + flow(position, time - 1, remaining_nodes));
+        }
+
+        seen_costs[config] = best;
+
+        return best;
+    }
+
+    int flow_redone(std::string position, int time, std::set<std::string> remaining_nodes)
+    {
+        if (time <= 1)
+            return 0;
+
+        if (remaining_nodes.empty())
+            return 0;
+
+        auto config = std::make_tuple(position, time, remaining_nodes);
+
+        if (seen_costs.contains(config))
+        {
+            return seen_costs[config];
+        }
+
+        int best = 0;
+
+        if (!remaining_nodes.contains(position))
+        {
+            for (auto target : remaining_nodes)
+                best = std::max(best, flow(target, time - valve_matrix[std::make_pair(position, target)], remaining_nodes));
         }
 
         if (remaining_nodes.contains(position))
