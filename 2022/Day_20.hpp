@@ -39,11 +39,8 @@ private:
 
         int64_t val_1, val_2, val_3;
 
-        int index_0 = 0;
-
-        for (int index = 0; index < numbers.size(); ++index)
-            if (numbers[index].first == 0)
-                index_0 = index;
+        // Find 0 explicitly
+        int index_0 = std::find_if(numbers.begin(), numbers.end(), [](const std::pair<int64_t, int64_t>& a) { return 0 == a.first; }) - numbers.begin();;
 
         val_1 = numbers[(index_0 + 1000) % numbers.size()].first;
         val_2 = numbers[(index_0 + 2000) % numbers.size()].first;
