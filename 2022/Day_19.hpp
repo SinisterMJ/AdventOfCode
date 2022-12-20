@@ -29,7 +29,6 @@ private:
         int ore_robots = 1;
         int clay_robots = 0;
         int obsidian_robots = 0;
-        int geode_robots = 0;
         int time_remaining = 0;
 
         bool operator < (const Setup& b) const
@@ -52,10 +51,7 @@ private:
             if (clay_robots != b.clay_robots)
                 return clay_robots < b.clay_robots;
             
-            if (obsidian_robots != b.obsidian_robots)
-                return obsidian_robots < b.obsidian_robots;
-
-            return geode_robots < b.geode_robots;
+            return obsidian_robots < b.obsidian_robots;
         }
     };
 
@@ -79,11 +75,10 @@ private:
 
             best = std::max(state.count_geode, best);
 
-            if (state.time_remaining == 0 || state.count_geode < (best - 2))
+            if (state.time_remaining == 0 || state.count_geode < (best - state.time_remaining - 1))
                 continue;
 
-            state.time_remaining--;
-            
+            state.time_remaining--;            
 
             if (state.count_ore >= scheme.ore_robot_cost && state.ore_robots < scheme.max_ore_cost)
             {
@@ -92,7 +87,6 @@ private:
                 temp.count_ore += state.ore_robots;
                 temp.count_clay += state.clay_robots;
                 temp.count_obsidian += state.obsidian_robots;
-                temp.count_geode += state.geode_robots;
 
                 temp.count_ore -= scheme.ore_robot_cost;
                 temp.ore_robots += 1;
@@ -110,7 +104,6 @@ private:
                 temp.count_ore += state.ore_robots;
                 temp.count_clay += state.clay_robots;
                 temp.count_obsidian += state.obsidian_robots;
-                temp.count_geode += state.geode_robots;
 
                 temp.count_ore -= scheme.clay_robot_cost;
                 temp.clay_robots += 1;
@@ -130,7 +123,6 @@ private:
                 temp.count_ore += state.ore_robots;
                 temp.count_clay += state.clay_robots;
                 temp.count_obsidian += state.obsidian_robots;
-                temp.count_geode += state.geode_robots;
 
                 temp.count_ore -= scheme.obsidian_robot_cost.first;
                 temp.count_clay -= scheme.obsidian_robot_cost.second;
@@ -150,11 +142,10 @@ private:
                 temp.count_ore += state.ore_robots;
                 temp.count_clay += state.clay_robots;
                 temp.count_obsidian += state.obsidian_robots;
-                temp.count_geode += state.geode_robots;
+                temp.count_geode += state.time_remaining;
 
                 temp.count_ore -= scheme.geode_robot_cost.first;
                 temp.count_obsidian -= scheme.geode_robot_cost.second;
-                temp.geode_robots += 1;
                 if (!seen.contains(temp))
                 {
                     seen.insert(temp);
@@ -165,8 +156,7 @@ private:
             state.count_ore += state.ore_robots;
             state.count_clay += state.clay_robots;
             state.count_obsidian += state.obsidian_robots;
-            state.count_geode += state.geode_robots;
-
+            
             if (!seen.contains(state))
             {
                 seen.insert(state);
