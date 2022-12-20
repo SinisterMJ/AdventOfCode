@@ -37,15 +37,8 @@ private:
                 int64_t val = numbers[index_val].first;
                 numbers.erase(numbers.begin() + index_val);
 
-                int64_t offset = index_val + val;
-                int64_t div = (numbers_orig.size() - 1);
-                int64_t temp = std::abs(offset / div);
-                if (offset < 0)
-                {
-                    offset += (temp + 1) * (numbers_orig.size() - 1);
-                }
+                int64_t offset = modulo<int64_t>(index_val + val, numbers.size());
 
-                offset %= (numbers_orig.size() - 1);
                 numbers.insert(numbers.begin() + offset, std::make_pair(val, index));
             }
         }

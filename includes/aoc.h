@@ -21,6 +21,12 @@ inline void hash_combine(std::size_t & seed, const T & v)
 }
 
 template <class T>
+inline T modulo(T a, T b)
+{
+    return a >= 0 ? a % b : (b - std::abs(a % b)) % b;
+}
+
+template <class T>
 inline bool in_range(T input, T low, T high)
 {
     return low <= input && input <= high;
