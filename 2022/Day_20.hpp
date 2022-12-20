@@ -24,15 +24,11 @@ private:
             for (int index = 0; index < numbers.size(); ++index)
             {
                 // Find it
-                int64_t index_val = 0;
-                
-                index_val = std::find_if(numbers.begin(), numbers.end(), [&index](const std::pair<int64_t, int64_t>& a) { return index == a.second; }) - numbers.begin();
-                
+                int64_t index_val = std::find_if(numbers.begin(), numbers.end(), [&index](const std::pair<int64_t, int64_t>& a) { return index == a.second; }) - numbers.begin();
                 int64_t val = numbers[index_val].first;
+                
                 numbers.erase(numbers.begin() + index_val);
-
                 int64_t offset = modulo<int64_t>(index_val + val, numbers.size());
-
                 numbers.insert(numbers.begin() + offset, std::make_pair(val, index));
             }
         }
@@ -40,7 +36,7 @@ private:
         int64_t val_1, val_2, val_3;
 
         // Find 0 explicitly
-        int index_0 = std::find_if(numbers.begin(), numbers.end(), [](const std::pair<int64_t, int64_t>& a) { return 0 == a.first; }) - numbers.begin();;
+        int64_t index_0 = std::find_if(numbers.begin(), numbers.end(), [](const std::pair<int64_t, int64_t>& a) { return 0 == a.first; }) - numbers.begin();;
 
         val_1 = numbers[(index_0 + 1000) % numbers.size()].first;
         val_2 = numbers[(index_0 + 2000) % numbers.size()].first;
