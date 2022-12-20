@@ -25,15 +25,9 @@ private:
             {
                 // Find it
                 int64_t index_val = 0;
-                for (int i = 0; i < numbers.size(); ++i)
-                {
-                    if (numbers[i].second == index)
-                    {
-                        index_val = i;
-                        break;
-                    }
-                }
-
+                
+                index_val = std::find_if(numbers.begin(), numbers.end(), [&index](const std::pair<int64_t, int64_t>& a) { return index == a.second; }) - numbers.begin();
+                
                 int64_t val = numbers[index_val].first;
                 numbers.erase(numbers.begin() + index_val);
 
