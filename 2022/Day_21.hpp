@@ -109,33 +109,6 @@ private:
             monkeys[name] = thisMonkey;
         }
 
-        return solve_monkey("root");
-    }
-
-    int64_t part2()
-    {
-        monkeys.clear();
-        for (auto line : inputVector)
-        {
-            std::string name = line.substr(0, 4);
-            Monkey thisMonkey;
-
-            auto split = util::split(line.substr(6), ' ');
-            if (split.size() == 1)
-            {
-                thisMonkey.value = std::stoi(split[0]);
-                thisMonkey.value_set = true;
-            }
-            else
-            {
-                thisMonkey.left = split[0];
-                thisMonkey.command = split[1];
-                thisMonkey.right = split[2];
-            }
-
-            monkeys[name] = thisMonkey;
-        }
-
         monkeys["humn"].saw_human = true;
         bool propagated = true;
 
@@ -160,6 +133,11 @@ private:
             }
         }
 
+        return solve_monkey("root");
+    }
+
+    int64_t part2()
+    {
         if (!monkeys[monkeys["root"].left].saw_human)
         {
             int64_t target = solve_monkey(monkeys["root"].left);
