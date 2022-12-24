@@ -114,13 +114,13 @@ private:
 
         v2 start(0, 0);
         for (; expedition[start] == '#'; start.x++);
+
         v2 end(0, max_y);
         for (; expedition[end] == '#'; end.x++);
 
         int first = solve(start, end);
         int second = solve(end, start);
         int third = solve(start, end);
-
 
         return std::make_pair(first, first + second + third);
     }
