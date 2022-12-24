@@ -19,8 +19,8 @@ private:
     std::map<std::string, Valve> system_orig;
 
     std::map<int, std::string> nodeMap;
-
     std::map<std::pair<std::string, std::string>, int> valve_matrix;
+    std::map<std::set<std::string>, int32_t> costMap;
 
     int getCosts(std::string start, std::string target)
     {
@@ -130,38 +130,23 @@ private:
         return best;
     }
 
-    int flow_redone(std::string position, int time, std::set<std::string> remaining_nodes)
+    void flow_redone(std::string position, int time, std::set<std::string> remaining_nodes, std::set<std::string> visited, int pressure)
     {
+        costMap[visited] = std::max(costMap[visited], pressure);
+
         if (time <= 1)
-            return 0;
+            return;
 
         if (remaining_nodes.empty())
-            return 0;
-
-        auto config = std::make_tuple(position, time, remaining_nodes);
-
-        if (seen_costs.contains(config))
+            return;
+        
+        for (auto target : remaining_nodes)
         {
-            return seen_costs[config];
+            if (target == position)
+                continue;
+            //best = std::max(best, flow(target, time - valve_matrix[std::make_pair(position, target)], remaining_nodes));
         }
-
-        int best = 0;
-
-        if (!remaining_nodes.contains(position))
-        {
-            for (auto target : remaining_nodes)
-                best = std::max(best, flow(target, time - valve_matrix[std::make_pair(position, target)], remaining_nodes));
-        }
-
-        if (remaining_nodes.contains(position))
-        {
-            remaining_nodes.erase(position);
-            best = std::max(best, (time - 1) * system_orig[position].pressure + flow(position, time - 1, remaining_nodes));
-        }
-
-        seen_costs[config] = best;
-
-        return best;
+        
     }
 
     int part1()
@@ -191,6 +176,16 @@ private:
 
         std::vector<int> results;
         results.resize(i + 1);
+        
+        {
+            std::set<std::string> nodes;
+            std::set<std::string> visited;
+            visited.insert("AA");
+            for (auto& [key, val] : nodeMap)
+                nodes.insert(val);
+
+            flow_redone("AA", 26, nodes, std::set<std::string>(), 0);
+        }
 
         for (int index = 0; index <= i; ++index)
         {
