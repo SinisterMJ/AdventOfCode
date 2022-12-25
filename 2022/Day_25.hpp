@@ -33,7 +33,7 @@ private:
         }
 
         int64_t factor = 1;
-        while ((factor * 2) < sum)
+        while ((factor * 3) < sum)
             factor *= 5;
 
         std::string result = "";
@@ -76,12 +76,7 @@ private:
             factor /= 5;
 
             if (factor == 0)
-            {
-                if (result[0] == '0')
-                    return result.substr(1);
-
                 return result;
-            }
         }
     }
 
