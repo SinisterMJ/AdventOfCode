@@ -132,21 +132,21 @@ private:
 
     void flow_redone(std::string position, int time, std::set<std::string> remaining_nodes, std::set<std::string> visited, int pressure)
     {
+        if (remaining_nodes.contains(position))
+        {
+            time--;
+            visited.insert(position);
+            pressure += time * system_orig[position].pressure;
+            remaining_nodes.erase(position);
+        }
+
         costMap[visited] = std::max(costMap[visited], pressure);
 
-        if (time <= 1)
+        if (time <= 1 || remaining_nodes.empty())
             return;
 
-        if (remaining_nodes.empty())
-            return;
-        
         for (auto target : remaining_nodes)
-        {
-            if (target == position)
-                continue;
-            //best = std::max(best, flow(target, time - valve_matrix[std::make_pair(position, target)], remaining_nodes));
-        }
-        
+            flow_redone(target, time - valve_matrix[std::make_pair(position, target)], remaining_nodes, visited, pressure);        
     }
 
     int part1()
@@ -196,6 +196,7 @@ private:
                 if (!mask[key])
                     nodes.insert(val);
 
+            //results[index] = costMap[nodes];
             results[index] = flow("AA", 26, nodes);
         }
 
