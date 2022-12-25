@@ -76,7 +76,12 @@ private:
             factor /= 5;
 
             if (factor == 0)
+            {
+                if (result[0] == '0')
+                    return result.substr(1);
+
                 return result;
+            }
         }
     }
 
