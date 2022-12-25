@@ -9,14 +9,75 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    int part1()
+    std::string part1()
     {
-        return 0;
-    }
+        int64_t sum = 0;
 
-    int part2()
-    {
-        return 0;
+        for (auto line : inputVector)
+        {
+            int64_t factor = std::pow(5, line.size() - 1);
+
+            for (auto ch : line)
+            {
+                if (ch == '2')
+                    sum += 2 * factor;
+                if (ch == '1')
+                    sum += 1 * factor;
+                if (ch == '-')
+                    sum -= factor;
+                if (ch == '=')
+                    sum -= 2 * factor;
+
+                factor /= 5;
+            }
+        }
+
+        int64_t factor = 1;
+        while ((factor * 2) < sum)
+            factor *= 5;
+
+        std::string result = "";
+
+        for (;;)
+        {
+            int64_t min_dist = std::numeric_limits<int64_t>::max();
+            
+            min_dist = std::min(min_dist, std::abs(sum - 2 * factor));
+            min_dist = std::min(min_dist, std::abs(sum - 1 * factor));
+            min_dist = std::min(min_dist, std::abs(sum));
+            min_dist = std::min(min_dist, std::abs(sum + 1 * factor));
+            min_dist = std::min(min_dist, std::abs(sum + 2 * factor));
+
+            if (min_dist == std::abs(sum - 2 * factor))
+            {
+                result += "2";
+                sum -= 2 * factor;
+            }
+            else if (min_dist == std::abs(sum - 1 * factor))
+            {
+                result += "1";
+                sum -= 1 * factor;
+            }
+            else if (min_dist == std::abs(sum))
+            {
+                result += "0";
+            }
+            else if (min_dist == std::abs(sum + 1 * factor))
+            {
+                result += "-";
+                sum += 1 * factor;
+            }
+            else if (min_dist == std::abs(sum + 2 * factor))
+            {
+                result += "=";
+                sum += 2 * factor;
+            }
+
+            factor /= 5;
+
+            if (factor == 0)
+                return result;
+        }
     }
 
 public:
@@ -32,12 +93,10 @@ public:
         myTime.start();
 
         auto result_1 = part1();
-        auto result_2 = part2();
 
         int64_t time = myTime.usPassed();
 
-        std::cout << "Day 25 - Part 1: " << result_1 << '\n'
-                  << "Day 25 - Part 2: " << result_2 << '\n';
+        std::cout << "Day 25 - Part 1: " << result_1 << '\n';
 
         return time;
     }
