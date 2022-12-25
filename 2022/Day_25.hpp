@@ -15,7 +15,7 @@ private:
 
         for (auto line : inputVector)
         {
-            int64_t factor = std::pow(5, line.size() - 1);
+            int64_t factor = static_cast<int64_t>(std::pow(5, line.size() - 1));
 
             for (auto ch : line)
             {
