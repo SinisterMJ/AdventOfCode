@@ -187,6 +187,45 @@ private:
             flow_redone("AA", 26, nodes, std::set<std::string>(), 0);
         }
 
+        int best_redone = 0;
+
+        for (int index = 0; index <= i; ++index)
+        {
+            std::set<std::string> nodes;
+            auto mask = std::bitset<16>(index);
+
+            for (auto [key, val] : nodeMap)
+            {
+                if (!mask[key])
+                    nodes.insert(val);
+            }
+
+            if (!costMap.contains(nodes))
+                continue;
+
+            for (int index_2 = index + 1; index_2 <= i; ++index_2)
+            {
+                std::set<std::string> nodes_2;
+                auto mask = std::bitset<16>(index);
+
+                for (auto [key, val] : nodeMap)
+                {
+                    if (!mask[key])
+                        nodes_2.insert(val);
+                }
+
+                if (!costMap.contains(nodes_2))
+                    continue;
+
+                std::set<std::string> intersection;
+
+                std::set_intersection(nodes.begin(), nodes.end(), nodes_2.begin(), nodes_2.end(), std::inserter(intersection, intersection.begin()));
+
+                if (intersection.empty())
+                    best_redone = std::max(best_redone, costMap[nodes] + costMap[nodes_2]);
+            }
+        }
+
         for (int index = 0; index <= i; ++index)
         {
             std::set<std::string> nodes;            
