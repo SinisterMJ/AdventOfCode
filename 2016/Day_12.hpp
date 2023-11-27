@@ -12,54 +12,105 @@ private:
     std::string inputString;
     std::vector<std::string> inputVec;
 
-    int64_t part1()
+    struct cmd {
+        std::string command;
+        int8_t reg;
+        int8_t source = -1;
+        int8_t value;
+    };
+
+    std::vector<cmd> command_list;
+
+    void parse_lines()
     {
-        std::regex wsaq_re("-?[0-9]+");
-        std::regex_token_iterator<std::string::iterator> it(inputString.begin(), inputString.end(), wsaq_re);
-        std::regex_token_iterator<std::string::iterator> rend;
-
-        int64_t result = 0;
-
-        while (it != rend)
+        for (auto line : inputVec)
         {
-            int64_t query = std::stoi(*it);
-            result += query;
-            it++;
-        }
+            auto els = util::split(line, ' ');
+            cmd single;
+            single.command = els[0];
 
-        return result;
-    }
-
-    static bool has_red_value(const json& _json)
-    {
-        return std::any_of(_json.cbegin(), _json.cend(), [](const json& value) { return value.is_string() && value.get<std::string>() == "red"; });
-    }
-
-    static int64_t calc(const json&  input)
-    {
-        if (input.is_number())
-            return input.get<int>();
-
-        if (input.is_string())
-            return 0;
-
-        if (input.is_array() || input.is_object())
-        {
-            if (input.is_object() && has_red_value(input))
+            if (single.command == "dec" || single.command == "inc")
             {
-                return 0;
+                single.reg = els[1][0] - 'a';
+            }
+            
+            if (single.command == "cpy")
+            {
+                int8_t val = els[1][0] - 'a';
+
+                if (val < 4 && val >= 0)
+                    single.source = val;
+                else
+                    single.value = std::stoi(els[1]);
+
+                single.reg = els[2][0] - 'a';
             }
 
-            return std::accumulate(input.cbegin(), input.cend(), static_cast<int64_t>(0), [](int64_t sum, const json& element) { return sum + calc(element); } );
+            if (single.command == "jnz")
+            {
+                single.reg = els[1][0] - 'a';
+                single.value = std::stoi(els[2]);
+            }
+
+            command_list.push_back(single);
+        }
+    }
+
+    int64_t run_parts(int64_t init_c)
+    {
+        int64_t registers[4];
+        std::memset(&registers[0], 0x00, 4 * sizeof(int64_t));
+        registers[2] = init_c;
+
+        int index = 0;
+
+        while (index < command_list.size())
+        {
+            cmd single = command_list[index];
+
+            if (single.command == "inc" || single.command == "dec")
+            {
+                registers[single.reg] += single.command == "inc" ? 1 : -1;
+                index++;
+            }
+            
+            if (single.command == "cpy")
+            {
+                if (single.source != -1)
+                {
+                    registers[single.reg] = registers[single.source];
+                }
+                else
+                {
+                    registers[single.reg] = single.value;
+                }
+                index++;
+            }
+
+            if (single.command == "jnz")
+            {
+                if (!in_range<int8_t>(single.reg, 0, 3))
+                {
+                    index += single.value;
+                    continue;
+                }
+                if (registers[single.reg] != 0)
+                {
+                    index += single.value;
+                }
+                else
+                {
+                    index++;
+                }
+            }
         }
 
-        return 0;
+        return registers[0];
     }
 
     int64_t part2()
     {
-        auto data = json::parse(inputString);
-        return calc(data);
+        return 0;
     }
 
 public:
@@ -74,8 +125,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        parse_lines();
+        auto result_1 = run_parts(0);
+        auto result_2 = run_parts(1);
 
         int64_t time = myTime.usPassed();
         std::cout << "Day 12 - Part 1: " << result_1 << '\n'
