@@ -46,6 +46,14 @@ std::pair<T, T> merge_overlap(std::pair<T, T> left, std::pair<T, T> right)
 
 namespace util
 {
+    bool replace(std::string& str, const std::string& from, const std::string& to) {
+        size_t start_pos = str.find(from);
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, from.length(), to);
+        return true;
+    }
+
     class Timer {
     private:
         std::chrono::time_point<std::chrono::steady_clock> startP;

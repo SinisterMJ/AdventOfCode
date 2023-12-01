@@ -36,11 +36,11 @@ int main()
 
 	std::vector<int64_t> runTimes = { };
     
-    /*{
+    {
         Day01 mDay01; runTimes.emplace_back(mDay01.run());
         std::cout << std::endl;
     }
-    
+    /*
     {
         Day02 mDay02; runTimes.emplace_back(mDay02.run());
         std::cout << std::endl;
@@ -109,14 +109,14 @@ int main()
     {
         Day15 mDay15; runTimes.emplace_back(mDay15.run());
         std::cout << std::endl;
-    }*/
+    }
 
     {
         Day16 mDay16; runTimes.emplace_back(mDay16.run());
         std::cout << std::endl;
     }
 
-    /*{
+    {
         Day17 mDay17; runTimes.emplace_back(mDay17.run());
         std::cout << std::endl;
     }
