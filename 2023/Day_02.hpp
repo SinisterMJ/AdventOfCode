@@ -3,6 +3,7 @@
 
 #include "../includes/aoc.h"
 #include <algorithm>
+#include <tuple>
 
 class Day02 {
 private:
@@ -12,12 +13,78 @@ private:
 
     int64_t part1()
     {
-        return 0;
+        int result = 0;
+        
+        std::map<std::string, int> available;
+        available["red"] = 12;
+        available["green"] = 13;
+        available["blue"] = 14;
+        
+        int index = 1;
+        
+        for (auto line : inputVector)
+        {
+            auto games = util::split(line, ':');
+            auto draw = util::split(games[1], ';');
+            bool passed_test = true;
+            for (auto sdraw : draw)
+            {
+                auto cubes = util::split(sdraw, ',');
+                for (auto cube : cubes)
+                {
+                    if (cube[0] == ' ')
+                        cube = cube.substr(1);
+
+                    int64_t pos = cube.find(" ");
+                    auto num = cube.substr(0, pos);
+                    auto color = cube.substr(pos + 1);
+                    if (available[color] < std::stoi(num))
+                        passed_test = false;
+                }
+            }
+
+            if (passed_test)
+            {
+                result += index;
+            }
+
+            ++index;
+        }
+        return result;
     }
 
     int64_t part2()
     {
-        return 0;
+        int result = 0;
+        int index = 1;
+        for (auto line : inputVector)
+        {
+            std::map<std::string, int> available;
+            available["red"] = 0;
+            available["green"] = 0;
+            available["blue"] = 0;
+
+            auto games = util::split(line, ':');
+            auto draw = util::split(games[1], ';');
+            bool failed_test = false;
+            for (auto sdraw : draw)
+            {
+                auto cubes = util::split(sdraw, ',');
+                for (auto cube : cubes)
+                {
+                    if (cube[0] == ' ')
+                        cube = cube.substr(1);
+
+                    int64_t pos = cube.find(" ");
+                    auto num = std::stoi(cube.substr(0, pos));
+                    auto color = cube.substr(pos + 1);
+                    available[color] = std::max(num, available[color]);
+                }
+            }
+
+            result += available["red"] * available["green"] * available["blue"];
+        }
+        return result;
     }
 
 public:

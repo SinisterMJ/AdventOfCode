@@ -55,7 +55,7 @@ private:
                 }
             }
             
-            for (int i = line.length() - 1; i >= 0; --i)
+            for (int64_t i = line.length() - 1; i >= 0; --i)
             {
                 if (in_range<char>(line[i], '0', '9'))
                 {
