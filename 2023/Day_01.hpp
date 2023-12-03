@@ -10,19 +10,19 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::map<std::string, std::string> replacements;
+    std::map<std::string, int8_t> replacements;
 
     int64_t part1(bool replace)
     {
-        replacements["one"] = "1";
-        replacements["two"] = "2";
-        replacements["three"] = "3";
-        replacements["four"] = "4";
-        replacements["five"] = "5";
-        replacements["six"] = "6";
-        replacements["seven"] = "7";
-        replacements["eight"] = "8";
-        replacements["nine"] = "9";
+        replacements["one"] = '1';
+        replacements["two"] = '2';
+        replacements["three"] = '3';
+        replacements["four"] = '4';
+        replacements["five"] = '5';
+        replacements["six"] = '6';
+        replacements["seven"] = '7';
+        replacements["eight"] = '8';
+        replacements["nine"] = '9';
         int result = 0;
         for (auto line : inputVector)
         {
@@ -36,12 +36,12 @@ private:
                     {
                         if (line.substr(index, before.size()) == before)
                         {
-                            new_line += after;
+                            new_line.push_back(after);
                             replaced = true;
                         }
                     }
                     if (!replaced)
-                        new_line += line.substr(index, 1);
+                        new_line.push_back(line[index]);
                 }
                 line = new_line;
             }

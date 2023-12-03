@@ -35,7 +35,7 @@ int main()
 	int64_t total_us = 0;
 
 	std::vector<int64_t> runTimes = { };
-    /*
+    
     {
         Day01 mDay01; runTimes.emplace_back(mDay01.run());
         std::cout << std::endl;
@@ -44,7 +44,7 @@ int main()
     {
         Day02 mDay02; runTimes.emplace_back(mDay02.run());
         std::cout << std::endl;
-    }*/
+    }
     
     {
         Day03 mDay03; runTimes.emplace_back(mDay03.run());
