@@ -56,7 +56,6 @@ private:
     int64_t part2()
     {
         int result = 0;
-        int index = 1;
         for (auto line : inputVector)
         {
             std::map<std::string, int> available;
@@ -66,7 +65,7 @@ private:
 
             auto games = util::split(line, ':');
             auto draw = util::split(games[1], ';');
-            bool failed_test = false;
+
             for (auto sdraw : draw)
             {
                 auto cubes = util::split(sdraw, ',');

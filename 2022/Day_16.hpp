@@ -206,11 +206,11 @@ private:
             for (int index_2 = index + 1; index_2 <= i; ++index_2)
             {
                 std::set<std::string> nodes_2;
-                auto mask = std::bitset<16>(index);
+                auto mask_inner = std::bitset<16>(index);
 
                 for (auto [key, val] : nodeMap)
                 {
-                    if (!mask[key])
+                    if (!mask_inner[key])
                         nodes_2.insert(val);
                 }
 
