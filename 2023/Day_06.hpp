@@ -8,7 +8,6 @@ class Day06 {
 private:
 
     std::vector<std::string> inputVector;
-    std::string inputString;
 
     int64_t totalVals(int64_t time, int64_t distance)
     {
