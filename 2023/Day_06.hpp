@@ -10,23 +10,25 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::vector<int> raceTime{ 41, 77, 70, 96 };
-    std::vector<int> raceDistance{ 249, 1362, 1127, 1011 };
+    int64_t totalVals(int64_t time, int64_t distance)
+    {
+        double root = std::sqrt(time * time - 4 * distance);
+        double result = (time - root) / 2.0;
+        return (time - 2 * (int64_t(result) + 1) + 1);
+    }
 
     int64_t part1()
     {
+        auto raceTime = util::splitInt64(util::split(inputVector[0], ':')[1], ' ');
+        auto raceDistance = util::splitInt64(util::split(inputVector[1], ':')[1], ' ');
+
         int64_t result = 1;
 
         for (int index = 0; index < raceTime.size(); ++index)
         {
             auto time = raceTime[index];
             auto distance = raceDistance[index];
-
-            int curr_race = 0;
-            for (int i = 0; i <= time; ++i)
-                curr_race += ((time - i) * i > distance);
-
-            result *= curr_race;
+            result *= totalVals(time, distance);
         }
 
         return result;
@@ -34,12 +36,15 @@ private:
 
     int64_t part2()
     {
-        int64_t time = 41777096;
-        int64_t distance = 249136211271011;
+        auto split = util::split(inputVector[0], ':');
+        util::replace(split[1], " ", "");
+        int64_t time = std::stoll(split[1]);
 
-        double root = std::sqrt(time * time - 4 * distance);
-        double result = (time - root) / 2.0;
-        return (time - 2 * (int64_t(result) + 1) + 1);
+        split = util::split(inputVector[1], ':');
+        util::replace(split[1], " ", "");
+        int64_t distance = std::stoll(split[1]);
+
+        return totalVals(time, distance);
     }
 
 public:

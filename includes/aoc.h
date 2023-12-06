@@ -48,9 +48,11 @@ namespace util
 {
     bool replace(std::string& str, const std::string& from, const std::string& to) {
         size_t start_pos = str.find(from);
-        if (start_pos == std::string::npos)
-            return false;
-        str.replace(start_pos, from.length(), to);
+        while (start_pos != std::string::npos)
+        {
+            str.replace(start_pos, from.length(), to);
+            start_pos = str.find(from);
+        }
         return true;
     }
 
@@ -164,6 +166,8 @@ namespace util
 		std::stringstream ss(s);
 		std::string number;
 		while (std::getline(ss, number, delim)) {
+            if (number == "")
+                continue;
 			elems.emplace_back(std::stoll(number));
 		}
 		return elems;
