@@ -39,7 +39,7 @@ private:
 
         double root = std::sqrt(time * time - 4 * distance);
         double result = (time - root) / 2.0;
-        return int64_t(result) + 1;
+        return (time - 2 * (int64_t(result) + 1) + 1);
     }
 
 public:
