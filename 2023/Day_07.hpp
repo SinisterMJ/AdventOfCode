@@ -46,9 +46,7 @@ private:
             std::sort(occs.rbegin(), occs.rend());
 
             if (num_j == 5)
-            {
                 occs.push_back(0);
-            }
 
             occs[0] += num_j;
 
@@ -86,15 +84,9 @@ private:
                 if (a.rank != b.rank)
                     return a.rank < b.rank;
                 else
-                {
                     for (int index = 0; index < a.cards.size(); ++index)
-                    {
                         if (a.cards[index] != b.cards[index])
-                        {
                             return cardStrength[a.cards[index]] < cardStrength[b.cards[index]];
-                        }
-                    }
-                }
 
                 return false;
             }
