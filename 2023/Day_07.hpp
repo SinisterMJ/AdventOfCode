@@ -81,7 +81,7 @@ private:
 
     void sortArray()
     {
-        std::sort(allCards.begin(), allCards.end(), [=](const auto& a, const auto& b)
+        std::sort(allCards.begin(), allCards.end(), [&](const auto& a, const auto& b)
             {
                 if (a.rank != b.rank)
                     return a.rank < b.rank;
