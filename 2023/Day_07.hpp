@@ -70,93 +70,6 @@ private:
             return 1;
         }
 
-        int rankLevel_part2(std::map<int8_t, int8_t>& dict)
-        {
-            for (auto [ch, occ] : dict)
-            {
-                if (occ == 5)
-                    return 7;
-                
-                if (occ == 4 && dict['J'] >= 1)
-                    return 7;
-
-                if (occ == 4)
-                    return 6;
-
-                if (ch == 'J' && occ >= 2)
-                {
-                    for (auto [ch_i, occ_i] : dict)
-                    {
-                        if (occ_i == 2 && ch != ch_i)
-                            return 6;
-                        if (occ_i == 3 && ch != ch_i)
-                            return 7;
-                    }
-
-                    if (occ == 2)
-                        return 4;
-                    if (occ == 3)
-                        return 6;
-                }                    
-
-                if (occ == 3)
-                {
-                    if (ch != 'J' && dict['J'] >= 1)
-                        return 5 + dict['J'];
-
-                    if (ch == 'J')
-                    {
-                        for (auto [ch_i, occ_i] : dict)
-                        {
-                            if (occ_i == 2)
-                                return 7;
-                        }
-
-                        return 6;
-                    }
-
-                    for (auto [ch_i, occ_i] : dict)
-                    {
-                        if (occ_i == 2)
-                            return 5;
-                    }
-                    return 4;
-                }
-
-                if (occ == 2)
-                {
-                    if (ch != 'J' && dict['J'] >= 1)
-                    {
-                        for (auto [ch_i, occ_i] : dict)
-                        {
-                            if (ch_i != ch && occ_i == 2 && ch_i != 'J')
-                                return 5;
-                        }
-
-                        if (dict['J'] == 2)
-                            return 6;
-
-                        if (dict['J'] == 3)
-                            return 7;
-                        
-                        return 4;
-                    }
-
-                    for (auto [ch_i, occ_i] : dict)
-                    {
-                        if (ch_i != ch && occ_i == 2)
-                            return 3;
-                        if (occ_i == 3)
-                            return 5;
-                    }
-
-                    return 2;
-                }
-            }
-
-            return 1 + dict['J'];
-        }
-
         bool bigger(CamelCards comp)
         {
             std::map<int8_t, int8_t> occurences;
@@ -199,8 +112,48 @@ private:
             for (auto ch : comp.cards)
                 occurences_comp[ch] += 1;
 
-            auto rank = rankLevel_part2(occurences);
-            auto rank_comp = rankLevel_part2(occurences_comp);
+            int8_t max = 0;
+            for (auto [ch, occ] : occurences)
+            {
+                if (ch == 'J')
+                    continue;
+                max = std::max(occ, max);
+            }
+
+            for (auto [ch, occ] : occurences)
+            {
+                if (ch == 'J')
+                    continue;
+                if (occ == max)
+                {
+                    occurences[ch] += occurences['J'];
+                    occurences['J'] = 0;
+                    break;
+                }
+            }
+
+            max = 0;
+            for (auto [ch, occ] : occurences_comp)
+            {
+                if (ch == 'J')
+                    continue;
+                max = std::max(occ, max);
+            }
+
+            for (auto [ch, occ] : occurences_comp)
+            {
+                if (ch == 'J')
+                    continue;
+                if (occ == max)
+                {
+                    occurences_comp[ch] += occurences_comp['J'];
+                    occurences_comp['J'] = 0;
+                    break;
+                }
+            }
+
+            auto rank = rankLevel(occurences);
+            auto rank_comp = rankLevel(occurences_comp);
 
             if (rank == rank_comp)
             {
