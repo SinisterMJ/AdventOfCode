@@ -97,7 +97,8 @@ private:
                 }
 
                 return false;
-            });
+            }
+        );
     }
 
     int64_t part1()
