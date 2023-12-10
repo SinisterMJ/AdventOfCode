@@ -94,6 +94,16 @@ public:
 
 	}
 
+	Map2DBase()
+		: _minX(std::numeric_limits<int32_t>::max())
+		, _minY(std::numeric_limits<int32_t>::max())
+		, _maxX(std::numeric_limits<int32_t>::min())
+		, _maxY(std::numeric_limits<int32_t>::min())
+		, emptyCell(0)
+	{
+
+	}
+
 	~Map2DBase()
 	{
 
