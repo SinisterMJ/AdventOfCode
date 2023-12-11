@@ -34,7 +34,7 @@ private:
 
                 levels[++index] = newVals;
 
-                allZeros = std::all_of(levels[index].begin(), levels[index].end(), [](int i) { return i == 0; });;
+                allZeros = std::all_of(levels[index].begin(), levels[index].end(), [](int i) { return i == 0; });
             }
 
             while (index > 0)
