@@ -45,7 +45,43 @@ private:
         }
 
         auto start = plumbing.find('S');
-        plumbing.write(start, '7');
+        
+        if (
+            from_left.find(plumbing.read(start + v2(1, 0))) != from_left.end() &&
+            from_right.find(plumbing.read(start + v2(-1, 0))) != from_right.end()
+            )
+            plumbing.write(start, '-');
+        
+        if (
+            from_left.find(plumbing.read(start + v2(1, 0))) != from_left.end() &&
+            from_bottom.find(plumbing.read(start + v2(0, 1))) != from_bottom.end()
+            )
+            plumbing.write(start, 'F');
+        
+        if (
+            from_left.find(plumbing.read(start + v2(1, 0))) != from_left.end() &&
+            from_top.find(plumbing.read(start + v2(0, -1))) != from_top.end()
+            )
+            plumbing.write(start, 'L');
+
+        if (
+            from_right.find(plumbing.read(start + v2(-1, 0))) != from_right.end() &&
+            from_top.find(plumbing.read(start + v2(0, 1))) != from_top.end()
+            )
+            plumbing.write(start, '7');
+
+        if (
+            from_right.find(plumbing.read(start + v2(-1, 0))) != from_right.end() &&
+            from_bottom.find(plumbing.read(start + v2(0, -1))) != from_bottom.end()
+            )
+            plumbing.write(start, 'J');
+
+        if (
+            from_top.find(plumbing.read(start + v2(0, 1))) != from_top.end() &&
+            from_bottom.find(plumbing.read(start + v2(0, -1))) != from_bottom.end()
+            )
+            plumbing.write(start, '|');
+
         auto neighbours = MapHelper::getNeighboursVec(false);
 
         std::queue<v2> curr;
