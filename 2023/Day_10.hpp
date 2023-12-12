@@ -194,13 +194,13 @@ private:
         for (int i = 0; i < inputVector.size() * 2; i += 2)
         {
             check.push(v2(0, i));
-            check.push(v2(inputVector[i / 2].size() * 2 - 2, i));
+            check.push(v2((int32_t)(inputVector[i / 2].size()) * 2 - 2, i));
         }
 
         for (int j = 2; j < inputVector.size() * 2; j += 2)
         {
             check.push(v2(j, 0));
-            check.push(v2(j, inputVector.size() * 2 - 2));
+            check.push(v2(j, (int32_t)(inputVector.size()) * 2 - 2));
         }
 
         while (!check.empty())

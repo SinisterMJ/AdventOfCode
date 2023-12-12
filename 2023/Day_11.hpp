@@ -33,7 +33,7 @@ private:
             if (val == '#')
                 galaxies.push_back(pos);
 
-        for (int y = inputVector.size() - 1; y >= 0; --y)
+        for (int64_t y = inputVector.size() - 1; y >= 0; --y)
         {
             bool allEmpty = std::all_of(inputVector[y].begin(), inputVector[y].end(), [](int8_t i) { return i == '.'; });
             if (allEmpty)
@@ -42,7 +42,7 @@ private:
                         pos.y += expand - 1;
         }
 
-        for (int x = inputVector[0].size() - 1; x >= 0; --x)
+        for (int x = (int32_t)(inputVector[0].size()) - 1; x >= 0; --x)
         {
             bool allEmpty = true;
             for (int y = 0; y < inputVector.size(); ++y)
