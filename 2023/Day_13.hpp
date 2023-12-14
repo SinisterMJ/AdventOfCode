@@ -99,7 +99,6 @@ private:
                 y = 0;
                 continue;
             }
-
             
             for (auto ch : line)
                 local[v2(x++, y)] = ch;
