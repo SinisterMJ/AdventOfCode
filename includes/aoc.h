@@ -233,6 +233,9 @@ struct v2
     v2 operator * (const int64_t& a) const { return v2(a * x, a * y); }
     v2& operator*= (const int64_t& b) { x *= b; y *= b; return *this; }
 
+    v2 operator * (const int32_t& a) const { return v2(a * x, a * y); }
+    v2& operator*= (const int32_t& b) { x *= b; y *= b; return *this; }
+
     v2 operator - (const v2& a) const { return v2(x - a.x, y - a.y); }
     v2& operator-= (const v2& b) { x -= b.x; y -= b.y; return *this; }
     v2 operator / (const int64_t div) const { return v2(x / div, y / div); }

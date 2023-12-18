@@ -133,7 +133,7 @@ public:
 	std::vector<v2> findAll(T val)
 	{
 		std::vector<v2> allPositions;
-		for (auto elem : dataMap)
+		for (auto& elem : dataMap)
 		{
 			if (elem.second == val)
 				allPositions.emplace_back(elem.first);

@@ -56,14 +56,14 @@ private:
 			{
 				if (pos.y != 2)
 				{
-					int32_t y = pos.y * 2 - 2;
+					int64_t y = pos.y * 2 - 2;
 					for (int x = 0; x < 5; ++x)
 						recursiveNeighbours.push_back(v3(x, y, input.z + 1));
 				}
 
 				if (pos.x != 2)
 				{
-					int32_t x = pos.x * 2 - 2;
+					int64_t x = pos.x * 2 - 2;
 					for (int y = 0; y < 5; ++y)
 						recursiveNeighbours.push_back(v3(x, y, input.z + 1));
 				}
@@ -93,7 +93,7 @@ private:
 		while (time < 200)
 		{
 			std::map<v3, uint8_t> bugMapTemp;
-			for (int z = minLevel; z <= maxLevel; ++z)
+			for (int64_t z = minLevel; z <= maxLevel; ++z)
 			{
 				for (int y = 0; y < 5; ++y)
 				{
@@ -107,7 +107,7 @@ private:
 
 						auto neighbours = getNeighbours(pos);
 
-						for (auto check : neighbours)
+						for (const auto& check : neighbours)
 						{
 							if (bugMap.find(check) != bugMap.end())
 							{
@@ -133,7 +133,7 @@ private:
 			time++;
 		}
 		
-		for (auto elem : bugMap)
+		for (const auto& elem : bugMap)
 		{
 			if (elem.second == '#')
 				result++;
