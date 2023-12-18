@@ -46,10 +46,10 @@ private:
 
         for (int i = 0; i < iterations; ++i)
         {
-            int max_x = 0;
-            int max_y = 0;
-            int min_x = 0;
-            int min_y = 0;
+            int64_t max_x = 0;
+            int64_t max_y = 0;
+            int64_t min_x = 0;
+            int64_t min_y = 0;
 
             for (auto [position, val] : image)
             {
@@ -60,9 +60,9 @@ private:
                 min_y = std::min(position.y, min_y);
             }
 
-            for (int y = min_y - 2; y <= max_y + 2; ++y)
+            for (int64_t y = min_y - 2; y <= max_y + 2; ++y)
             {
-                for (int x = min_x - 2; x <= max_x + 2; ++x)
+                for (int64_t x = min_x - 2; x <= max_x + 2; ++x)
                 {
                     pos.x = x;
                     pos.y = y;

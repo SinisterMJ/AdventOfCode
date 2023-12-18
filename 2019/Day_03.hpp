@@ -12,10 +12,10 @@ private:
 	class WireLine {
 	private:
 		struct Line {
-			int32_t startOffset;
+			int32_t startOffset{ 0 };
 			v2 start;
 			v2 end;
-			bool vertical;
+			bool vertical{ false };
 		};
 
 		std::vector<Line> lines;
@@ -70,9 +70,9 @@ private:
 			}
 		}
 
-		std::map<v2, int> getPositionsWithSteps(std::vector<Line>& others)
+		std::map<v2, int64_t> getPositionsWithSteps(std::vector<Line>& others)
 		{	
-			std::map<v2, int32_t> crossings;
+			std::map<v2, int64_t> crossings;
 			for (auto lineA : lines)
 			{
 				for (auto lineB : others)
@@ -82,10 +82,10 @@ private:
 
 					Line* vert = lineA.vertical ? &lineA : &lineB;
 					Line* hori = lineA.vertical ? &lineB : &lineA;
-					int32_t minX = hori->start.x < hori->end.x ? hori->start.x : hori->end.x;
-					int32_t maxX = hori->start.x > hori->end.x ? hori->start.x : hori->end.x;
-					int32_t minY = vert->start.y < vert->end.y ? vert->start.y : vert->end.y;
-					int32_t maxY = vert->start.y > vert->end.y ? vert->start.y : vert->end.y;
+					int64_t minX = hori->start.x < hori->end.x ? hori->start.x : hori->end.x;
+					int64_t maxX = hori->start.x > hori->end.x ? hori->start.x : hori->end.x;
+					int64_t minY = vert->start.y < vert->end.y ? vert->start.y : vert->end.y;
+					int64_t maxY = vert->start.y > vert->end.y ? vert->start.y : vert->end.y;
 
 					if (minY <= hori->start.y && hori->start.y <= maxY &&
 						minX <= vert->start.x && vert->start.x <= maxX)
@@ -95,7 +95,7 @@ private:
 						if (crossings.find(crossing) != crossings.end())
 							continue;
 
-						int32_t total = vert->startOffset + hori->startOffset + 
+						int64_t total = vert->startOffset + hori->startOffset +
 							(crossing - vert->start).abs() + 
 							(crossing - hori->start).abs();
 
@@ -131,10 +131,10 @@ public:
 
 		auto map = AL.getPositionsWithSteps(BL.getLines());
 
-		int32_t distance = std::numeric_limits<int32_t>::max();
-		int32_t steps = std::numeric_limits<int32_t>::max();
+		int64_t distance = std::numeric_limits<int64_t>::max();
+		int64_t steps = std::numeric_limits<int64_t>::max();
 
-		for (auto elem : map)
+		for (auto& elem : map)
 		{
 			distance = std::min(distance, elem.first.abs());
 			steps = std::min(steps, elem.second);

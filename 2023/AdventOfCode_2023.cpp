@@ -114,14 +114,14 @@ int main()
     {
         Day16 mDay16; runTimes.emplace_back(mDay16.run());
         std::cout << std::endl;
-    }*/
+    }
 
     {
         Day17 mDay17; runTimes.emplace_back(mDay17.run());
         std::cout << std::endl;
-    }
+    }*/
     
-    /*{
+    {
         Day18 mDay18; runTimes.emplace_back(mDay18.run());
         std::cout << std::endl;
     }
@@ -159,7 +159,7 @@ int main()
     {
         Day25 mDay25; runTimes.emplace_back(mDay25.run());
         std::cout << std::endl;
-    }*/
+    }
 
 	total_us = std::accumulate(runTimes.begin(), runTimes.end(), static_cast<int64_t>(0));
 

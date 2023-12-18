@@ -84,14 +84,14 @@ private:
         return sum;
     }
 
-    int part2()
+    int64_t part2()
     {
-        int32_t best = 0;
+        int64_t best = 0;
         auto neighbours = MapHelper::getNeighboursVec(false);
 
         for (auto& [start, height] : trees)
         {
-            std::vector<int32_t> distances;
+            std::vector<int64_t> distances;
 
             for (auto& direction : neighbours)
             {
@@ -105,7 +105,7 @@ private:
                 distances.push_back((currPos - start).manhattan());                
             }
 
-            best = std::max(best, distances[0] * distances[1] * distances[2] * distances[3]);
+            best = std::max<int64_t>(best, distances[0] * distances[1] * distances[2] * distances[3]);
         }
 
         return best;

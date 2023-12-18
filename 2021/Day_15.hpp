@@ -10,8 +10,8 @@ private:
     std::vector<std::string> inputVec;
     std::unordered_map<v2, int32_t> risk_map;
 
-    int32_t max_x{ 0 };
-    int32_t max_y{ 0 };
+    int64_t max_x{ 0 };
+    int64_t max_y{ 0 };
 
     void buildmap(bool big)
     {
@@ -89,7 +89,7 @@ private:
             {
                 auto pos = n + vec.second;
 
-                if (in_range(pos.x, 0, max_x) && in_range(pos.y, 0, max_y))
+                if (in_range<int64_t>(pos.x, 0, max_x) && in_range<int64_t>(pos.y, 0, max_y))
                 {
                     if (seen.find(pos) != seen.end())
                         continue;

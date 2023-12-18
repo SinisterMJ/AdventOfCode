@@ -32,7 +32,7 @@ private:
                     {
                         continue;
                     }
-                    int offset = element.x - position;
+                    int64_t offset = element.x - position;
                     result.insert(v2(position - offset, element.y));
                 }
             }
@@ -52,7 +52,7 @@ private:
                     {
                         continue;
                     }
-                    int offset = element.y - position;
+                    int64_t offset = element.y - position;
                     result.insert(v2(element.x, position - offset));
                 }
             }
@@ -93,8 +93,8 @@ private:
             input = fold_map(input, instruction);
         }
 
-        int max_x = 0;
-        int max_y = 0;
+        int64_t max_x = 0;
+        int64_t max_y = 0;
 
         for (auto pos : input)
         {
@@ -102,11 +102,11 @@ private:
             max_y = std::max(max_y, pos.y);
         }
 
-        for (int y = 0; y <= max_y; ++y)
+        for (int64_t y = 0; y <= max_y; ++y)
         {
             result += "\n";
 
-            for (int x = 0; x <= max_x; ++x)
+            for (int64_t x = 0; x <= max_x; ++x)
             {
                 if (input.find(v2(x, y)) == input.end())
                     result += " ";

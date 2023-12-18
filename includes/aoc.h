@@ -203,9 +203,9 @@ const double PI = 3.14159265359;
 struct v2
 {
 	v2() : x(0), y(0) { }
-	v2(int x, int y) : x(x), y(y) { }
-	int abs() { return std::abs(x) + std::abs(y); }
-	int abs() const { return std::abs(x) + std::abs(y); }
+	v2(int64_t x, int64_t y) : x(x), y(y) { }
+    int64_t abs() { return std::abs(x) + std::abs(y); }
+    int64_t abs() const { return std::abs(x) + std::abs(y); }
 
     v2 getDirection()
     {
@@ -220,25 +220,25 @@ struct v2
         return v2(0, 0);
     }
 
-    int32_t manhattan()
+    int64_t manhattan()
     {
         return std::abs(x) + std::abs(y);
     }
 
-	int x;
-	int y;
+	int64_t x;
+    int64_t y;
     v2 operator + (const v2& a) const { return v2(a.x + x, a.y + y); }
     v2& operator+= (const v2& b) { x += b.x; y += b.y; return *this; }
     
-    v2 operator * (const int32_t& a) const { return v2(a * x, a * y); }
-    v2& operator*= (const int32_t& b) { x *= b; y *= b; return *this; }
+    v2 operator * (const int64_t& a) const { return v2(a * x, a * y); }
+    v2& operator*= (const int64_t& b) { x *= b; y *= b; return *this; }
 
     v2 operator - (const v2& a) const { return v2(x - a.x, y - a.y); }
     v2& operator-= (const v2& b) { x -= b.x; y -= b.y; return *this; }
-    v2 operator / (const int div) const { return v2(x / div, y / div); }
-    v2& operator/= (const int div) { x /= div; y /= div; return *this; }
+    v2 operator / (const int64_t div) const { return v2(x / div, y / div); }
+    v2& operator/= (const int64_t div) { x /= div; y /= div; return *this; }
 
-	int& operator[](int index)
+    int64_t& operator[](int64_t index)
 	{
 		if (index == 0)
 			return x;
@@ -259,26 +259,26 @@ bool operator >= (const v2& a, const v2& b) { return !(a < b); }
 struct v3
 {
 	v3() : x(0), y(0), z(0) { }
-	v3(int x, int y, int z) : x(x), y(y), z(z) { }
+	v3(int64_t x, int64_t y, int64_t z) : x(x), y(y), z(z) { }
 
-	int x;
-	int y;
-	int z;
+    int64_t x;
+    int64_t y;
+    int64_t z;
 
     double length()
     {
-        double l2 = x * x + y * y + z * z;
+        double l2 = static_cast<double>(x * x + y * y + z * z);
         return std::sqrt(l2);
     }
 
-    int32_t manhattan()
+    int64_t manhattan()
     {
         return std::abs(x) + std::abs(y) + std::abs(z);
     }
 
     v3& operator+= (const v3& b) { x += b.x; y += b.y; z += b.z;  return *this; }
     v3& operator-= (const v3& b) { x -= b.x; y -= b.y; z -= b.z;  return *this; }
-    v3& operator-= (const int32_t& b) { x *= b; y *= b; z *= b;  return *this; }
+    v3& operator-= (const int64_t& b) { x *= b; y *= b; z *= b;  return *this; }
     v3 cross(const v3& b) 
     {
         v3 result;
@@ -290,7 +290,7 @@ struct v3
         return result;
     }
 
-	int& operator[](int index)
+    int64_t& operator[](int index)
 	{
 		if (index == 0)
 			return x;
@@ -299,7 +299,7 @@ struct v3
 		return z;
 	}
 
-    int operator[](int index) const
+    int64_t operator[](int index) const
     {
         if (index == 0)
             return x;
@@ -327,7 +327,7 @@ v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z +
 v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
 v3 operator * (const v3& a, const int32_t& b) { return v3(a.x * b, a.y * b, a.z * b); }
 
-int operator * (const v3& a, const v3& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
+int64_t operator * (const v3& a, const v3& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 
 struct v4
 {

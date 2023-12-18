@@ -11,14 +11,14 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::pair<int, int> solve()
+    std::pair<int64_t, int64_t> solve()
     {
         std::set<v2> grove;
 
-        int32_t min_y = 0;
-        int32_t min_x = 0;
-        int32_t max_x = 0;
-        int32_t max_y = 0;
+        int64_t min_y = 0;
+        int64_t min_x = 0;
+        int64_t max_x = 0;
+        int64_t max_y = 0;
 
         int y_line = 0;
         for (auto line : inputVector)
@@ -43,7 +43,7 @@ private:
             { v2(1, -1), v2(1, 0), v2(1, 1) }
         };
 
-        int32_t solve_1;
+        int64_t solve_1;
 
         std::vector<v2> neighbours = MapHelper::getNeighboursVec(true);
         for (int i = 0;; ++i)
@@ -117,10 +117,10 @@ private:
             }
 
             std::swap(finalGrove, grove);
-            min_x = std::numeric_limits<int32_t>::max();
-            min_y = std::numeric_limits<int32_t>::max();
-            max_x = std::numeric_limits<int32_t>::min();
-            max_y = std::numeric_limits<int32_t>::min();
+            min_x = std::numeric_limits<int64_t>::max();
+            min_y = std::numeric_limits<int64_t>::max();
+            max_x = std::numeric_limits<int64_t>::min();
+            max_y = std::numeric_limits<int64_t>::min();
             for (auto& pos : grove)
             {
                 min_x = std::min(pos.x, min_x);
@@ -130,7 +130,7 @@ private:
             }
 
             if (i == 9)
-                solve_1 = (max_x - min_x + 1) * (max_y - min_y + 1) - static_cast<int32_t>(grove.size());
+                solve_1 = (max_x - min_x + 1) * (max_y - min_y + 1) - static_cast<int64_t>(grove.size());
 
             if (!moveHappened)
                 return std::make_pair(solve_1, i + 1);

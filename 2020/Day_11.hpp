@@ -34,8 +34,8 @@ private:
                         for (int index = 1; index <= max_vector; ++index)
                         {
                             v2 pos_neighbour = pos + elem * index;
-                            if (in_range<int32_t>(pos_neighbour.x, 0, static_cast<int32_t>(ferry_s_temp[y].size()) - 1) &&
-                                in_range<int32_t>(pos_neighbour.y, 0, static_cast<int32_t>(ferry_s_temp.size()) - 1))
+                            if (in_range<int64_t>(pos_neighbour.x, 0, static_cast<int64_t>(ferry_s_temp[y].size()) - 1) &&
+                                in_range<int64_t>(pos_neighbour.y, 0, static_cast<int64_t>(ferry_s_temp.size()) - 1))
                             {
                                 if (ferry_s_temp[pos_neighbour.y][pos_neighbour.x] != '.')
                                 {

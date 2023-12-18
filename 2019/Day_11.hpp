@@ -11,7 +11,7 @@ class Day11 {
 private:
 	struct Hull {
 		v2 position;
-		int color;
+		int color{ 0 };
 	};
 
 	v2 turn(v2 in, int64_t dir)
@@ -71,10 +71,10 @@ public:
 		std::map<v2, int> currentColor1 = runPaintJob(v2(0, 1), 0, commands);
 		std::map<v2, int> currentColor2 = runPaintJob(v2(0, 1), 1, commands);
 				
-		int minX = 0, maxX = 0;
-		int minY = 0, maxY = 0;
+		int64_t minX = 0, maxX = 0;
+		int64_t minY = 0, maxY = 0;
 
-		for (auto elem : currentColor2)
+		for (auto& elem : currentColor2)
 		{
 			minX = std::min(minX, elem.first.x);
 			maxX = std::max(maxX, elem.first.x);
@@ -83,9 +83,9 @@ public:
 		}
 
 		std::string result = "";
-		for (int y = maxY; y >= minY; --y)
+		for (int64_t y = maxY; y >= minY; --y)
 		{
-			for (int x = minX; x <= maxX; ++x)
+			for (int64_t x = minX; x <= maxX; ++x)
 			{
 				v2 pos(x, y);
 				if (currentColor2.find(pos) != currentColor2.end())

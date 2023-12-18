@@ -31,7 +31,7 @@ private:
 		}
 	};
 
-	int gcd(int a, int b)
+	int64_t gcd(int64_t a, int64_t b)
 	{
 		if (b == 0)
 			return a;
@@ -80,7 +80,7 @@ public:
 
 							if (asteroids.read(searchPos) == '#')
 							{
-								int32_t ggt = gcd(std::abs(searchPos.x - basePos.x), std::abs(searchPos.y - basePos.y));
+								int64_t ggt = gcd(std::abs(searchPos.x - basePos.x), std::abs(searchPos.y - basePos.y));
 								v2 vec((searchPos - basePos) / ggt);
 								v2 curPos = basePos + vec;
 								bool isVisible = true;

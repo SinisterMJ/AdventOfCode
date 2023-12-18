@@ -34,8 +34,8 @@ private:
 
     void print(std::map<v2, int8_t>& room)
     {
-        int32_t min_y = 5;
-        int32_t max_y = 0;
+        int64_t min_y = 5;
+        int64_t max_y = 0;
 
         for (auto [pos, val] : room)
         {
@@ -43,7 +43,7 @@ private:
             max_y = std::max(pos.y, max_y);
         }
 
-        for (int y = min_y; y <= max_y; ++y)
+        for (int64_t y = min_y; y <= max_y; ++y)
         {
             for (int x = 0; x < 14; ++x)
             {
@@ -59,8 +59,8 @@ private:
 
     std::string print_string(std::map<v2, int8_t>& room)
     {
-        int32_t min_y = 5;
-        int32_t max_y = 0;
+        int64_t min_y = 5;
+        int64_t max_y = 0;
 
         std::string res = "";
 
@@ -70,7 +70,7 @@ private:
             max_y = std::max(pos.y, max_y);
         }
 
-        for (int y = min_y; y <= max_y; ++y)
+        for (int64_t y = min_y; y <= max_y; ++y)
         {
             for (int x = 0; x < 14; ++x)
             {
@@ -118,7 +118,7 @@ private:
 
     bool checkAbove(std::map<v2, int8_t>& room, v2 pos)
     {
-        for (int y = pos.y - 1; y > 1; y--)
+        for (int64_t y = pos.y - 1; y > 1; y--)
         {
             if (room[v2(pos.x, y)] != '.')
                 return false;
@@ -144,9 +144,9 @@ private:
         if (start.y == 1) // Find distance to own cell or nothing
         {
             // Check if way is free
-            int step = (targetRow - start.x) / std::abs(targetRow - start.x);
+            int64_t step = (targetRow - start.x) / std::abs(targetRow - start.x);
 
-            for (int x = start.x + step; x != targetRow; x += step)
+            for (int64_t x = start.x + step; x != targetRow; x += step)
                 if (room[v2(x, 1)] != '.')
                     return result;
             
@@ -166,7 +166,7 @@ private:
                 return result;
 
             // Go to the right:
-            for (int x = start.x;; ++x)
+            for (int64_t x = start.x;; ++x)
             {
                 v2 pos(x, 1);
                 if (room.find(pos) == room.end())
@@ -180,7 +180,7 @@ private:
             }
 
             // And the left...
-            for (int x = start.x;; --x)
+            for (int64_t x = start.x;; --x)
             {
                 v2 pos(x, 1);
                 if (room.find(pos) == room.end())

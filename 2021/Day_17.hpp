@@ -7,8 +7,8 @@ class Day17 {
 private:
     std::string inputString;
 
-    int32_t target_x[2];
-    int32_t target_y[2];
+    int32_t target_x[2] = { 0, 0};
+    int32_t target_y[2] = { 0, 0 };
 
     int64_t part1()
     {
@@ -46,7 +46,7 @@ private:
                     (position.x >= target_x[0] || vector.x > 0)) // undershot target
                 {
                     position += vector;
-                    vector.x = std::max(0, vector.x - 1);
+                    vector.x = std::max<int64_t>(0, vector.x - 1);
                     vector.y--;
 
                     if (target_x[0] <= position.x && position.x <= target_x[1] &&

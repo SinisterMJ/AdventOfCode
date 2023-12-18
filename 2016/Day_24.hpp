@@ -88,8 +88,8 @@ private:
 		}
 
 		int32_t time = 0;
-		int32_t minLevel = -1;
-		int32_t maxLevel = +1;
+		int64_t minLevel = -1;
+		int64_t maxLevel = +1;
 		while (time < 200)
 		{
 			std::map<v3, uint8_t> bugMapTemp;
@@ -107,7 +107,7 @@ private:
 
 						auto neighbours = getNeighbours(pos);
 
-						for (auto check : neighbours)
+						for (auto& check : neighbours)
 						{
 							if (bugMap.find(check) != bugMap.end())
 							{
@@ -133,7 +133,7 @@ private:
 			time++;
 		}
 		
-		for (auto elem : bugMap)
+		for (auto& elem : bugMap)
 		{
 			if (elem.second == '#')
 				result++;

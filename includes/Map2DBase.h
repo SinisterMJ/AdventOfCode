@@ -184,13 +184,13 @@ public:
 		dataMap[pos] += val;
     }
 
-    int32_t height() { return _maxY - _minY + 1; }
-    int32_t width() { return _maxX - _minX + 1; }
+    int64_t height() { return _maxY - _minY + 1; }
+    int64_t width() { return _maxX - _minX + 1; }
 	
-	int32_t minX() { return _minX; }
-	int32_t minY() { return _minY; }
-	int32_t maxX() { return _maxX; }
-	int32_t maxY() { return _maxY; }
+	int64_t minX() { return _minX; }
+	int64_t minY() { return _minY; }
+	int64_t maxX() { return _maxX; }
+	int64_t maxY() { return _maxY; }
 
 	bool move(int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, bool checkOccupation = true)
 	{
@@ -244,10 +244,10 @@ public:
 	}
 
 private:
-	int32_t _minY;
-	int32_t _minX;
-	int32_t _maxY;
-	int32_t _maxX;
+	int64_t _minY;
+	int64_t _minX;
+	int64_t _maxY;
+	int64_t _maxX;
 
 	T emptyCell;
 
@@ -268,12 +268,12 @@ void DrawMap(std::map<v2, int>& map, const std::map<int, uint8_t>& dict, bool re
 		SetConsoleCursorPosition(hStdout, destCoord);
 	}
 
-	int minX = 0;
-	int minY = 0;
-	int maxX = 0;
-	int maxY = 0;
+	int64_t minX = 0;
+	int64_t minY = 0;
+	int64_t maxX = 0;
+	int64_t maxY = 0;
 
-	for (auto elem : map)
+	for (auto& elem : map)
 	{
 		minX = std::min(minX, elem.first.x);
 		maxX = std::max(maxX, elem.first.x);
@@ -282,9 +282,9 @@ void DrawMap(std::map<v2, int>& map, const std::map<int, uint8_t>& dict, bool re
 	}
 
 	std::string result = "";
-	for (int y = minY; y <= maxY; ++y)
+	for (int64_t y = minY; y <= maxY; ++y)
 	{
-		for (int x = minX; x <= maxX; ++x)
+		for (int64_t x = minX; x <= maxX; ++x)
 		{
 			int val = map[v2(x, y)];
 			if (dict.find(val) == dict.end())
@@ -315,12 +315,12 @@ void DrawMap(std::map<v2, int8_t>& map, bool resetScreen = true)
         SetConsoleCursorPosition(hStdout, destCoord);
     }
 
-    int minX = 0;
-    int minY = 0;
-    int maxX = 0;
-    int maxY = 0;
+	int64_t minX = 0;
+	int64_t minY = 0;
+	int64_t maxX = 0;
+	int64_t maxY = 0;
 
-    for (auto elem : map)
+    for (auto &elem : map)
     {
         minX = std::min(minX, elem.first.x);
         maxX = std::max(maxX, elem.first.x);
@@ -329,9 +329,9 @@ void DrawMap(std::map<v2, int8_t>& map, bool resetScreen = true)
     }
 
     std::string result = "";
-    for (int y = minY; y <= maxY; ++y)
+    for (int64_t y = minY; y <= maxY; ++y)
     {
-        for (int x = minX; x <= maxX; ++x)
+        for (int64_t x = minX; x <= maxX; ++x)
         {
             int8_t val = map[v2(x, y)];
             

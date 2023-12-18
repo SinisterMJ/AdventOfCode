@@ -10,7 +10,7 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
     std::set<v3> cubes;
-    int max_x, max_y, max_z, min_x, min_y, min_z;
+    int64_t max_x{ 0 }, max_y{ 0 }, max_z{ 0 }, min_x{ 0 }, min_y{ 0 }, min_z{ 0 };
     std::vector<v3> neighbours = MapHelper::getNeighboursVec3d(false);
 
     int64_t part1()
@@ -39,9 +39,9 @@ private:
 
         int64_t exposed = 0;
 
-        for (auto cube : cubes)
+        for (auto& cube : cubes)
         {
-            for (auto neigh : neighbours)
+            for (auto& neigh : neighbours)
             {
                 if (!cubes.contains(neigh + cube))
                     exposed++;
@@ -53,7 +53,7 @@ private:
 
     bool outside(v3 position, std::set<v3>& checked)
     {
-        for (auto dir : neighbours)
+        for (auto& dir : neighbours)
         {
             if (cubes.contains(position + dir))
                 continue;
@@ -78,9 +78,9 @@ private:
     int64_t part2()
     {        
         int exposed_outside = 0;
-        for (auto cube : cubes)
+        for (auto& cube : cubes)
         {
-            for (auto dir : neighbours)
+            for (auto& dir : neighbours)
             {
                 std::set<v3> checked;
                 if (!cubes.contains(dir + cube) &&
@@ -96,14 +96,14 @@ private:
     {
         std::set<v3> result;
         result.insert(v3(min_x - 1, min_y - 1, min_z - 1));
-        for (int x = min_x - 1; x <= max_x + 1; ++x)
+        for (int64_t x = min_x - 1; x <= max_x + 1; ++x)
         {
-            for (int y = min_y - 1; y <= max_y + 1; ++y)
+            for (int64_t y = min_y - 1; y <= max_y + 1; ++y)
             { 
-                for (int z = min_z - 1; z <= max_z + 1; ++z)
+                for (int64_t z = min_z - 1; z <= max_z + 1; ++z)
                 {
                     v3 pos(x, y, z);
-                    for (auto dir : neighbours)
+                    for (auto& dir : neighbours)
                     {
                         if (result.contains(pos + dir) && !cubes.contains(pos + dir))
                             result.insert(pos);
@@ -120,9 +120,9 @@ private:
         int exposed_outside = 0;
         auto outside = outside_cubes();
 
-        for (auto cube : cubes)
+        for (auto& cube : cubes)
         {
-            for (auto neigh : neighbours)
+            for (const auto& neigh : neighbours)
                 if (outside.contains(neigh + cube))
                     exposed_outside++;
         }

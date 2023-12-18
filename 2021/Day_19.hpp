@@ -35,9 +35,9 @@ private:
 
                 if (vec_first.length() == vec_second.length())
                 {
-                    int x = std::abs(vec_first.x);
-                    int y = std::abs(vec_first.y);
-                    int z = std::abs(vec_first.z);
+                    int64_t x = std::abs(vec_first.x);
+                    int64_t y = std::abs(vec_first.y);
+                    int64_t z = std::abs(vec_first.z);
 
                     if (x == y || x == z || y == z)
                     {
@@ -223,7 +223,7 @@ private:
             for (auto& beacon : scanner)
                 beacons.insert(beacon);
         
-        int32_t max_dist = 0;
+        int64_t max_dist = 0;
 
         for (int i = 0; i < offsets.size(); ++i)
             for (int j = i + 1; j < offsets.size(); ++j)

@@ -14,7 +14,7 @@ private:
     struct SensorPair
     {
         v2 sensor;
-        int distance = 0;
+        int64_t distance = 0;
     };
 
     std::vector<SensorPair> sensors;
@@ -56,17 +56,17 @@ private:
         }
     }
 
-    int part1()
+    int64_t part1()
     {
-        std::vector<std::pair<int, int>> ranges;
+        std::vector<std::pair<int64_t, int64_t>> ranges;
 
         for (auto [sensor, dist] : sensors)
         {
             auto d = dist - std::abs((sensor.y - 2'000'000));
             if (d >= 0)
             {
-                int left = sensor.x - d;
-                int right = sensor.x + d;
+                int64_t left = sensor.x - d;
+                int64_t right = sensor.x + d;
 
                 ranges.push_back(std::make_pair(left, right));
             }
@@ -78,7 +78,7 @@ private:
         while (merged)
         {
             merged = false;
-            std::vector<std::pair<int, int>> tempRanges;
+            std::vector<std::pair<int64_t, int64_t>> tempRanges;
 
             for (int i = 0; i < ranges.size(); i++)
             {
@@ -104,7 +104,7 @@ private:
                 ranges = tempRanges;
         }
 
-        int sum = 0;
+        int64_t sum = 0;
 
         for (auto [left, right] : ranges)
             sum += right - left + 1;
@@ -126,8 +126,8 @@ private:
     {
         for (auto [sensor, distance] : sensors)
         {
-            int x = sensor.x - distance - 1;
-            int y = sensor.y;
+            int64_t x = sensor.x - distance - 1;
+            int64_t y = sensor.y;
             v2 test_pos(x, y);
             v2 dir(1, -1);
 

@@ -88,8 +88,8 @@ private:
 		}
 
 		int32_t time = 0;
-		int32_t minLevel = -1;
-		int32_t maxLevel = +1;
+		int64_t minLevel = -1;
+		int64_t maxLevel = +1;
 		while (time < 200)
 		{
 			std::map<v3, uint8_t> bugMapTemp;

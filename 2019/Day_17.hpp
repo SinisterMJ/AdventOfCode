@@ -231,7 +231,7 @@ PatternFound:
 			}
 
 			bool foundOnlyTrue = true;
-			for (auto elem : movedTo)
+			for (auto& elem : movedTo)
 			{
 				foundOnlyTrue &= elem.second;
 			}
@@ -313,7 +313,7 @@ PatternFound:
 		return result;
 	}
 
-	int getScaffolds(std::vector<int64_t> commands, std::map<v2, int32_t>& cameraView)
+	int64_t getScaffolds(std::vector<int64_t> commands, std::map<v2, int32_t>& cameraView)
 	{
 		IntcodeVM vm;
 		vm.initializeCommands(commands);
@@ -336,10 +336,10 @@ PatternFound:
 
 		}
 
-		int32_t minX, minY, maxX, maxY;
+		int64_t minX, minY, maxX, maxY;
 		minX = minY = maxX = maxY = 0;
 
-		for (auto elem : cameraView)
+		for (auto& elem : cameraView)
 		{
 			minX = std::min(minX, elem.first.x);
 			minY = std::min(minY, elem.first.y);
@@ -347,10 +347,10 @@ PatternFound:
 			maxY = std::max(maxY, elem.first.y);
 		}
 
-		int32_t overlaps = 0;
-		for (int y = minY + 1; y < maxY; ++y)
+		int64_t overlaps = 0;
+		for (int64_t y = minY + 1; y < maxY; ++y)
 		{
-			for (int x = minX + 1; x < maxX; ++x)
+			for (int64_t x = minX + 1; x < maxX; ++x)
 			{
 				v2 currPos(x, y);
 				if (cameraView[currPos] == 35)

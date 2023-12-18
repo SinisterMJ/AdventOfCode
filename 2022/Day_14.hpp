@@ -13,7 +13,7 @@ private:
     int64_t solve(bool addFloor)
     {
         std::unordered_set<v2> occupied;
-        int max_y = 0;
+        int64_t max_y = 0;
         for (auto line : inputVector)
         {
             auto paths = util::split(line, " -> ");
@@ -42,7 +42,7 @@ private:
         max_y += 2;
 
         if (addFloor)
-            for (int x = 500 - max_y - 2; x < 500 + max_y + 2; ++x)
+            for (int64_t x = 500 - max_y - 2; x < 500 + max_y + 2; ++x)
                 occupied.insert(v2(x, max_y));
         
         int sum = 0;

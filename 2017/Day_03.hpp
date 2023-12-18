@@ -13,7 +13,7 @@ private:
 	int32_t number{ 277678 };
 
 
-	int32_t part1()
+	int64_t part1()
 	{
 		std::map<v2, int32_t> memory;
 		v2 dir(0, -1);

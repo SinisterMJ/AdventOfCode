@@ -63,9 +63,9 @@ public:
 					result++;
 			}
 		}
-		int minX, minY, maxX, maxY;
-		minX = minY = std::numeric_limits<int>::max();
-		maxX = maxX = std::numeric_limits<int>::min();
+		int64_t minX, minY, maxX, maxY;
+		minX = minY = std::numeric_limits<int64_t>::max();
+		maxX = maxX = std::numeric_limits<int64_t>::min();
 
 		for (auto elem : tileMap)
 		{

@@ -10,7 +10,7 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    int part1()
+    int64_t part1()
     {
         bool map = true;
         int y = 0;
@@ -115,7 +115,7 @@ private:
         return (pos.y + 1) * 1000 + (pos.x + 1) * 4 + angleVal;
     }
 
-    int part2()
+    int64_t part2()
     {
         int y = 0;
         std::string instructions = "";

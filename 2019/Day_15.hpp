@@ -20,10 +20,10 @@ private:
 	{
 		std::map<v2, int32_t> copy(map);
 
-		int minX = 0;
-		int minY = 0;
-		int maxX = 0;
-		int maxY = 0;
+		int64_t minX = 0;
+		int64_t minY = 0;
+		int64_t maxX = 0;
+		int64_t maxY = 0;
 		for (auto elem : map)
 		{
 			minX = std::min(minX, elem.first.x);
@@ -31,9 +31,9 @@ private:
 			minY = std::min(minY, elem.first.y);
 			maxY = std::max(maxY, elem.first.y);
 		}
-		for (int y = minY; y <= maxY; ++y)
+		for (int64_t y = minY; y <= maxY; ++y)
 		{
-			for (int x = minX; x <= maxX; ++x)
+			for (int64_t x = minX; x <= maxX; ++x)
 			{
 				if (copy.find(v2(x, y)) == copy.end())
 					copy[v2(x, y)] = 4;

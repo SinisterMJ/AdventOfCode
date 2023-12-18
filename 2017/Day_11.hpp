@@ -20,10 +20,10 @@ private:
         northwest
     };
 
-    std::pair<int32_t, int32_t> solve()
+    std::pair<int64_t, int64_t> solve()
     {
         v2 position(0, 0);
-        int32_t max = 0;
+        int64_t max = 0;
 
         for (auto& el : directions)
         {
@@ -47,7 +47,7 @@ private:
             max = std::max(max, std::max(std::abs(position.x), std::abs(position.y)));
         }
 
-        int32_t pos_final = std::max(std::abs(position.x), std::abs(position.y));
+        int64_t pos_final = std::max(std::abs(position.x), std::abs(position.y));
 
         return std::make_pair(pos_final, max);
     }

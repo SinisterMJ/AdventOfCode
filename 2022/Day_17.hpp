@@ -77,7 +77,7 @@ private:
             {
                 //std::set<std::tuple<int64_t, int, std::set<v2>>> repeatable;
                 std::set<v2> blocks;
-                for (int y = lastSpawn.y; y > lastSpawn.y - 40; --y)
+                for (int64_t y = lastSpawn.y; y > lastSpawn.y - 40; --y)
                     for (int x = 0; x < 7; ++x)
                         if (blocked.contains(v2(x, y)))
                             blocks.insert(v2(x, y - lastSpawn.y));
