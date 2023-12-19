@@ -158,7 +158,7 @@ private:
         }
 
         std::map<std::map<v2, int8_t>, int64_t> seen;
-        std::map<int64_t, int64_t> loads;
+        std::unordered_map<int64_t, int64_t> loads;
 
         // 4'000'000'000 because its 1'000'000'000 cycles, of each 4 movements
         for (int64_t index = 0; index < 4'000'000'000; ++index)

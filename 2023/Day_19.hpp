@@ -32,10 +32,10 @@ private:
     };
 
     struct ranged_part {
-        std::pair<int64_t, int64_t> x;
-        std::pair<int64_t, int64_t> m;
-        std::pair<int64_t, int64_t> a;
-        std::pair<int64_t, int64_t> s;
+        std::pair<int32_t, int32_t> x;
+        std::pair<int32_t, int32_t> m;
+        std::pair<int32_t, int32_t> a;
+        std::pair<int32_t, int32_t> s;
     };
 
     std::vector<part> parts;

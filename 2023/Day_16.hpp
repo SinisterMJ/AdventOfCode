@@ -13,8 +13,8 @@ private:
 
     int count_energized(v2 start, int direction)
     {
-        std::map<v2, int8_t> mirrors;
-        std::map<v2, int8_t> seen_rays;
+        std::unordered_map<v2, int8_t> mirrors;
+        std::unordered_map<v2, int8_t> seen_rays;
 
         int x = 0;
         int y = 0;

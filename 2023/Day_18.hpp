@@ -29,7 +29,7 @@ private:
         return totalCount / 2 + perimeter / 2 + 1;
     }
 
-    int part1()
+    int64_t part1()
     {
         std::map<v2, std::string> dug_out;
         std::map<std::string, v2> dir_lookup{
