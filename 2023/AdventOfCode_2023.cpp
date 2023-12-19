@@ -119,17 +119,17 @@ int main()
     {
         Day17 mDay17; runTimes.emplace_back(mDay17.run());
         std::cout << std::endl;
-    }*/
+    }
     
     {
         Day18 mDay18; runTimes.emplace_back(mDay18.run());
         std::cout << std::endl;
-    }
+    }*/
 
-    //{
-    //    Day19 mDay19; runTimes.emplace_back(mDay19.run());
-    //    std::cout << std::endl;
-    //}
+    {
+        Day19 mDay19; runTimes.emplace_back(mDay19.run());
+        std::cout << std::endl;
+    }
 
     //{
     //    Day20 mDay20; runTimes.emplace_back(mDay20.run());
