@@ -79,8 +79,7 @@ private:
     {
         if (current == "A")
         {
-            int64_t total_currently = 0;
-            total_currently += (input.a.second - input.a.first + 1);
+            int64_t total_currently = (input.a.second - input.a.first + 1);
             total_currently *= (input.m.second - input.m.first + 1);
             total_currently *= (input.x.second - input.x.first + 1);
             total_currently *= (input.s.second - input.s.first + 1);
