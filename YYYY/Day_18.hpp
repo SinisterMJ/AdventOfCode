@@ -10,12 +10,12 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    int part1()
+    int64_t part1()
     {
         return 0;
     }
 
-    int part2()
+    int64_t part2()
     {
         return 0;
     }
