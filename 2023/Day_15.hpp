@@ -58,6 +58,7 @@ private:
                     {
                         l = lens;
                         found = true;
+                        break;
                     }
                 }
 
