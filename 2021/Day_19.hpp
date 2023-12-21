@@ -165,7 +165,7 @@ private:
         return offset;
     }
 
-    std::pair<int32_t, int32_t> solve()
+    std::pair<int64_t, int64_t> solve()
     {
         std::vector<v3> list;
         for (auto ln : inputVec)
@@ -229,7 +229,7 @@ private:
             for (int j = i + 1; j < offsets.size(); ++j)
                 max_dist = std::max(max_dist, (offsets[i] - offsets[j]).manhattan());
         
-        return std::make_pair(static_cast<int32_t>(beacons.size()), max_dist);
+        return std::make_pair(beacons.size(), max_dist);
     }
 
     int64_t part2()

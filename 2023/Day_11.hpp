@@ -14,17 +14,17 @@ private:
     int64_t solver(int expand)
     {
         std::map<v2, int8_t> base;
-        int x = 0;
-        int y = 0;
+        int x_s = 0;
+        int y_s = 0;
 
         for (auto line : inputVector)
         {
             for (auto ch : line)
             {
-                base[v2(x++, y)] = ch;
+                base[v2(x_s++, y_s)] = ch;
             }
-            x = 0;
-            y++;
+            x_s = 0;
+            y_s++;
         }
 
         std::vector<v2> galaxies;
