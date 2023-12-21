@@ -453,4 +453,75 @@ int64_t lcm(int64_t a, int64_t b)
     return (a * b) / gcd(a, b);
 }
 
+namespace MapHelper {
+    std::vector<v2> getNeighboursVec(bool include_diagonal)
+    {
+        std::vector<v2> neighbours;
+        neighbours.emplace_back(1, 0);
+        neighbours.emplace_back(0, 1);
+        neighbours.emplace_back(-1, 0);
+        neighbours.emplace_back(0, -1);
+
+        if (include_diagonal)
+        {
+            neighbours.emplace_back(1, -1);
+            neighbours.emplace_back(-1, -1);
+            neighbours.emplace_back(1, 1);
+            neighbours.emplace_back(-1, 1);
+        }
+
+        return neighbours;
+    }
+
+    v2 turnLeft(v2 input)
+    {
+        return v2(-input.y, input.x);
+    }
+
+    v2 turnRight(v2 input)
+    {
+        return v2(input.y, -input.x);
+    }
+
+    std::vector<v3> getNeighboursVec3d(bool include_diagonal)
+    {
+        std::vector<v3> neighbours;
+        neighbours.emplace_back(1, 0, 0);
+        neighbours.emplace_back(0, 1, 0);
+        neighbours.emplace_back(0, 0, 1);
+        neighbours.emplace_back(-1, 0, 0);
+        neighbours.emplace_back(0, -1, 0);
+        neighbours.emplace_back(0, 0, -1);
+
+        if (include_diagonal)
+        {
+            neighbours.emplace_back(1, 1, 0);
+            neighbours.emplace_back(1, 0, 1);
+            neighbours.emplace_back(1, 1, 1);
+            neighbours.emplace_back(1, -1, 0);
+            neighbours.emplace_back(1, 0, -1);
+            neighbours.emplace_back(1, -1, -1);
+            neighbours.emplace_back(1, 1, -1);
+            neighbours.emplace_back(1, -1, 1);
+
+            neighbours.emplace_back(0, 1, 1);
+            neighbours.emplace_back(0, 1, -1);
+            neighbours.emplace_back(0, -1, 1);
+            neighbours.emplace_back(0, -1, -1);
+
+            neighbours.emplace_back(-1, 1, 0);
+            neighbours.emplace_back(-1, 0, 1);
+            neighbours.emplace_back(-1, 1, 1);
+            neighbours.emplace_back(-1, -1, 0);
+            neighbours.emplace_back(-1, 0, -1);
+            neighbours.emplace_back(-1, -1, -1);
+            neighbours.emplace_back(-1, 1, -1);
+            neighbours.emplace_back(-1, -1, 1);
+
+        }
+
+        return neighbours;
+    }
+};
+
 #endif  // ADVENTOFCODE_AOC
