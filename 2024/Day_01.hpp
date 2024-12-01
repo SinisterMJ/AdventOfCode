@@ -28,9 +28,7 @@ private:
 
         int result = 0;
         for (int index = 0; index < list_left.size(); ++index)
-        { 
             result += std::abs(list_left[index] - list_right[index]);
-        }
 
         return result;
     }
