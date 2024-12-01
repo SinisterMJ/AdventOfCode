@@ -293,6 +293,24 @@ struct v3
         return result;
     }
 
+    v3 normalize()
+    {
+        if (x > 0)
+            return v3(1, 0, 0);
+        if (x < 0)
+            return v3(-1, 0, 0);
+        if (y > 0)
+            return v3(0, 1, 0);
+        if (y < 0)
+            return v3(0, -1, 0);
+        if (z > 0)
+            return v3(0, 0, 1);
+        if (z < 0)
+            return v3(0, 0, -1);
+
+        return v3(0, 0, 0);
+    }
+
     int64_t& operator[](int index)
 	{
 		if (index == 0)

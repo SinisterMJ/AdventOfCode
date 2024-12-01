@@ -93,7 +93,7 @@ private:
 		while (time < 200)
 		{
 			std::map<v3, uint8_t> bugMapTemp;
-			for (int z = minLevel; z <= maxLevel; ++z)
+			for (int64_t z = minLevel; z <= maxLevel; ++z)
 			{
 				for (int y = 0; y < 5; ++y)
 				{

@@ -10,7 +10,7 @@ private:
     std::string input;
 	std::vector<std::string> direction_list;
 
-    int part1()
+    int64_t part1()
     {
 		auto neighbours = MapHelper::getNeighboursVec(false);
 		int dir = 0;
@@ -30,7 +30,7 @@ private:
         return pos.manhattan();
     }
 
-	int part2()
+	int64_t part2()
 	{
 		auto neighbours = MapHelper::getNeighboursVec(false);
 		int dir = 0;

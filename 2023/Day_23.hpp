@@ -9,15 +9,111 @@ private:
 
     std::vector<std::string> inputVector;
     std::string inputString;
+    
+    std::map<v2, int8_t> hike;
+    std::vector<v2> neighbours = MapHelper::getNeighboursVec(false);
 
-    int64_t part1()
+    int32_t getSteps(v2 current, v2 end, int32_t steps, std::set<v2> visited, bool part_one)
     {
-        return 0;
+        while (true)
+        {
+            std::vector<v2> possible;
+
+            if (current == end)
+                return steps;
+
+            for (auto n : neighbours)
+            {
+                v2 position = current + n;
+
+                if (visited.contains(position))
+                    continue;
+
+                if (!hike.contains(position) || hike[position] == '#')
+                    continue;
+
+                auto val = hike[position];
+
+                if (part_one)
+                {
+                    if (val == '.')
+                        possible.push_back(position);
+
+                    if (val == '>' && n == v2(1, 0))
+                        possible.push_back(position);
+
+                    if (val == '<' && n == v2(-1, 0))
+                        possible.push_back(position);
+
+                    if (val == '^' && n == v2(0, -1))
+                        possible.push_back(position);
+
+                    if (val == 'v' && n == v2(0, 1))
+                        possible.push_back(position);
+                }
+                else
+                {
+                    possible.push_back(position);
+                }
+            }
+
+            if (possible.size() == 1)
+            {
+                current = possible[0];
+                steps++;
+                visited.insert(current);
+            }
+
+            int32_t maxSteps = 0;
+
+            if (possible.size() > 1)
+            {
+                for (auto pos : possible)
+                {
+                    auto copiedVisited = visited;
+                    copiedVisited.insert(pos);
+                    maxSteps = std::max(maxSteps, getSteps(pos, end, steps + 1, copiedVisited, part_one));
+                }
+
+                return maxSteps;
+            }
+        }
+
+        return -1;
     }
 
-    int64_t part2()
+    std::pair<int32_t, int32_t> solve()
     {
-        return 0;
+        v2 start(0, 0);
+        v2 current(0, 0);
+        v2 exit(0, 0);
+        
+        bool foundStart = false;
+
+        for (auto line : inputVector)
+        {
+            for (auto ch : line)
+            {
+                if (!foundStart && ch == '.')
+                {
+                    start = current;
+                    foundStart = true;
+                }
+
+                if (ch == '.')
+                    exit = current;
+                
+                hike[current] = ch;
+                current.x++;
+            }
+
+            current.y++;
+            current.x = 0;
+        }
+
+        std::set<v2> visited{ start };
+
+        return std::make_pair(getSteps(start, exit, 0, visited, true), getSteps(start, exit, 0, visited, false));
     }
 
 public:
@@ -32,8 +128,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result = solve();
+        auto result_1 = result.first;
+        auto result_2 = result.second;
 
         int64_t time = myTime.usPassed();
 
