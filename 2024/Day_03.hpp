@@ -11,14 +11,15 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    int64_t part(bool do_skip)
+    std::pair<int64_t, int64_t> part()
     {
         const std::regex r("mul\\((\\d{1,3},\\d{1,3})\\)");
         std::smatch sm;
 
         bool enabled = true;
 
-        int64_t result = 0;
+        int64_t result_1 = 0;
+        int64_t result_2 = 0;
 
         for (auto line : inputVector)
         {
@@ -40,14 +41,15 @@ private:
                 if (pos_enable > pos_disable)
                     enabled = true;
 
-                if (enabled || do_skip)
-                    result += front * back;
+                result_1 += front * back;
+                if (enabled)
+                    result_2 += front * back;
 
                 line = sm.suffix().str();
             }
         }
 
-        return result;
+        return std::make_pair(result_1, result_2);
     }
 
 public:
@@ -61,8 +63,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part(true);
-        auto result_2 = part(false);
+        auto results = part();
+        auto result_1 = results.first;
+        auto result_2 = results.second;
 
         int64_t time = myTime.usPassed();
 
