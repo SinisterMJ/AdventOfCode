@@ -3,6 +3,7 @@
 
 #include "../includes/aoc.h"
 #include <algorithm>
+#include <regex>
 
 class Day03 {
 private:
@@ -10,14 +11,43 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    int64_t part1()
+    int64_t part(bool do_skip)
     {
-        return 0;
-    }
+        const std::regex r("mul\\(([0-9]+,[0-9]+)\\)");
+        std::smatch sm;
 
-    int64_t part2()
-    {
-        return 0;
+        bool enabled = true;
+
+        int64_t result = 0;
+
+        for (auto line : inputVector)
+        {
+            while (std::regex_search(line, sm, r))
+            {
+                auto mul_str = sm[1].str();
+                auto pos = mul_str.find(',');
+                auto front = std::stoi(mul_str.substr(0, pos));
+                auto back = std::stoi(mul_str.substr(pos + 1));
+
+                auto prefix_str = sm.prefix().str();
+
+                auto pos_enable = static_cast<int64_t>(prefix_str.rfind("do()"));
+                auto pos_disable = static_cast<int64_t>(prefix_str.rfind("don't()"));
+
+                if (pos_disable > pos_enable)
+                    enabled = false;
+
+                if (pos_enable > pos_disable)
+                    enabled = true;
+
+                if (enabled || do_skip)
+                    result += front * back;
+
+                line = sm.suffix().str();
+            }
+        }
+
+        return result;
     }
 
 public:
@@ -31,8 +61,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result_1 = part(true);
+        auto result_2 = part(false);
 
         int64_t time = myTime.usPassed();
 
