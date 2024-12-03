@@ -13,7 +13,7 @@ private:
 
     int64_t part(bool do_skip)
     {
-        const std::regex r("mul\\(([0-9]+,[0-9]+)\\)");
+        const std::regex r("mul\\((\\d{1,3},\\d{1,3})\\)");
         std::smatch sm;
 
         bool enabled = true;
