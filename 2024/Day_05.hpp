@@ -10,14 +10,94 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
+    std::map<int32_t, std::vector<int32_t>> rules;
+    std::vector<std::vector<int32_t>> prints;
+
     int64_t part1()
     {
-        return 0;
+        for (auto line : inputVector)
+        {
+            if (line.find("|") != std::string::npos)
+            {
+                auto nums = util::splitInt(line, '|');
+
+                if (rules.find(nums[0]) == rules.end())
+                    rules[nums[0]] = std::vector<int32_t>();
+
+                rules[nums[0]].push_back(nums[1]);
+            }
+
+            if (line.find(",") != std::string::npos)
+            {
+                auto nums = util::splitInt(line, ',');
+                std::vector<int32_t> local;
+                for (auto num : nums)
+                    local.push_back(num);
+
+                prints.push_back(nums);
+            }
+        }
+
+        int64_t result = 0;
+
+        for (auto print : prints)
+        {
+            bool good = true;
+            for (int i = 0; i < print.size(); ++i)
+            {
+                for (int j = i + 1; j < print.size(); ++j)
+                {
+                    if (std::find(rules[print[j]].begin(), rules[print[j]].end(), print[i]) != rules[print[j]].end())
+                        good = false;
+                }
+            }
+
+            if (good)
+                result += print[print.size() / 2];
+        }
+
+        return result;
     }
 
     int64_t part2()
     {
-        return 0;
+        int64_t result = 0;
+
+        for (auto print : prints)
+        {
+            bool good = true;
+            for (int i = 0; i < print.size(); ++i)
+            {
+                for (int j = i + 1; j < print.size(); ++j)
+                {
+                    if (std::find(rules[print[j]].begin(), rules[print[j]].end(), print[i]) != rules[print[j]].end())
+                        good = false;
+                }
+            }
+
+            if (good)
+                continue;
+
+            while (!good)
+            {
+                good = true;
+                for (int i = 0; i < print.size(); ++i)
+                {
+                    for (int j = i + 1; j < print.size(); ++j)
+                    {
+                        if (std::find(rules[print[j]].begin(), rules[print[j]].end(), print[i]) != rules[print[j]].end())
+                        {
+                            good = false;
+                            std::swap(print[i], print[j]);
+                        }
+                    }
+                }
+            }
+
+            result += print[print.size() / 2];
+        }
+
+        return result;
     }
 
 public:
