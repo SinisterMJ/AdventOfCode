@@ -13,7 +13,7 @@ private:
     std::map<int32_t, std::vector<int32_t>> rules;
     std::vector<std::vector<int32_t>> prints;
 
-    int64_t part1()
+    std::pair<int64_t, int64_t> parts()
     {
         for (auto line : inputVector)
         {
@@ -38,7 +38,8 @@ private:
             }
         }
 
-        int64_t result = 0;
+        int64_t result_1 = 0;
+        int64_t result_2 = 0;
 
         for (auto print : prints)
         {
@@ -53,31 +54,8 @@ private:
             }
 
             if (good)
-                result += print[print.size() / 2];
-        }
-
-        return result;
-    }
-
-    int64_t part2()
-    {
-        int64_t result = 0;
-
-        for (auto print : prints)
-        {
-            bool good = true;
-            for (int i = 0; i < print.size(); ++i)
-            {
-                for (int j = i + 1; j < print.size(); ++j)
-                {
-                    if (std::find(rules[print[j]].begin(), rules[print[j]].end(), print[i]) != rules[print[j]].end())
-                        good = false;
-                }
-            }
-
-            if (good)
-                continue;
-
+                result_1 += print[print.size() / 2];
+            
             while (!good)
             {
                 good = true;
@@ -92,12 +70,13 @@ private:
                         }
                     }
                 }
-            }
 
-            result += print[print.size() / 2];
+                if (good)
+                    result_2 += print[print.size() / 2];
+            }            
         }
 
-        return result;
+        return std::make_pair(result_1, result_2);
     }
 
 public:
@@ -111,8 +90,9 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result = parts();
+        auto result_1 = result.first;
+        auto result_2 = result.second;
 
         int64_t time = myTime.usPassed();
 
