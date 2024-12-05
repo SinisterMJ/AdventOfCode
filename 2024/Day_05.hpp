@@ -10,7 +10,7 @@ private:
     std::vector<std::string> inputVector;
     std::string inputString;
 
-    std::map<int32_t, std::vector<int32_t>> rules;
+    std::map<int32_t, std::set<int32_t>> rules;
     std::vector<std::vector<int32_t>> prints;
 
     std::pair<int64_t, int64_t> parts()
@@ -20,11 +20,7 @@ private:
             if (line.find("|") != std::string::npos)
             {
                 auto nums = util::splitInt(line, '|');
-
-                if (rules.find(nums[0]) == rules.end())
-                    rules[nums[0]] = std::vector<int32_t>();
-
-                rules[nums[0]].push_back(nums[1]);
+                rules[nums[0]].insert(nums[1]);
             }
 
             if (line.find(",") != std::string::npos)
@@ -44,14 +40,10 @@ private:
         for (auto print : prints)
         {
             bool good = true;
-            for (int i = 0; i < print.size(); ++i)
-            {
-                for (int j = i + 1; j < print.size(); ++j)
-                {
-                    if (std::find(rules[print[j]].begin(), rules[print[j]].end(), print[i]) != rules[print[j]].end())
+            for (int i = 0; i < print.size() && good; ++i)
+                for (int j = i + 1; j < print.size() && good; ++j)
+                    if (rules[print[j]].contains(print[i]))
                         good = false;
-                }
-            }
 
             if (good)
                 result_1 += print[print.size() / 2];
@@ -63,7 +55,7 @@ private:
                 {
                     for (int j = i + 1; j < print.size(); ++j)
                     {
-                        if (std::find(rules[print[j]].begin(), rules[print[j]].end(), print[i]) != rules[print[j]].end())
+                        if (rules[print[j]].contains(print[i]))
                         {
                             good = false;
                             std::swap(print[i], print[j]);
