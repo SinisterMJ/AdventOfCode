@@ -12,6 +12,7 @@ private:
     std::string inputString;
     Map2DBase<uint8_t> castle;
     std::set<std::pair<v2, v2>> path;
+    v2 start;
 
     int64_t part1()
     {
@@ -20,11 +21,13 @@ private:
             for (int x = 0; x < inputVector[y].size(); ++x)
             {
                 castle.write(v2(x, y), inputVector[y][x]);
+                if (inputVector[y][x] == '^')
+                    start = v2(x, y);
             }
         }
 
         v2 dir(0, -1);
-        v2 pos = castle.find('^');
+        v2 pos = start;
 
         while (true)
         {
@@ -52,13 +55,6 @@ private:
         std::set<v2> seen_blocks;
         for (const auto& way : path)
         {
-            for (int y = 0; y < inputVector.size(); ++y)
-            {
-                for (int x = 0; x < inputVector[y].size(); ++x)
-                {
-                    castle.write(v2(x, y), inputVector[y][x]);
-                }
-            }
 
             v2 position = way.first + way.second;
 
@@ -72,7 +68,7 @@ private:
             castle.write(position, '#');
 
             v2 dir(0, -1);
-            v2 pos = castle.find('^');
+            v2 pos = start;
             std::set<std::pair<v2, v2>> seen;
 
             while (true)
@@ -95,6 +91,8 @@ private:
 
                 pos = new_pos;
             }
+
+            castle.write(position, '.');
         }
 
         return total;
