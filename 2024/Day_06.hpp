@@ -62,6 +62,9 @@ private:
             if (seen_blocks.contains(position))
                 continue;
 
+            if (position == start)
+                continue;
+
             seen_blocks.insert(position);
             inputVector[position.y][position.x] = '#';
 
