@@ -3,14 +3,12 @@
 
 #include "../includes/aoc.h"
 #include <algorithm>
-#include "../includes/Map2DBase.h"
 
 class Day06 {
 private:
 
     std::vector<std::string> inputVector;
     std::string inputString;
-    Map2DBase<uint8_t> castle;
     std::set<std::pair<v2, v2>> path;
     v2 start;
 
@@ -20,7 +18,6 @@ private:
         {
             for (int x = 0; x < inputVector[y].size(); ++x)
             {
-                castle.write(v2(x, y), inputVector[y][x]);
                 if (inputVector[y][x] == '^')
                     start = v2(x, y);
             }
@@ -34,9 +31,10 @@ private:
             positions.insert(pos);
             path.insert(std::make_pair(pos, dir));
             v2 new_pos = pos + dir;
-            if (!castle.validIndex(new_pos))
+            if (!in_range<int64_t>(new_pos.y, 0, inputVector.size() - 1) || !in_range<int64_t>(new_pos.x, 0, inputVector[new_pos.y].size() - 1))
                 break;
-            if (castle.read(new_pos) == '#')
+
+            if (inputVector[new_pos.y][new_pos.x] == '#')
             {
                 dir = v2(-dir.y, dir.x);
                 continue;
@@ -58,14 +56,14 @@ private:
 
             v2 position = way.first + way.second;
 
-            if (castle.read(v2(position)) == '#')
+            if (inputVector[position.y][position.x] == '#')
                 continue;
 
             if (seen_blocks.contains(position))
                 continue;
 
             seen_blocks.insert(position);
-            castle.write(position, '#');
+            inputVector[position.y][position.x] = '#';
 
             v2 dir(0, -1);
             v2 pos = start;
@@ -80,9 +78,10 @@ private:
                 }
                 seen.insert(std::make_pair(pos, dir));
                 v2 new_pos = pos + dir;
-                if (!castle.validIndex(new_pos))
+                if (!in_range<int64_t>(new_pos.y, 0, inputVector.size() - 1) || !in_range<int64_t>(new_pos.x, 0, inputVector[new_pos.y].size() - 1))
                     break;
-                if (castle.read(new_pos) == '#')
+
+                if (inputVector[new_pos.y][new_pos.x] == '#')
                 {
                     dir = v2(-dir.y, dir.x);
                     continue;
@@ -91,7 +90,7 @@ private:
                 pos = new_pos;
             }
 
-            castle.write(position, '.');
+            inputVector[position.y][position.x] = '.';
         }
 
         return total;
