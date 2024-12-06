@@ -28,10 +28,10 @@ private:
 
         v2 dir(0, -1);
         v2 pos = start;
-
+        std::set<v2> positions;
         while (true)
         {
-            castle.write(pos, 'X');
+            positions.insert(pos);
             path.insert(std::make_pair(pos, dir));
             v2 new_pos = pos + dir;
             if (!castle.validIndex(new_pos))
@@ -45,7 +45,7 @@ private:
             pos = new_pos;
         }
         
-        return castle.findAll('X').size();
+        return positions.size();
     }
 
     int64_t part2()
@@ -79,7 +79,6 @@ private:
                     break;
                 }
                 seen.insert(std::make_pair(pos, dir));
-                castle.write(pos, 'X');
                 v2 new_pos = pos + dir;
                 if (!castle.validIndex(new_pos))
                     break;
