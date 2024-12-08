@@ -80,6 +80,34 @@ private:
         return digits;
     }
 
+    int64_t solve_2(int64_t left, std::vector<int64_t>& right, int index, int64_t total)
+    {
+        if (index == right.size())
+            return left == total;
+
+        int64_t result = 0;
+
+        {
+            int64_t temp_total = total + right[index];
+            result += solve_2(left, right, index + 1, temp_total);
+        }
+
+        {
+            int64_t temp_total = total * right[index];
+            result += solve_2(left, right, index + 1, temp_total);
+        }
+
+        {
+            int64_t temp_total = total;
+            for (int i = 0; i < numDigits(right[index]); ++i)
+                temp_total *= 10;
+
+            temp_total += right[index];
+            result += solve_2(left, right, index + 1, temp_total);
+        }
+
+        return result;
+    }
 
     int64_t part2()
     {
@@ -96,35 +124,8 @@ private:
 
         for (auto [left, right] : equations)
         {
-            for (int i = 0; i < std::pow(3, right.size() - 1); ++i)
-            {
-                std::string versions = intToTernary(i);
-
-                while (versions.size() < (right.size() - 1))
-                    versions = "0" + versions;
-
-                int64_t total = right[0];
-                for (int j = 1; j < right.size(); ++j)
-                {
-                    if (versions[j - 1] == '0')
-                        total += right[j];
-                    if (versions[j - 1] == '1')
-                        total *= right[j];
-                    if (versions[j - 1] == '2')
-                    {
-                        for (int i = 0; i < numDigits(right[j]); ++i)
-                            total *= 10;
-
-                        total += right[j];
-                    }
-                }
-
-                if (total == left)
-                {
-                    sum += total;
-                    break;
-                }
-            }
+            if (solve_2(left, right, 0, 0))
+                sum += left;
         }
 
         return sum;
