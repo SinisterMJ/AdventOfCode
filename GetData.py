@@ -22,7 +22,7 @@ for y in range(start_year, year + 1):
         Path(filePath).mkdir(parents=True, exist_ok=True)
 
         if os.path.isfile(fileName):
-            print ("File exist. No request should be done.")
+            continue
             
         cookies = dict(session='53616c7465645f5fb39dce8967cd5f0d658dc39f2f1e1c303b16864af0d7ccc501f191948b416e25e68cc0dad5f9606a273ad47b8c3228b968e3389cb8bf4208')
         r = requests.get("https://adventofcode.com/" + str(y) + "/day/" + str(d) + "/input", cookies=cookies)
