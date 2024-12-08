@@ -66,6 +66,21 @@ private:
         return result;
     }
 
+    // generic solution
+    template <class T>
+    int numDigits(T number)
+    {
+        int digits = 0;
+        if (number == 0)
+            return 1;
+        while (number) {
+            number /= 10;
+            digits++;
+        }
+        return digits;
+    }
+
+
     int64_t part2()
     {
         std::map<int64_t, std::vector<int64_t>> equations;
@@ -97,10 +112,10 @@ private:
                         total *= right[j];
                     if (versions[j - 1] == '2')
                     {
-                        std::string l = std::to_string(total);
-                        std::string r = std::to_string(right[j]);
-                        auto lr = l + r;
-                        total = std::stoll(lr);
+                        for (int i = 0; i < numDigits(right[j]); ++i)
+                            total *= 10;
+
+                        total += right[j];
                     }
                 }
 
