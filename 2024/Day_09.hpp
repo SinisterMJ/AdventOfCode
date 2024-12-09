@@ -74,10 +74,12 @@ private:
 
         int last = static_cast<int>(memory.size() - 1);
         int first = 0;
+        std::set<int32_t> handled;
+        handled.insert(-1);
 
         for (;;)
         {
-            while (memory[last] == -1)
+            while (last >= 0 && handled.contains(memory[last]))
                 last--;
 
             if (last < 0)
@@ -117,6 +119,8 @@ private:
                 if (first >= last)
                     break;
             }
+
+            handled.insert(value);
             
             if (last <= 0)
                 break;
