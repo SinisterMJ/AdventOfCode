@@ -9,15 +9,51 @@ private:
 
     std::vector<std::string> inputVector;
     std::string inputString;
-
-    int64_t part1()
+    
+    int64_t getPower(int times)
     {
-        return 0;
+        int64_t result = 1;
+        for (int i = 0; i < times; ++i)
+            result *= 10;
+
+        return result;
     }
 
-    int64_t part2()
+    int64_t solve(int epochs, std::vector<int64_t> start)
     {
-        return 0;
+        std::map<int64_t, int64_t> stones;
+
+        for (auto el : start)
+            stones[el] = 1;
+
+        for (int i = 0; i < epochs; ++i)
+        {
+            std::map<int64_t, int64_t> outcome;
+            for (auto [stone, count] : stones)
+            {
+                auto dig = numDigits(stone);
+                if (stone == 0)
+                    outcome[1] += count;
+                else if (dig % 2 == 0)
+                {
+                    int64_t front = stone / getPower(dig / 2);
+                    int64_t back = stone % getPower(dig / 2);
+                    outcome[front] += count;
+                    outcome[back] += count;
+                    continue;
+                }
+                else
+                    outcome[2024 * stone] += count;
+            }
+            std::swap(stones, outcome);
+        }
+
+        int64_t result = 0;
+
+        for (auto [stone, count] : stones)
+            result += count;
+
+        return result;
     }
 
 public:
@@ -31,8 +67,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result_1 = solve(25, util::splitInt64(inputVector[0], ' '));
+        auto result_2 = solve(75, util::splitInt64(inputVector[0], ' '));
 
         int64_t time = myTime.usPassed();
 

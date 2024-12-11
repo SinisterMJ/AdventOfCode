@@ -21,6 +21,19 @@ inline void hash_combine(std::size_t & seed, const T & v)
 }
 
 template <class T>
+int numDigits(T number)
+{
+    int digits = 0;
+    if (number == 0)
+        return 1;
+    while (number) {
+        number /= 10;
+        digits++;
+    }
+    return digits;
+}
+
+template <class T>
 inline T modulo(T a, T b)
 {
     return a >= 0 ? a % b : (b - std::abs(a % b)) % b;
