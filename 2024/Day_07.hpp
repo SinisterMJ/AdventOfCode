@@ -67,18 +67,7 @@ private:
     }
 
     // generic solution
-    template <class T>
-    int numDigits(T number)
-    {
-        int digits = 0;
-        if (number == 0)
-            return 1;
-        while (number) {
-            number /= 10;
-            digits++;
-        }
-        return digits;
-    }
+    
 
     int64_t solve_2(int64_t left, std::vector<int64_t>& right, int index, int64_t total)
     {
