@@ -3,6 +3,7 @@
 
 #include "../includes/aoc.h"
 #include <algorithm>
+#include <unordered_map>
 
 class Day01 {
 private:
@@ -36,11 +37,13 @@ private:
     int64_t part2()
     {
         int64_t result = 0;
+        std::unordered_map<int32_t, int32_t> lookup;
 
-        for (int i = 0; i < list_left.size(); ++i)
-            for (int j = 0; j < list_right.size(); ++j)
-                if (list_left[i] == list_right[j])
-                    result += list_left[i];
+        for (auto i : list_right)
+            lookup[i]++;
+
+        for (auto i: list_left)
+            result += lookup[i] * i;
                 
         return result;
     }
