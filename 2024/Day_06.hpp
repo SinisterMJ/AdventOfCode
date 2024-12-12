@@ -53,7 +53,6 @@ private:
         std::set<v2> seen_blocks;
         for (const auto& way : path)
         {
-
             v2 position = way.first + way.second;
 
             if (inputVector[position.y][position.x] == '#')
