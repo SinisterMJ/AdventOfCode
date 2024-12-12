@@ -13,6 +13,7 @@ private:
 
     std::vector<int32_t> list_left;
     std::vector<int32_t> list_right;
+    std::unordered_map<int32_t, int32_t> lookup;
 
     int64_t part1()
     {
@@ -22,6 +23,7 @@ private:
             auto items = util::splitInt(item, ' ');
             list_left.push_back(items[0]);
             list_right.push_back(items[1]);
+            lookup[items[1]]++;
         }
 
         std::sort(list_left.begin(), list_left.end());
@@ -37,10 +39,6 @@ private:
     int64_t part2()
     {
         int64_t result = 0;
-        std::unordered_map<int32_t, int32_t> lookup;
-
-        for (auto i : list_right)
-            lookup[i]++;
 
         for (auto i: list_left)
             result += lookup[i] * i;
