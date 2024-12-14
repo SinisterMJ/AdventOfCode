@@ -44,3 +44,5 @@ x64/
 *Debug/
 *Release/
 *inputs/
+GetData.py
+Leaderboard.py
