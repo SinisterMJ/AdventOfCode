@@ -21,7 +21,7 @@ private:
                 
         
         neighbours = MapHelper::getNeighboursVec(false);
-        int total = 0;
+        int64_t total = 0;
         for (auto start : heights.findAll(0))
         {
             std::set<v2> n;
