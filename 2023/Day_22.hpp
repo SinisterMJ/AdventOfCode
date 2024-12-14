@@ -118,7 +118,7 @@ private:
 
     int64_t part2()
     {
-        int32_t falling = 0;
+        int64_t falling = 0;
 
         std::map<int32_t, std::set<int32_t>> dependencies;
         std::map<int32_t, std::set<int32_t>> r_dependencies;

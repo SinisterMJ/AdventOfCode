@@ -127,9 +127,9 @@ private:
         return true;
     }
 
-    std::vector<std::pair<int32_t, v2>> findValidMoves(std::map<v2, int8_t>& room, v2 start)
+    std::vector<std::pair<int64_t, v2>> findValidMoves(std::map<v2, int8_t>& room, v2 start)
     {
-        std::vector<std::pair<int32_t, v2>> result;
+        std::vector<std::pair<int64_t, v2>> result;
         auto val = room[start];
         int32_t targetRow = 1;
         if (val == 'A')
@@ -197,7 +197,7 @@ private:
         return result;
     }
 
-    int32_t runSteps(std::map<v2, int8_t>& rooms)
+    int64_t runSteps(std::map<v2, int8_t>& rooms)
     {
         std::set<std::map<v2, int8_t>> states;
         std::set<std::pair<int32_t, std::map<v2, int8_t>>> candidates;
@@ -219,7 +219,7 @@ private:
         {
             auto cand = *candidates.begin();
             room = cand.second;
-            int32_t cost = cand.first;
+            int64_t cost = cand.first;
             candidates.erase(candidates.begin());
 
             if (states.find(room) == states.end())

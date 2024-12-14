@@ -11,10 +11,10 @@ private:
     std::string inputString;
 
     struct rule {
-        int8_t criteria;
-        int8_t comparator;
-        int32_t value;
-        std::string accepted;
+        int8_t criteria{ 0 };
+        int8_t comparator{ 0 };
+        int32_t value{ 0 };
+        std::string accepted{ "" };
     };
 
     struct ruleSet {
