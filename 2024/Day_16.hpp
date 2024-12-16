@@ -11,9 +11,11 @@ private:
 
     std::vector<std::string> inputVector;
     std::string inputString;
-    Map2DBase<int8_t> map;
+    Map2DBase<int8_t>* map = new Map2DBase<int8_t>();
     v2 start;
     v2 end;
+
+    std::set<v2> visited_ideals;
 
     int32_t part1()
     {
@@ -21,17 +23,17 @@ private:
         {
             for (int x = 0; x < inputVector[y].size(); ++x)
             {
-                map.write(x, y, inputVector[y][x]);
+                map->write(x, y, inputVector[y][x]);
 
                 if (inputVector[y][x] == 'E')
                 {
                     end = v2(x, y);
-                    map.write(x, y, '.');
+                    map->write(x, y, '.');
                 }
                 if (inputVector[y][x] == 'S')
                 {
                     start = v2(x, y);
-                    map.write(x, y, '.');
+                    map->write(x, y, '.');
                 }
             }
         }
@@ -59,18 +61,67 @@ private:
             cost_map[std::make_pair(position, direction)] = cost;
 
             auto left = v2(-direction.y, direction.x);
-            if (map.read(position + left) == '.')
+            if (map->read(position + left) == '.')
                 spots.push(std::make_tuple(cost + 1000, position, left));
 
             auto right = v2(direction.y, -direction.x);
-            if (map.read(position + right) == '.')
+            if (map->read(position + right) == '.')
                 spots.push(std::make_tuple(cost + 1000, position, right));
 
-            if (map.read(position + direction) == '.')
+            if (map->read(position + direction) == '.')
                 spots.push(std::make_tuple(cost + 1, position + direction, direction));
 
         }
         return 0;
+    }
+
+    bool solve_recursive(v2 position, v2 direction, int32_t cost, int32_t max_cost, std::set<std::pair<v2, v2>>& seen)
+    {
+        if (seen.contains(std::make_pair(position, direction)))
+            return false;
+
+        if (cost > max_cost)
+            return false;
+
+        if (position == end && cost == max_cost)
+        {
+            visited_ideals.insert(position);
+            return true;
+        }
+
+        bool hit = false;
+        seen.insert(std::make_pair(position, direction));
+
+        if (position == v2(2, 11))
+            int test = 0;
+
+        if (map->read(position + direction) == '.')
+            hit |= solve_recursive(position + direction, direction, cost + 1, max_cost, seen);
+
+        auto right = v2(-direction.y, direction.x);
+        auto left = v2(direction.y, -direction.x);
+
+        if (map->read(position + left) == '.')
+            hit |= solve_recursive(position, left, cost + 1000, max_cost, seen);
+
+        if (map->read(position + right) == '.')
+            hit |= solve_recursive(position, right, cost + 1000, max_cost, seen);
+
+        if (hit)
+        {
+            visited_ideals.insert(position);
+            return true;
+        }
+
+        seen.erase(std::make_pair(position, direction));
+        return false;
+    }
+
+    int32_t part2_wrong(int32_t max_cost)
+    {
+        std::set<std::pair<v2, v2>> seen_start;
+        solve_recursive(start, v2(1, 0), 0, max_cost, seen_start);
+        return visited_ideals.size();
     }
 
     int32_t part2(int32_t max_cost)
@@ -105,14 +156,14 @@ private:
             cost_map[std::make_pair(position, direction)] = cost;
 
             auto left = v2(-direction.y, direction.x);
-            if (map.read(position + left) == '.')
+            if (map->read(position + left) == '.')
                 paths.push(std::make_tuple(cost + 1000, position, left, visited));
 
             auto right = v2(direction.y, -direction.x);
-            if (map.read(position + right) == '.')
+            if (map->read(position + right) == '.')
                 paths.push(std::make_tuple(cost + 1000, position, right, visited));
 
-            if (map.read(position + direction) == '.')
+            if (map->read(position + direction) == '.')
             {
                 std::set<v2> copyVisited = visited;
                 copyVisited.insert(position + direction);
