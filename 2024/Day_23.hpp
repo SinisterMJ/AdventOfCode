@@ -74,9 +74,9 @@ private:
     {
         bool found_in_all = true;
 
-        for (int i = 0; i < candidates.size(); ++i)
+        for (int i = 0; i < candidates.size() && found_in_all; ++i)
         {
-            for (int j = i + 1; j < candidates.size(); ++j)
+            for (int j = i + 1; j < candidates.size() && found_in_all; ++j)
             {
                 found_in_all &= (
                     std::find(connected_systems[candidates[i]].begin(), connected_systems[candidates[i]].end(), candidates[j])
@@ -101,9 +101,7 @@ private:
         {
             working_nodes.clear();
             for (auto [depth, index] : depth_index)
-            {
                 working_nodes.push_back(nodes[index]);
-            }
 
             if (in_clique(working_nodes))
             {
