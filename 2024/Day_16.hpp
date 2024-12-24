@@ -92,9 +92,6 @@ private:
         bool hit = false;
         seen.insert(std::make_pair(position, direction));
 
-        if (position == v2(2, 11))
-            int test = 0;
-
         if (map->read(position + direction) == '.')
             hit |= solve_recursive(position + direction, direction, cost + 1, max_cost, seen);
 
@@ -121,7 +118,7 @@ private:
     {
         std::set<std::pair<v2, v2>> seen_start;
         solve_recursive(start, v2(1, 0), 0, max_cost, seen_start);
-        return visited_ideals.size();
+        return static_cast<int32_t>(visited_ideals.size());
     }
 
     int32_t part2(int32_t max_cost)
@@ -171,7 +168,7 @@ private:
             }
         }
 
-        return passed_points.size();
+        return static_cast<int32_t>(passed_points.size());
     }
 
 public:

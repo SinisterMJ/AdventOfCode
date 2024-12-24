@@ -140,7 +140,7 @@ private:
 
     std::string part2()
     {
-        int max_i = inputVector.size();
+        int max_i = static_cast<int32_t>(inputVector.size());
         int min_i = 1024;
 
         int test = (max_i + min_i) / 2;

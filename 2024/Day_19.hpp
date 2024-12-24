@@ -21,15 +21,15 @@ private:
         int result = 0;
         for (auto target : targets)
         {
-            std::set<int32_t> seen_offsets;
-            std::queue<int32_t> offsets;
+            std::set<int64_t> seen_offsets;
+            std::queue<int64_t> offsets;
             offsets.push(0);
             seen_offsets.insert(0);
 
             while (!offsets.empty())
             {
-                int32_t off = offsets.front(); offsets.pop();
-                if (off == target.size())
+                int64_t off = offsets.front(); offsets.pop();
+                if (off == static_cast<int64_t>(target.size()))
                 {
                     result += 1;
                     break;
@@ -61,10 +61,10 @@ private:
         int64_t result = 0;
         for (auto target : targets)
         {
-            std::map<int32_t, int64_t> seen_offsets;
+            std::map<int64_t, int64_t> seen_offsets;
             seen_offsets[0] = 1;
 
-            for (int index = 1; index <= target.size(); ++index)
+            for (int64_t index = 1; index <= static_cast<int64_t>(target.size()); ++index)
             {                
                 for (auto pattern : patterns)
                 {

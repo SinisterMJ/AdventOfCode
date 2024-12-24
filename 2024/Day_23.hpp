@@ -43,8 +43,6 @@ private:
                 connected_systems[right].push_back(left);
         }
 
-        int64_t result = 0;
-
         std::set<std::vector<std::string>> circuits;
 
         for (auto& [left, list] : connected_systems)

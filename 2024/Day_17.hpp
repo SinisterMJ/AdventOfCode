@@ -18,10 +18,10 @@ private:
 
         auto commands = util::splitInt64(inputVector[4].substr(std::string("Program: ").size()), ',');
 
-        int command_index = 0;
+        int64_t command_index = 0;
         std::vector<int32_t> outputs;
 
-        while (command_index < commands.size())
+        while (command_index < static_cast<int64_t>(commands.size()))
         {
             int64_t combo = commands[command_index + 1];
             if (combo == 4)
@@ -32,7 +32,7 @@ private:
                 combo = reg_c;
 
             if (commands[command_index] == 0)
-                reg_a = reg_a / (0x1 << combo);
+                reg_a = reg_a / (static_cast<int64_t>(0x1) << combo);
 
             if (commands[command_index] == 1)
                 reg_b = reg_b ^ commands[command_index + 1];
@@ -56,10 +56,10 @@ private:
                 outputs.push_back(combo & 0x7);
 
             if (commands[command_index] == 6)
-                reg_b = reg_a / (0x1 << combo);
+                reg_b = reg_a / (static_cast<int64_t>(0x1) << combo);
 
             if (commands[command_index] == 7)
-                reg_c = reg_a / (0x1 << combo);
+                reg_c = reg_a / (static_cast<int64_t>(0x1) << combo);
 
             command_index += 2;
         }
@@ -95,10 +95,10 @@ private:
                     int64_t reg_b = 0;
                     int64_t reg_c = 0;
 
-                    int command_index = 0;
+                    int64_t command_index = 0;
                     std::vector<int32_t> outputs;
 
-                    while (command_index < commands.size())
+                    while (command_index < static_cast<int64_t>(commands.size()))
                     {
                         int64_t combo = commands[command_index + 1];
                         if (combo == 4)
@@ -109,7 +109,7 @@ private:
                             combo = reg_c;
 
                         if (commands[command_index] == 0)
-                            reg_a = reg_a / (0x1 << combo);
+                            reg_a = reg_a / (static_cast<int64_t>(0x1) << combo);
 
                         if (commands[command_index] == 1)
                             reg_b = reg_b ^ commands[command_index + 1];
@@ -133,10 +133,10 @@ private:
                             outputs.push_back(combo & 0x7);
 
                         if (commands[command_index] == 6)
-                            reg_b = reg_a / (0x1 << combo);
+                            reg_b = reg_a / (static_cast<int64_t>(0x1) << combo);
 
                         if (commands[command_index] == 7)
-                            reg_c = reg_a / (0x1 << combo);
+                            reg_c = reg_a / (static_cast<int64_t>(0x1) << combo);
 
                         command_index += 2;
                     }
