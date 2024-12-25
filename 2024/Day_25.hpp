@@ -12,7 +12,61 @@ private:
 
     int64_t part1()
     {
-        return 0;
+        std::vector<std::vector<int8_t>> keys;
+        std::vector<std::vector<int8_t>> locks;
+
+        for (int i = 0; i < inputVector.size(); i += 8)
+        {
+            // Key
+            if (inputVector[i + 6] == "#####")
+            {
+                std::vector<int8_t> key_temp;                
+                for (int j = 0; j < 5; ++j)
+                {
+                    int8_t depth = 0;
+
+                    depth += (inputVector[i + 1][j] == '#');
+                    depth += (inputVector[i + 2][j] == '#');
+                    depth += (inputVector[i + 3][j] == '#');
+                    depth += (inputVector[i + 4][j] == '#');
+                    depth += (inputVector[i + 5][j] == '#');
+                    key_temp.push_back(depth);
+                }
+                keys.push_back(key_temp);
+            }
+            else // lock
+            {
+                std::vector<int8_t> lock_temp;
+                for (int j = 0; j < 5; ++j)
+                {
+                    int8_t depth = 0;
+
+                    depth += (inputVector[i + 1][j] == '.');
+                    depth += (inputVector[i + 2][j] == '.');
+                    depth += (inputVector[i + 3][j] == '.');
+                    depth += (inputVector[i + 4][j] == '.');
+                    depth += (inputVector[i + 5][j] == '.');
+                    lock_temp.push_back(5 - depth);
+                }
+                locks.push_back(lock_temp);
+            }
+        }
+
+        int64_t result = 0;
+        for (auto& key : keys)
+        {
+            for (auto& lock : locks)
+            {
+                if ((key[0] + lock[0] < 6) &&
+                    (key[1] + lock[1] < 6) &&
+                    (key[2] + lock[2] < 6) &&
+                    (key[3] + lock[3] < 6) &&
+                    (key[4] + lock[4] < 6))
+                    result++;
+            }
+        }
+
+        return result;
     }
 
     int64_t part2()
