@@ -126,7 +126,8 @@ private:
 
                 if (index_r[pair.first] == end)
                 {
-                    result.push_back(pair.second);
+                    min_length = pair.second.size();
+                    result.push_back(pair.second + "A");
                     continue;
                 }
 
@@ -150,6 +151,8 @@ private:
 
         for (auto line : inputVector)
         {
+            line = "029A";
+            int32_t code = std::stoi(line.substr(0, line.size() - 1));
             Robot numbers;
             Robot_Directions direct;
             int8_t start = 'A';
@@ -161,15 +164,78 @@ private:
 
                 int32_t min_length = std::numeric_limits<int32_t>::max();
 
+                std::vector<std::string> paths_r1;
+
+                for (auto p : path)
+                {
+                    int8_t start_r1 = 'A';
+                    std::vector<std::string> shortest_r1{ "" };
+
+                    for (int32_t i = 0; i < p.size(); ++i)
+                    {
+                        auto subpath_1 = direct.get_paths(start_r1, p[i]);
+                        start_r1 = p[i];
+
+                        std::vector<std::string> concat;
+                        for (auto& outer : shortest_r1)
+                        {
+                            for (auto& inner : subpath_1)
+                            {
+                                concat.push_back(outer + inner);
+                            }
+                        }
+
+                        std::swap(concat, shortest_r1);
+                    }
+
+                    if (shortest_r1[0].size() < min_length)
+                        paths_r1.clear();
+                    if (shortest_r1[0].size() > min_length)
+                        continue;
+
+                    for (auto pa : shortest_r1)
+                        paths_r1.push_back(pa);
+                }
+
+                min_length = std::numeric_limits<int32_t>::max();
+
+                std::vector<std::string> paths_r2;
+
+                for (auto p : paths_r1)
+                {
+                    int8_t start_r2 = 'A';
+                    std::vector<std::string> shortest_r2{ "" };
+
+                    for (int32_t i = 0; i < p.size(); ++i)
+                    {
+                        auto subpath_2 = direct.get_paths(start_r2, p[i]);
+                        start_r2 = p[i];
+
+                        std::vector<std::string> concat;
+                        for (auto& outer : shortest_r2)
+                        {
+                            for (auto& inner : subpath_2)
+                            {
+                                concat.push_back(outer + inner);
+                            }
+                        }
+
+                        std::swap(concat, shortest_r2);
+                    }
+
+                    if (shortest_r2[0].size() < min_length)
+                        paths_r1.clear();
+                    if (shortest_r2[0].size() > min_length)
+                        continue;
+
+                    for (auto pa : shortest_r2)
+                        paths_r2.push_back(pa);
+                }
+
             }
         }
 
-        Robot test;
-        auto result = test.get_paths('A', 0);
-        result = test.get_paths(0, 2);
-        result = test.get_paths(2, 9);
-        result = test.get_paths(9, 'A');
-        return 0;
+        return result;
     }
 
     int64_t part2()
