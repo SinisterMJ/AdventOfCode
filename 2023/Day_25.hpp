@@ -12,7 +12,7 @@ private:
 
     std::map<std::string, std::vector<std::string>> connections;
 
-    int64_t getNumGroup(std::string node, std::map<std::string, std::vector<std::string>> connections_altered)
+    uint64_t getNumGroup(std::string node, std::map<std::string, std::vector<std::string>> connections_altered)
     {
         std::set<std::string> localNodes;
         localNodes.insert(node);
@@ -81,7 +81,7 @@ private:
                                 altered[comp_j].erase(altered[comp_j].begin() + j_i);
                                 altered[comp_k].erase(altered[comp_k].begin() + k_i);
 
-                                int64_t groupSize = getNumGroup(components[0], altered);
+                                uint64_t groupSize = getNumGroup(components[0], altered);
 
                                 if (groupSize != components.size())
                                 {

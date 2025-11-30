@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien\Helper">
+      <UniqueIdentifier>{0285bfb7-cf33-4084-ad30-0138d9a6a128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Days">
+      <UniqueIdentifier>{d8c48065-c801-4733-b97b-7d52ea7baabf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\includes\aoc.h">
+      <Filter>Headerdateien\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\includes\ConsoleColor.h">
+      <Filter>Headerdateien\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_01.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_02.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_03.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_04.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_05.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_06.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_07.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_08.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_09.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_10.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_11.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_12.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_13.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_14.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_15.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_16.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_17.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="..\includes\Map2DBase.h">
+      <Filter>Headerdateien\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_18.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_19.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_20.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_21.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_22.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_23.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_24.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="Day_25.hpp">
+      <Filter>Headerdateien\Days</Filter>
+    </ClInclude>
+    <ClInclude Include="..\includes\AccumulatorVM.h">
+      <Filter>Headerdateien\Helper</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\includes\AccumulatorVM.cpp">
+      <Filter>Headerdateien\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="AdventOfCode_2025.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

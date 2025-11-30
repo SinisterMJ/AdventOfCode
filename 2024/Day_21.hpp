@@ -68,7 +68,7 @@ private:
 
                 if (index_r[pair.first] == end)
                 {
-                    min_length = pair.second.size();
+                    min_length = static_cast<int8_t>(pair.second.size());
                     result.push_back(pair.second + "A");
                     continue;
                 }
@@ -119,7 +119,7 @@ private:
 
             auto neighbours = MapHelper::getNeighboursVec(false);
 
-            int8_t min_length = std::numeric_limits<int8_t>::max();
+            uint64_t min_length = std::numeric_limits<int8_t>::max();
             while (!l.empty())
             {
                 auto pair = l.front(); l.pop();
@@ -152,7 +152,7 @@ private:
         for (auto line : inputVector)
         {
             line = "029A";
-            int32_t code = std::stoi(line.substr(0, line.size() - 1));
+            //int32_t code = std::stoi(line.substr(0, line.size() - 1));
             Robot numbers;
             Robot_Directions direct;
             int8_t start = 'A';
