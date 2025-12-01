@@ -45,11 +45,10 @@ private:
             int count = std::stoi(turn.substr(1));
             start += sign * count;
 
-            if (start >= 100)
-                zeros += start / 100;
-
             if (start <= 0)
                 zeros += -start / 100 + 1 - started_zero;
+            else
+                zeros += start / 100;
 
             start = (start % 100 + 100) % 100;
         }
