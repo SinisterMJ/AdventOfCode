@@ -12,12 +12,38 @@ private:
 
     int64_t part1()
     {
-        return 0;
+        int64_t result = 0;
+        for (const std::string& line : util::split(inputVector[0], ','))
+        {
+            auto ranges = util::splitInt64(line, '-');
+            for (int64_t i = ranges[0]; i <= ranges[1]; ++i)
+            {
+                auto str = std::to_string(i);
+                if (str.size() % 2 == 1)
+                    continue;
+                
+                if (str.substr(0, str.size() / 2) == str.substr(str.size() / 2))
+                    result += i;
+            }
+        }
+        return result;
     }
 
     int64_t part2()
     {
-        return 0;
+        int64_t result = 0;
+        for (const std::string& line : util::split(inputVector[0], ','))
+        {
+            auto ranges = util::splitInt64(line, '-');
+            for (int64_t i = ranges[0]; i <= ranges[1]; ++i)
+            {
+                auto str = std::to_string(i);
+                
+                if ((str + str).find(str, 1) < str.size())
+                    result += i;
+            }
+        }
+        return result;
     }
 
 public:
