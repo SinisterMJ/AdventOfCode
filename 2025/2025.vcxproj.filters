@@ -63,47 +63,8 @@
     <ClInclude Include="Day_12.hpp">
       <Filter>Headerdateien\Days</Filter>
     </ClInclude>
-    <ClInclude Include="Day_13.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_14.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_15.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_16.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_17.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
     <ClInclude Include="..\includes\Map2DBase.h">
       <Filter>Headerdateien\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_18.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_19.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_20.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_21.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_22.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_23.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_24.hpp">
-      <Filter>Headerdateien\Days</Filter>
-    </ClInclude>
-    <ClInclude Include="Day_25.hpp">
-      <Filter>Headerdateien\Days</Filter>
     </ClInclude>
     <ClInclude Include="..\includes\AccumulatorVM.h">
       <Filter>Headerdateien\Helper</Filter>

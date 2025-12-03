@@ -141,19 +141,6 @@
     <ClInclude Include="Day_10.hpp" />
     <ClInclude Include="Day_11.hpp" />
     <ClInclude Include="Day_12.hpp" />
-    <ClInclude Include="Day_13.hpp" />
-    <ClInclude Include="Day_14.hpp" />
-    <ClInclude Include="Day_15.hpp" />
-    <ClInclude Include="Day_16.hpp" />
-    <ClInclude Include="Day_17.hpp" />
-    <ClInclude Include="Day_18.hpp" />
-    <ClInclude Include="Day_19.hpp" />
-    <ClInclude Include="Day_20.hpp" />
-    <ClInclude Include="Day_21.hpp" />
-    <ClInclude Include="Day_22.hpp" />
-    <ClInclude Include="Day_23.hpp" />
-    <ClInclude Include="Day_24.hpp" />
-    <ClInclude Include="Day_25.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\includes\AccumulatorVM.cpp" />
