@@ -12,12 +12,35 @@ private:
 
     int64_t part1()
     {
-        return 0;
+        int sum = 0;
+        for (const std::string& line : inputVector)
+        {
+            auto first = std::max_element(line.begin(), line.end() - 1);
+            auto second = std::max_element(first + 1, line.end());
+            sum += (*first - '0') * 10 + (*second - '0');
+        }
+
+        return sum;
     }
 
     int64_t part2()
     {
-        return 0;
+        int64_t sum = 0;
+        for (const std::string& line : inputVector)
+        {
+            int64_t joltage = 0;
+            auto start = line.begin();
+            for (int i = 0; i < 12; ++i)
+            {
+                auto val = std::max_element(start, line.end() - 11 + i);
+                joltage = joltage * 10 + (*val - '0');
+                start = val + 1;
+            }
+
+            sum += joltage;
+        }
+
+        return sum;
     }
 
 public:
