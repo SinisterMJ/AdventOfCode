@@ -10,19 +10,6 @@
 #include "Day_10.hpp"
 #include "Day_11.hpp"
 #include "Day_12.hpp"
-#include "Day_13.hpp"
-#include "Day_14.hpp"
-#include "Day_15.hpp"
-#include "Day_16.hpp"
-#include "Day_17.hpp"
-#include "Day_18.hpp"
-#include "Day_19.hpp"
-#include "Day_20.hpp"
-#include "Day_21.hpp"
-#include "Day_22.hpp"
-#include "Day_23.hpp"
-#include "Day_24.hpp"
-#include "Day_25.hpp"
 
 #include <numeric>
 #include <iomanip>
@@ -44,19 +31,19 @@ int main()
     {
         Day02 mDay02; runTimes.emplace_back(mDay02.run());
         std::cout << std::endl;
-    }*/
+    }
 
     {
         Day03 mDay03; runTimes.emplace_back(mDay03.run());
         std::cout << std::endl;
-    }
+    }*/
 
-    /*{
+    {
         Day04 mDay04; runTimes.emplace_back(mDay04.run());
         std::cout << std::endl;
     }
 
-    {
+    /*{
         Day05 mDay05; runTimes.emplace_back(mDay05.run());
         std::cout << std::endl;
     }

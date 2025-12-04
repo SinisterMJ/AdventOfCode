@@ -3,21 +3,46 @@
 
 #include "../includes/aoc.h"
 #include <algorithm>
+#include <unordered_map>
 
 class Day04 {
 private:
 
     std::vector<std::string> inputVector;
-    std::string inputString;
 
-    int64_t part1()
+    int64_t run(bool part_2)
     {
-        return 0;
-    }
+        std::unordered_map<v2, bool> grid;
+        for (int y = 0; y < inputVector.size(); ++y)
+            for (int x = 0; x < inputVector[y].size(); ++x)
+                if (inputVector[y][x] == '@')
+                    grid[v2(x, y)] = true;
 
-    int64_t part2()
-    {
-        return 0;
+        int count = 0;
+        const auto& neighbors = MapHelper::getNeighboursVec(true);
+        bool removed = true;
+        while (removed)
+        {
+            removed = false;
+            for (auto& elem : grid)
+            {
+                int c = 0;
+                for (const auto& n : neighbors)
+                {
+                    v2 nPos = elem.first + n;
+                    if (grid.find(nPos) != grid.end())
+                        c++;
+                }
+
+                count += c < 4;
+                if (c < 4 && part_2)
+                {
+                    grid.erase(elem.first);
+                    removed = true;
+                }
+            }
+        }
+        return count;
     }
 
 public:
@@ -31,8 +56,8 @@ public:
         util::Timer myTime;
         myTime.start();
 
-        auto result_1 = part1();
-        auto result_2 = part2();
+        auto result_1 = run(false);
+        auto result_2 = run(true);
 
         int64_t time = myTime.usPassed();
 
