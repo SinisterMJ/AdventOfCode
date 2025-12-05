@@ -9,22 +9,22 @@ class Day04 {
 private:
 
     std::vector<std::string> inputVector;
+    std::unordered_map<v2, bool> grid;
 
     int64_t run(bool part_2)
     {
-        std::unordered_map<v2, bool> grid;
         for (int y = 0; y < inputVector.size(); ++y)
             for (int x = 0; x < inputVector[y].size(); ++x)
                 if (inputVector[y][x] == '@')
                     grid[v2(x, y)] = true;
-
+    
         int count = 0;
         const auto& neighbors = MapHelper::getNeighboursVec(true);
         bool removed = true;
         while (removed)
         {
             removed = false;
-            for (auto& elem : grid)
+            for (const auto& elem : grid)
             {
                 int c = 0;
                 for (const auto& n : neighbors)
