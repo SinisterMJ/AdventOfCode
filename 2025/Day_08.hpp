@@ -3,15 +3,56 @@
 
 #include "../includes/aoc.h"
 #include <algorithm>
+#include <numeric>
 
 class Day08 {
 private:
 
     std::vector<std::string> inputVector;
 
+    // Union-Find Datenstruktur
+    struct DSU {
+        std::vector<int> parent, size;
+        
+        DSU(int n) : parent(n), size(n, 1)
+        {
+            std::iota(parent.begin(), parent.end(), 0);
+        }
+        
+        int find(int x)
+        {
+            if (parent[x] != x)
+                parent[x] = find(parent[x]);
+           
+            return parent[x];
+        }
+        
+        bool unite(int x, int y)
+        {
+            int rx = find(x), ry = find(y);
+        
+            if (rx == ry)
+                return false;
+
+            if (size[rx] < size[ry])
+                std::swap(rx, ry);
+            
+            parent[ry] = rx;
+            size[rx] += size[ry];
+            return true;
+        }
+
+        int get_size(int x)
+        {
+            return size[find(x)];
+        }
+    };
+
     std::pair<int64_t, int64_t> run_parts()
     {
         std::vector<v3> boxes;
+        std::vector<std::pair<float, std::pair<int, int>>> distances;
+
         int64_t part1_result = 0;
 
         for (const std::string& line : inputVector)
@@ -20,12 +61,8 @@ private:
             boxes.push_back(v3(coords[0], coords[1], coords[2]));
         }
 
-        std::vector<std::pair<float, std::pair<int, int>>> distances;
-        std::vector<std::set<int>> subsets;
-        subsets.push_back(std::set<int>({ 0 }));
-        
         for (int i = 0; i < boxes.size(); ++i)
-        {            
+        {
             for (int j = i + 1; j < boxes.size(); ++j)
             {
                 v3 diff = boxes[i] - boxes[j];
@@ -36,60 +73,35 @@ private:
 
         std::sort(distances.begin(), distances.end());
 
+        DSU dsu(static_cast<int>(boxes.size()));
         int index = 0;
-        while (subsets[0].size() != boxes.size())
+        int n = static_cast<int>(boxes.size());
+        int part1_components = 0;
+        while (dsu.get_size(dsu.find(0)) != n)
         {
             if (index == 1000)
             {
-                std::vector<int> counts;
-                for (const auto& sets : subsets)
-                    counts.push_back(sets.size());
-
-                std::sort(counts.begin(), counts.end(), std::greater<int>());
-                part1_result = counts[0] * counts[1] * counts[2];
-            }
-            auto index_l = distances[index].second.first;
-            auto index_r = distances[index].second.second;
-
-            bool found = false;
-            
-            for (auto& s : subsets)
-            {
-                if (s.contains(index_l) || s.contains(index_r))
-                {
-                    found = true;
-                    s.insert(index_l);
-                    s.insert(index_r);
-                }
-            }
-
-            if (!found)
-            {
-                auto temp = std::set({ index_l, index_r });
-                subsets.push_back(temp);
-                ++index;
-                continue;
-            }
-
-            for (int i = 0; i < subsets.size(); ++i)
-            {
-                for (int j = i + 1; j < subsets.size(); ++j)
-                {
-                    std::set<int> intersection;
-                    std::set_intersection(subsets[i].begin(), subsets[i].end(),
-                        subsets[j].begin(), subsets[j].end(),
-                        std::inserter(intersection, intersection.begin()));
-                    if (!intersection.empty())
-                    {
-                        subsets[i].insert(subsets[j].begin(), subsets[j].end());
-                        subsets.erase(subsets.begin() + j);
+                std::vector<int> comp_sizes;
+                std::vector<bool> counted(n, false);
+                for (int i = 0; i < n; ++i) {
+                    int root = dsu.find(i);
+                    if (!counted[root]) {
+                        comp_sizes.push_back(dsu.get_size(root));
+                        counted[root] = true;
                     }
                 }
+                std::sort(comp_sizes.begin(), comp_sizes.end(), std::greater<int>());
+                part1_result = 1;
+                for (int i = 0; i < std::min(3, (int)comp_sizes.size()); ++i)
+                    part1_result *= comp_sizes[i];
             }
+            auto [index_l, index_r] = distances[index].second;
+            dsu.unite(index_l, index_r);
             ++index;
         }
 
-        return std::make_pair(part1_result, boxes[distances[index - 1].second.first].x * boxes[distances[index - 1].second.second].x);
+        int64_t part2_result = boxes[distances[index - 1].second.first].x * boxes[distances[index - 1].second.second].x;
+        return std::make_pair(part1_result, part2_result);
     }
 
 public:
