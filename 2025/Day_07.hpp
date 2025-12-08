@@ -9,15 +9,61 @@ private:
 
     std::vector<std::string> inputVector;
     std::string inputString;
+    std::map<v2, int64_t> costs;
 
     int64_t part1()
     {
-        return 0;
+        std::set<int64_t> rays;
+        std::set<v2> activated;
+
+        int y = 0;
+        for (const auto& line : inputVector)
+        {
+            if (line.find('S') != std::string::npos)
+            {
+                int x = line.find('S');
+                rays.insert(x);
+            };
+
+            for (int x = 0; x < line.size(); x++)
+            {
+                if (line[x] == '^' && rays.contains(x))
+                {
+                    rays.erase(x);
+                    rays.insert(x - 1);
+                    rays.insert(x + 1);
+                    activated.insert(v2(x, y));
+                }
+            }
+
+            y++;
+        }
+
+        return activated.size();
+    }
+
+    int64_t paths(v2 pos)
+    {
+        if (costs.contains(pos))
+            return costs[pos];
+
+        if (pos.y >= inputVector.size())
+            return 1;
+
+        if (inputVector[pos.y][pos.x] == '^')
+        {
+            auto cost = paths(pos + v2(1, 1)) + paths(pos + v2(-1, 1));
+            costs[pos] = cost;
+            return cost;
+        }
+
+        return paths(pos + v2(0, 1));
     }
 
     int64_t part2()
     {
-        return 0;
+        v2 start(inputVector[0].find('S'), 0);
+        return paths(start);
     }
 
 public:
