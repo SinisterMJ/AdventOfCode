@@ -51,7 +51,7 @@ private:
     std::pair<int64_t, int64_t> run_parts()
     {
         std::vector<v3> boxes;
-        std::vector<std::pair<float, std::pair<int, int>>> distances;
+        std::vector<std::pair<double, std::pair<int, int>>> distances;
 
         int64_t part1_result = 0;
 
@@ -66,7 +66,7 @@ private:
             for (int j = i + 1; j < boxes.size(); ++j)
             {
                 v3 diff = boxes[i] - boxes[j];
-                float manh = diff.length();
+                double manh = diff.length();
                 distances.push_back({ manh, {i, j} });
             }
         }
