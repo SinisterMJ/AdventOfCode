@@ -13,7 +13,7 @@ private:
 
     int64_t part1()
     {
-        std::set<int64_t> rays;
+        std::vector<bool> rays(inputVector[0].size(), false);
         std::set<v2> activated;
 
         int y = 0;
@@ -21,17 +21,17 @@ private:
         {
             if (line.find('S') != std::string::npos)
             {
-                int x = line.find('S');
-                rays.insert(x);
+                int x = static_cast<int32_t>(line.find('S'));
+                rays[x] = true;
             };
 
             for (int x = 0; x < line.size(); x++)
             {
-                if (line[x] == '^' && rays.contains(x))
+                if (line[x] == '^' && rays[x])
                 {
-                    rays.erase(x);
-                    rays.insert(x - 1);
-                    rays.insert(x + 1);
+                    rays[x] = false;
+                    rays[x - 1] = true;
+                    rays[x + 1] = true;
                     activated.insert(v2(x, y));
                 }
             }
@@ -47,7 +47,7 @@ private:
         if (costs.contains(pos))
             return costs[pos];
 
-        if (pos.y >= inputVector.size())
+        if (pos.y == inputVector.size())
             return 1;
 
         if (inputVector[pos.y][pos.x] == '^')
