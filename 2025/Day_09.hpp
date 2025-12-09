@@ -3,6 +3,8 @@
 
 #include "../includes/aoc.h"
 #include <algorithm>
+#include <queue>
+#include <array>
 
 class Day09 {
 private:
@@ -24,8 +26,8 @@ private:
         {
             for (int j = i + 1; j < corners.size(); j++)
             {
-                v2 from = corners[i];
-                v2 to = corners[j];
+                const auto& from = corners[i];
+                const auto& to = corners[j];
                 int64_t area = (1 + std::abs(from.x - to.x)) * (1 + std::abs(from.y - to.y));
                 max_area = std::max(area, max_area);
             }
@@ -48,13 +50,13 @@ private:
         std::vector x_sorted(x_set.begin(), x_set.end());
         std::vector y_sorted(y_set.begin(), y_set.end());
 
-        std::map<int64_t, int64_t> x_map;
-        std::map<int64_t, int64_t> y_map;
+        std::unordered_map<int64_t, int64_t> x_map;
+        std::unordered_map<int64_t, int64_t> y_map;
 
-        for (int64_t i = 0; i < x_sorted.size(); i++)
+        for (uint64_t i = 0; i < x_sorted.size(); i++)
             x_map[x_sorted[i]] = i * 2 + 1;
 
-        for (int64_t i = 0; i < y_sorted.size(); i++)
+        for (uint64_t i = 0; i < y_sorted.size(); i++)
             y_map[y_sorted[i]] = i * 2 + 1;
 
         std::vector<std::vector<int>> arr((x_sorted.size() * 2 + 1), std::vector<int>(y_sorted.size() * 2 + 1, 2));
@@ -81,30 +83,26 @@ private:
         }
 
         arr[0][0] = 0;
-        bool changed = true;
-        while (changed)
-        {
-            changed = false;
-            for (int x = 0; x < arr.size(); x++)
+        std::queue<std::pair<int, int>> q;
+        q.push({ 0, 0 });
+
+        std::array<std::pair<int, int>, 4> neighbours = { {
+            {1, 0},   // rechts
+            {-1, 0},  // links
+            {0, 1},   // unten
+            {0, -1}   // oben
+        } };
+        while (!q.empty()) {
+            auto [x, y] = q.front();
+            q.pop();
+
+            for (auto [dx, dy] : std::array<std::pair<int, int>, 4>{ {{1,0},{-1,0},{0,1},{0,-1}} })
             {
-                for (int y = 0; y < arr[0].size(); y++)
+                int nx = x + dx, ny = y + dy;
+                if (nx >= 0 && nx < arr.size() && ny >= 0 && ny < arr[0].size() && arr[nx][ny] == 2)
                 {
-                    if (arr[x][y] != 2)
-                        continue;
-                    bool reachable = false;
-                    if (x > 0 && arr[x - 1][y] == 0)
-                        reachable = true;
-                    if (x < arr.size() - 1 && arr[x + 1][y] == 0)
-                        reachable = true;
-                    if (y > 0 && arr[x][y - 1] == 0)
-                        reachable = true;
-                    if (y < arr[0].size() - 1 && arr[x][y + 1] == 0)
-                        reachable = true;
-                    if (reachable)
-                    {
-                        arr[x][y] = 0;
-                        changed = true;
-                    }
+                    arr[nx][ny] = 0;
+                    q.push({ nx, ny });
                 }
             }
         }
@@ -131,9 +129,9 @@ private:
                 to.x = x_map[to.x];
                 to.y = y_map[to.y];
                 bool valid = true;
-                for (int x = std::min(from.x, to.x); x <= std::max(from.x, to.x); x++)
+                for (int64_t x = std::min(from.x, to.x); x <= std::max(from.x, to.x); x++)
                 {
-                    for (int y = std::min(from.y, to.y); y <= std::max(from.y, to.y); y++)
+                    for (int64_t y = std::min(from.y, to.y); y <= std::max(from.y, to.y); y++)
                     {
                         if (arr[x][y] == 0)
                         {
