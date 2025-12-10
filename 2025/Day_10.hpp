@@ -50,18 +50,21 @@ private:
             machines.push_back(m);
 
             std::bitset<13> buttonState(0);
-
             int button_count = std::numeric_limits<int>::max();
+
             for (int i = 0; i < std::pow(2, m.buttons.size()); ++i)
             {
                 buttonState = i;
+                if (buttonState.count() >= button_count)
+                    continue;
+
                 std::vector<bool> initial(m.lights.size(), false);
                 for (int b = 0; b < m.buttons.size(); b++)
                     if (buttonState[b])
                         for (const auto& lightIdx : m.buttons[b])
                             initial[lightIdx] = !initial[lightIdx];
                 if (initial == m.lights)
-                    button_count = std::min<int>(button_count, static_cast<int>(buttonState.count()));
+                    button_count = static_cast<int>(buttonState.count());
             }
 
             result += button_count;
