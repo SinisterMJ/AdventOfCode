@@ -12,7 +12,42 @@ private:
 
     int64_t part1()
     {
-        return 0;
+        std::map<int, int> patterns;
+        int64_t result = 0;
+        int index = 0;
+        int curr_count = 0;
+        for (const auto& line : inputVector)
+        {
+            if (line.empty())
+            {
+                patterns[index] = curr_count;
+                index++;
+                curr_count = 0;
+                continue;
+            }
+
+            if (line.find("#") != std::string::npos)
+            {
+                std::string::difference_type n = std::count(line.begin(), line.end(), '#');
+                curr_count += static_cast<int>(n);
+            }
+
+            if (line.find('x') != std::string::npos)
+            {
+                auto parts = util::split(line, ": ");
+                auto sizes = util::splitInt(parts[0], 'x');
+                auto area = sizes[0] * sizes[1];
+
+                auto pattern_counts = util::splitInt(parts[1], ' ');
+                int size_needed = 0;
+                for (int i = 0; i < pattern_counts.size(); ++i)
+                    size_needed += pattern_counts[i] * patterns[i];
+
+                if (size_needed * 1.2 < area)
+                    result++;
+            }
+        }
+        return result;
     }
 
     int64_t part2()
